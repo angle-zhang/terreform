@@ -2,7 +2,8 @@
 ## Tech stack
 ### Frontend 	
 	- Three/Tween.js
-	- React.js
+	- React.js 
+		Barebones react app w/o webpack image loading
 	- Styled components (?) 
 ### Backend
 	- wtf is rest API
