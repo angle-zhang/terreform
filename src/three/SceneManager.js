@@ -25,7 +25,6 @@ export default canvas => {
   function createBiomes(scene, camera) { 
     return new Biomes(scene, camera);
   }
-  console.log(biomes, "biomes");
   function update() {
     // only update active scene
     biomes.starterBiome.animate();

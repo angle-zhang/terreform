@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import threeEntryPoint from '../three/threeEntryPoint';
+import threeEntryPoint from '../three/ThreeEntryPoint';
 export default class ThreeContainer extends Component {
   componentDidMount() {
     threeEntryPoint(this.threeRootElement);
