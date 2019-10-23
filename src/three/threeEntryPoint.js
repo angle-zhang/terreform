@@ -2,7 +2,6 @@ import SceneManager from './SceneManager';
 export default containerElement => {
   const canvas = createCanvas(document, containerElement);
   const sceneManager = new SceneManager(canvas);
-
   bindEventListeners();
   render();
   function createCanvas(document, containerElement) {
@@ -19,7 +18,7 @@ export default containerElement => {
     canvas.style.height= '100%';
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
-    sceneManager.onWindowResize();
+    sceneManager.onWindowResize(canvas);
   }
   function render(time) {
     requestAnimationFrame(render);
