@@ -6,10 +6,10 @@
 		Barebones react app w/o webpack image loading
 	- Styled components (?) 
 ### Backend
-	- wtf is rest API
+	- rest API
 	- Node.js or django (more beginner friendly)  ?
 	- DB: MongoDB
 	
 ### Deployment
-	- AWS (fk bezos) or Azure 
+	- AWS or Azure 
 
