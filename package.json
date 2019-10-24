@@ -9,6 +9,7 @@
     "build": "webpack --mode development",
     "production": "webpack --mode production"
   },
+  "proxy": "http://localhost:5000/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/angle-zhang/terreform.git"
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@babel/cli": "^7.1.0",
     "@babel/core": "^7.1.0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.2",
@@ -37,7 +39,7 @@
     "style-loader": "^0.23.0",
     "three": "^0.109.0",
     "webpack": "^4.19.1",
-    "webpack-cli": "^3.1.1",
+    "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.8.2"
   },
   "dependencies": {
