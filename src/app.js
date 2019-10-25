@@ -30,7 +30,8 @@ componentDidMount() {
     return(
       <div className="App">
         <ThreeContainer />
-      </div>
+
+      </div>	
     );
   }
 }
