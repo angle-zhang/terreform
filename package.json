@@ -33,6 +33,7 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.2",
+    "babel-polyfill": "^6.26.0",
     "css-loader": "^1.0.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
