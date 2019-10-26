@@ -31,7 +31,7 @@ class StarterBiome extends Biome {
         this.setObjects();
     }
     setScene() { 
-        this._camera.position.z = 5;
+        this._camera.pan({ x: 0, y: 0, z: 5 })
     }
     setObjects() { 
         var geometry = new THREE.BoxGeometry( 1, 1, 1 );
