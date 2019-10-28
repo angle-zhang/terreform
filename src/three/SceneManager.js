@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import Biomes from './Biomes.js'
-import Camera from './Camera.js'
+import './Camera.js'
 import TWEEN from '@tweenjs/tween.js'
 
 // scene manager class
@@ -25,14 +25,13 @@ export default canvas => {
   }
 
   function buildCamera({ width, height }) {
-    const perspectiveCamera = new THREE.PerspectiveCamera(
+    const camera = new THREE.PerspectiveCamera(
       75,
       width / height,
       0.1,
       1000
     )
-    perspectiveCamera.position.set(0, -6, 5)
-    const camera = new Camera(perspectiveCamera)
+    camera.position.set(0, -6, 5)
     return camera
   }
 
@@ -44,7 +43,7 @@ export default canvas => {
     // only update active scene
     TWEEN.update()
     biomes.starterBiome.animate()
-    renderer.render(scene, camera.get())
+    renderer.render(scene, camera)
   }
 
   function onWindowResize({ width, height }) {

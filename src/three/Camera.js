@@ -1,37 +1,26 @@
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 
-export default class Camera {
-  constructor(camera) {
-    this.camera = camera
-  }
+THREE.PerspectiveCamera.prototype.setAspect = function(newAspect) {
+  this.aspect = newAspect
+  this.updateProjectionMatrix()
+}
 
-  get() {
-    return this.camera
+THREE.PerspectiveCamera.prototype.pan = function({
+  x = this.position.x,
+  y = this.position.y,
+  z = this.position.z
+} = {}) {
+  const coords = {
+    x: this.position.x,
+    y: this.position.y,
+    z: this.position.z
   }
-
-  setAspect(newAspect) {
-    this.camera.aspect = newAspect
-    this.camera.updateProjectionMatrix()
-  }
-
-  pan({
-    x = this.camera.position.x,
-    y = this.camera.position.y,
-    z = this.camera.position.z
-  } = {}) {
-    // console.log(TWEEN)
-    const coords = {
-      x: this.camera.position.x,
-      y: this.camera.position.y,
-      z: this.camera.position.z
-    }
-    new TWEEN.Tween(coords)
-      .to({ x, y, z }, 1000)
-      .easing(TWEEN.Easing.Quadratic.Out)
-      .onUpdate(() => {
-        this.camera.position.set(coords.x, coords.y, coords.z)
-      })
-      .start()
-  }
+  new TWEEN.Tween(coords)
+    .to({ x, y, z }, 1000)
+    .easing(TWEEN.Easing.Quadratic.Out)
+    .onUpdate(() => {
+      this.position.set(coords.x, coords.y, coords.z)
+    })
+    .start()
 }
