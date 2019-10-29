@@ -35,7 +35,7 @@ class StarterBiome extends Biome {
     }
     setObjects() { 
         var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-        var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        var material = new THREE.MeshPhongMaterial( { color: 0xaaaaff } );
         this.cube = new THREE.Mesh( geometry, material );
         this._scene.add( this.cube );       
     }
