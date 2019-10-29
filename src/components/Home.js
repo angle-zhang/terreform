@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Navbar from './Nav';
 import ThreeContainer from './ThreeContainer.js';
 import Description from './Description';
 
-const Button = styled.button`
-  font-family: 'Montserrat', sans-serif;
-  font-size: 20px;
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: #000;
   background-color: #ddd;
-  padding: 15px;
+  padding: 10px 25px;
   border: 2px solid transparent;
   border-radius: 15px;
   transition: border 0.25s, background-color 0.25s;
@@ -58,7 +59,7 @@ const Home = () => {
       <Navbar />
       <ThreeContainer />
       <Description title={titles[0]} body={bodies[0]} />
-      <Button>Donate</Button>
+      <StyledLink to="/donate">Donate</StyledLink>
       <ArrowIndicator>
         <img
           src="arrow.svg"

@@ -20,7 +20,7 @@ const Centered = styled.div`
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: #000;
-  padding: 10px;
+  padding: 10px 20px;
   margin-top: 40vh;
   margin-left: 80%;
   border: 2px solid transparent;

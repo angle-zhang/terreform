@@ -10,11 +10,16 @@ const Nav = styled.nav`
   align-items: center;
 `;
 
+const EmptyLink = styled(Link)`
+  text-decoration: none;
+  color: #000;
+`;
+
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: #000;
   margin: 20px;
-  padding: 10px;
+  padding: 10px 20px;
   border: 2px solid transparent;
   border-radius: 5px;
   transition: border 0.25s, background-color 0.25s;
@@ -29,10 +34,15 @@ const StyledLink = styled(Link)`
 const Header = styled.h1`
   margin-left: 30px;
   margin-right: auto;
+  border: 2px solid transparent;
+  transition: border 0.5s;
 
   & img {
-    margin-top: 30px;
     width: 30px;
+  }
+
+  &:hover {
+    border-bottom: 2px solid #00e676;
   }
 `;
 
@@ -41,10 +51,10 @@ const Navbar = () => {
     <Nav>
       <Header>
         <img src="leaf.svg" alt="Leaf" />
-        TERREFORM
+        <EmptyLink to="/home">TERREFORM</EmptyLink>
       </Header>
 
-      <StyledLink to="/login">Donate</StyledLink>
+      <StyledLink to="/donate">Donate</StyledLink>
       <StyledLink to="/start">Get Started</StyledLink>
       <StyledLink to="/about">About</StyledLink>
     </Nav>
