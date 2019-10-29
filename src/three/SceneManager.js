@@ -28,21 +28,17 @@ export default canvas => {
   function loadModel(name) {
     let loader = new THREE.GLTFLoader()
     loadString = `models/${name}/${name}.gltf` // depends on our directory structure for models
+    let model
     loader.load(
       loadString, (gltf) => {
-        scene.add(gltf.scene)
-        // Model settings
-        // gltf.animations
-        // gltf.scene
-        // gltf.scenes
-        // gltf.cameras
-        // gltf.asset
+        model = gltf.scene
       }, (xrh) => {
         console.log((xhr.loaded / xhr.total * 100) + '% loaded');
       }, (err) => {
         console.log('An error occurred!')
       }
     )
+    return model
   }
   function update() {
     // only update active scene
