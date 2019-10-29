@@ -50,6 +50,26 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   function createBiomes(scene, camera) {
     return new Biomes(scene, camera)
   }
+  
+  function loadModel(name) {
+    let loader = new THREE.GLTFLoader()
+    loadString = `models/${name}/${name}.gltf` // depends on our directory structure for models
+    loader.load(
+      loadString, (gltf) => {
+        scene.add(gltf.scene)
+        // Model settings
+        // gltf.animations
+        // gltf.scene
+        // gltf.scenes
+        // gltf.cameras
+        // gltf.asset
+      }, (xrh) => {
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      }, (err) => {
+        console.log('An error occurred!')
+      }
+    )
+  }
 
   function addLight(
     scene,
