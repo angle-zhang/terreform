@@ -37,13 +37,14 @@
     "css-loader": "^1.0.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
+    "react-hot-loader": "^4.6",
+    "react-router-dom": "^5.1.2",
+    "styled-components": "^4.4.0",
     "style-loader": "^0.23.0",
     "three": "^0.109.0",
     "webpack": "^4.19.1",
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.8.2"
   },
-  "dependencies": {
-    "react-hot-loader": "^4.3.11"
-  }
+  "dependencies": {}
 }
