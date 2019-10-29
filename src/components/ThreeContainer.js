@@ -1,8 +1,11 @@
-import React, { Component } from 'react';
-import threeEntryPoint from '../three/ThreeEntryPoint';
+import React, { Component } from 'react'
+import threeEntryPoint from '../three/ThreeEntryPoint'
 export default class ThreeContainer extends Component {
   componentDidMount() {
-    threeEntryPoint(this.threeRootElement);
+    threeEntryPoint(this.threeRootElement, {
+      backgroundColor: 0xffffff,
+      lighting: { color: 0xffdddd }
+    })
   }
   render() {
     // ref saves reference to the div which is passed to threeEntryPoint

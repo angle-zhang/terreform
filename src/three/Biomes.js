@@ -31,26 +31,26 @@ class Biome {
   }
 }
 
-// a starter biome class
-class StarterBiome extends Biome {
-  constructor(scene, camera) {
-    super(scene, camera);
-    this.setScene();
-    this.setObjects();
-  }
-  setScene() {
-    this._camera.position.z = 5;
-  }
-  setObjects() {
-    var geometry = new THREE.BoxGeometry(1, 1, 1);
-    var material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
-    this.cube = new THREE.Mesh(geometry, material);
-    this._scene.add(this.cube);
-  }
-  animate() {
-    this.cube.rotation.y += 0.02;
-    this.cube.rotation.x += 0.02;
-  }
+// a starter biome class 
+class StarterBiome extends Biome { 
+    constructor( scene, camera ) { 
+        super( scene, camera );
+        this.setScene(); 
+        this.setObjects();
+    }
+    setScene() { 
+        this._camera.position.z = 5;
+    }
+    setObjects() { 
+        var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+        var material = new THREE.MeshPhongMaterial( { color: 0xaaaaff } );
+        this.cube = new THREE.Mesh( geometry, material );
+        this._scene.add( this.cube );       
+    }
+    animate() { 
+        this.cube.rotation.y += .02;
+        this.cube.rotation.x += .02;
+    }
 }
 
 export default (scene, camera) => {
