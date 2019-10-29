@@ -1,6 +1,6 @@
 # terreform 
 ## setup 
-`npm i`
+`npm i` download node modules
 `npm run start` start dev server
 ## Tech stack
 ### Frontend 	
