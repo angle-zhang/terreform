@@ -62,6 +62,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
     const light = new THREE.DirectionalLight(color, intensity)
     light.position.set(x, y, z)
     scene.add(light)
+
   }
 
   function update() {
@@ -75,6 +76,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
     camera.aspect = width / height
     camera.updateProjectionMatrix()
     renderer.setSize(width, height)
+
   }
 
   return {
