@@ -1,5 +1,8 @@
 import * as THREE from 'three'
 import Biomes from './Biomes.js'
+import getOrbitControls from 'three-orbit-controls'
+
+const OrbitControls = getOrbitControls(THREE)
 
 /**
  * Options
@@ -17,6 +20,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const scene = buildScene()
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
+  const controls = buildOrbitControls(camera, renderer)
   const biomes = createBiomes(scene, camera)
   addLight(scene, lighting)
 
@@ -25,7 +29,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   }
 
   function buildRender({ width, height }) {
-    let webgl = new THREE.WebGLRenderer({ canvas: canvas })
+    const webgl = new THREE.WebGLRenderer({ canvas: canvas })
     webgl.setSize(width, height)
     webgl.setClearColor(backgroundColor, 1)
     return webgl
@@ -33,6 +37,14 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
 
   function buildCamera({ width, height }) {
     return new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
+  }
+
+  function buildOrbitControls(camera, renderer) {
+    const controls = new OrbitControls(camera, renderer.domElement)
+    // locks rotation to only around z-axis
+    controls.minPolarAngle = Math.PI / 2
+    controls.maxPolarAngle = Math.PI / 2
+    return controls
   }
 
   function createBiomes(scene, camera) {
@@ -55,6 +67,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   function update() {
     // only update active scene
     biomes.starterBiome.animate()
+    controls.update()
     renderer.render(scene, camera)
   }
 
