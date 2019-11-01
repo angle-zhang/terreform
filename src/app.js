@@ -4,7 +4,7 @@ import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 
 import Intro from './components/Intro';
-import Donate from './components/Donate';
+// import Donate from './components/Donate';
 import Home from './components/Home';
 
 const Container = styled.div`
@@ -42,7 +42,6 @@ class App extends Component {
         <Router>
           <Switch>
             <Route path="/home" component={Home} />
-            <Route path="/donate" component={Donate} />
             <Route component={Intro} />
           </Switch>
         </Router>
