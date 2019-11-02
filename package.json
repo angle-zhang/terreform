@@ -50,7 +50,6 @@
     "webpack-dev-server": "^3.8.2"
   },
   "dependencies": {
-    "react-hot-loader": "^4.3.11",
-    "three-orbit-controls": "^82.1.0"
+    "react-hot-loader": "^4.3.11"
   }
 }

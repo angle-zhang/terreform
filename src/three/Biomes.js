@@ -48,8 +48,8 @@ class StarterBiome extends Biome {
         this._scene.add( this.cube );       
     }
     animate() { 
-        this.cube.rotation.y += .02;
-        this.cube.rotation.x += .02;
+        // this.cube.rotation.y += .02;
+        // this.cube.rotation.x += .02;
     }
 }
 
