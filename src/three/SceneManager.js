@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
 
@@ -19,8 +20,16 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
   const biomes = createBiomes(scene, camera)
-  buildOrbitControls(biomes.starterBiome.cube)
+  const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
+
+  // TEMPORARY way to switch biomes
+  document.addEventListener('keypress', event => {
+    if (event.keyCode === 32) {
+      biomes.next()
+      controls.group = biomes.getCurrent().group
+    }
+  })
 
   function buildScene() {
     return new THREE.Scene()
@@ -33,23 +42,34 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
     return webgl
   }
 
-  function buildOrbitControls(mesh) {
-    return new OrbitControls(mesh)
+  function buildOrbitControls(group) {
+    return new OrbitControls(group)
   }
 
   function buildCamera({ width, height }) {
-    return new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
+    camera.setViewOffset(
+      window.innerWidth,
+      window.innerHeight,
+      300,
+      0,
+      window.innerWidth,
+      window.innerHeight
+    )
+    camera.position.set(0, 0, 0)
+    return camera
   }
 
   function createBiomes(scene, camera) {
     return new Biomes(scene, camera)
   }
-  
+
   function loadModel(name) {
     let loader = new THREE.GLTFLoader()
     loadString = `models/${name}/${name}.gltf` // depends on our directory structure for models
     loader.load(
-      loadString, (gltf) => {
+      loadString,
+      gltf => {
         scene.add(gltf.scene)
         // Model settings
         // gltf.animations
@@ -57,9 +77,11 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
         // gltf.scenes
         // gltf.cameras
         // gltf.asset
-      }, (xrh) => {
-        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-      }, (err) => {
+      },
+      xrh => {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+      },
+      err => {
         console.log('An error occurred!')
       }
     )
@@ -76,12 +98,12 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
     const light = new THREE.DirectionalLight(color, intensity)
     light.position.set(x, y, z)
     scene.add(light)
-
   }
 
   function update() {
     // only update active scene
-    biomes.starterBiome.animate()
+    TWEEN.update()
+    biomes.animate()
     renderer.render(scene, camera)
   }
 
@@ -89,7 +111,6 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
     camera.aspect = width / height
     camera.updateProjectionMatrix()
     renderer.setSize(width, height)
-
   }
 
   return {
