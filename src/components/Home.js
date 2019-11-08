@@ -7,26 +7,26 @@ import ThreeContainer from './ThreeContainer.js';
 import Description from './Description';
 
 const StyledLink = styled(Link)`
+  margin-left: 45vw;
   text-decoration: none;
-  color: #000;
-  background-color: #ddd;
+  color: #fff;
+  background-color: #00c853;
   padding: 10px 25px;
   border: 2px solid transparent;
-  border-radius: 15px;
+  border-radius: 5px;
   transition: border 0.25s, background-color 0.25s;
 
   &:hover {
     border-bottom: 2px solid #00e676;
+    background-color: #69f0ae;
     cursor: pointer;
   }
 `;
 
 const ArrowIndicator = styled.div`
   position: absolute;
-  display: flex;
-  top: 40vh;
-  margin-left: 90vw;
-  align-items: center;
+  top: 45vh;
+  margin-left: 5vw;
 
   & img {
     width: 30px;
@@ -35,12 +35,14 @@ const ArrowIndicator = styled.div`
   }
 
   & img:hover {
-    background-color: #ccc;
+    background-color: #eee;
     border-radius: 40px;
   }
 
   & p {
-    margin-left: 10px;
+    width: 50px;
+    text-align: left;
+    margin: 3px;
     color: #aaa;
   }
 `;
@@ -59,16 +61,20 @@ const Home = () => {
       <Navbar />
       <ThreeContainer />
       <Description title={titles[0]} body={bodies[0]} />
-      <StyledLink to="/donate">Donate</StyledLink>
       <ArrowIndicator>
         <img
-          src="arrow.svg"
-          alt="Arrow"
+          src="arrow-up.svg"
+          alt="Arrow up"
           onClick={() => setPage(page == maxPage - 1 ? 0 : page + 1)}
         />
         <p>
-          {page + 1} / {maxPage}
+          {page + 1} - {maxPage}
         </p>
+        <img
+          src="arrow-down.svg"
+          alt="Arrow down"
+          onClick={() => setPage(page == 0 ? maxPage - 1 : page - 1)}
+        />
       </ArrowIndicator>
     </div>
   );

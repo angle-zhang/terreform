@@ -20,13 +20,13 @@ const StyledLink = styled(Link)`
   color: #000;
   margin: 20px;
   padding: 10px 20px;
-  border: 2px solid transparent;
+  border: none;
   border-radius: 5px;
-  transition: border 0.25s, background-color 0.25s;
+  transition: all 0.4s;
 
   &:hover {
-    background-color: #ddd;
-    border-bottom: 2px solid #00e676;
+    background-color: #eee;
+    color: #00c853;
     cursor: pointer;
   }
 `;
@@ -35,14 +35,15 @@ const Header = styled.h1`
   margin-left: 30px;
   margin-right: auto;
   border: 2px solid transparent;
-  transition: border 0.5s;
+  border-radius: 0px;
+  transition: border 0.3s;
 
   & img {
     width: 30px;
   }
 
   &:hover {
-    border-bottom: 2px solid #00e676;
+    border-bottom: 2px solid #00c853;
   }
 `;
 

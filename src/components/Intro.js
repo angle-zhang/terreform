@@ -25,11 +25,11 @@ const StyledLink = styled(Link)`
   margin-left: 80%;
   border: 2px solid transparent;
   border-radius: 5px;
-  transition: border 0.25s, background-color 0.25s;
+  transition: all 0.4s;
 
   &:hover {
-    background-color: #ddd;
-    border-bottom: 2px solid #00e676;
+    color: #00c853;
+    background-color: #eee;
     cursor: pointer;
   }
 `;
@@ -37,6 +37,8 @@ const StyledLink = styled(Link)`
 const introText = [
   'Welcome to Terreform.',
   'By 2020, sea levels will rise between 1 to 4 feet worldwide.',
+  'No more freshwater is available in Australia.',
+  'Bananas are going extinct.',
   'There are currently fires in Westwood.',
   '33 penguins lose their homes every other third second.',
   "The world's largest glacier will disappear in 50 years."
@@ -51,7 +53,7 @@ const Intro = () => {
     setTimeout(() => {
       setCount((count) => (count == introText.length - 1 ? 1 : count + 1));
       setOpacity(1);
-    }, 500);
+    }, 600);
   };
 
   useEffect(() => {
