@@ -52,7 +52,7 @@ const Input = styled.div`
 
   & label {
     position: absolute;
-    margin-top: -63px;
+    margin-top: -55px;
     margin-left: 20px;
     font-size: 14px;
     color: #777;
@@ -61,7 +61,7 @@ const Input = styled.div`
 
   & input {
     width: 100%;
-    height: 20px;
+    height: 10px;
     font-family: 'Montserrat', sans-serif;
     font-size: 18px;
     margin: 8px;
@@ -85,17 +85,22 @@ const Input = styled.div`
 `;
 
 const Donate = () => {
+  const project = useField('number');
+  const amount = useField('number');
   const firstName = useField('text');
   const lastName = useField('text');
   const email = useField('email');
-  const number = useField('tel');
+  const cardNumber = useField('number');
+  const expirationDate = useField('date');
+  const cvv = useField('number');
+  const postalCode = useField('number');
 
   return (
     <div>
       <Navbar />
       <Centered>
         <h3>The Earth Needs a Good Friend</h3>
-        <p>
+        <p style={{ lineHeight: '40px' }}>
           When you support Friends of the Earth, you fuel the fight to protect
           people and the planet over corporate profits. Together, we’re working
           to build a system that promotes clean energy and solutions to climate
@@ -103,6 +108,16 @@ const Donate = () => {
           we’re protecting marine ecosystems and the people who live and work
           near them.
         </p>
+        <Row>
+          <Input>
+            <input {...project} />
+            <label>Project ID</label>
+          </Input>
+          <Input>
+            <input {...amount} />
+            <label>Amount</label>
+          </Input>
+        </Row>
         <Row>
           <Input>
             <input {...firstName} />
@@ -121,26 +136,26 @@ const Donate = () => {
         </Row>
         <Row>
           <Input>
-            <input {...number} />
-            <label>Number</label>
+            <input {...cardNumber} />
+            <label>Card Number</label>
           </Input>
         </Row>
         <Row>
           <Input>
-            <input />
-            <label>Placeholder</label>
+            <input {...expirationDate} />
+            <label>Expiration Date</label>
           </Input>
         </Row>
         <Row>
           <Input>
-            <input />
-            <label>Placeholder</label>
+            <input {...cvv} />
+            <label>CVV</label>
           </Input>
         </Row>
         <Row>
           <Input>
-            <input />
-            <label>Placeholder</label>
+            <input {...postalCode} />
+            <label>Postal Code</label>
           </Input>
         </Row>
         <Row>
