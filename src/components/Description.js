@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const StyledLink = styled(Link)`
-  margin: 40%;
+  margin-left: 80%;
   text-decoration: none;
   color: #fff;
   background-color: #00c853;
@@ -13,14 +13,13 @@ const StyledLink = styled(Link)`
   transition: border 0.25s, background-color 0.25s;
 
   &:hover {
-    border-bottom: 2px solid #00e676;
     background-color: #69f0ae;
     cursor: pointer;
   }
 `;
 
 const TextDetail = styled.div`
-  & h3,
+  & h2,
   p {
     user-select: none;
     -webkit-user-select: none;
@@ -29,16 +28,21 @@ const TextDetail = styled.div`
     -ms-user-select: none;
   }
 
+  & h2 {
+    text-align: right;
+  }
+
   & p {
-    margin-bottom: 40px;
     text-align: justify;
+    margin-bottom: 40px;
+    line-height: 45px;
   }
 `;
 
 const Container = styled.div`
-  width: 42%;
-  margin-left: 55vw;
-  margin-top: 27vh;
+  width: 40vw;
+  margin-left: 53vw;
+  margin-top: 22vh;
 
   // &:before {
   //   content: '';
@@ -55,7 +59,7 @@ const Description = ({ title, body }) => {
   return (
     <Container>
       <TextDetail>
-        <h3>{title.toUpperCase()}</h3>
+        <h2>{title.toUpperCase()}</h2>
         <p>{body}</p>
       </TextDetail>
       <StyledLink to="/donate">Donate</StyledLink>

@@ -17,7 +17,6 @@ const StyledLink = styled(Link)`
   transition: border 0.25s, background-color 0.25s;
 
   &:hover {
-    border-bottom: 2px solid #00e676;
     background-color: #69f0ae;
     cursor: pointer;
   }
@@ -25,7 +24,7 @@ const StyledLink = styled(Link)`
 
 const ArrowIndicator = styled.div`
   position: absolute;
-  top: 45vh;
+  top: 45%;
   margin-left: 5vw;
 
   & img {

@@ -24,7 +24,6 @@ const StyledLink = styled(Link)`
   transition: border 0.25s, background-color 0.25s;
 
   &:hover {
-    border-bottom: 2px solid #00e676;
     background-color: #69f0ae;
     cursor: pointer;
   }
