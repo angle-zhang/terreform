@@ -5,6 +5,7 @@ const Container = styled.div`
   width: 42%;
   margin-left: 45vw;
   margin-top: 20vh;
+  user-select: none;
 
   &:before {
     content: '';

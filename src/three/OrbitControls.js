@@ -1,6 +1,6 @@
 export default class OrbitControls {
-  constructor(mesh) {
-    this.mesh = mesh
+  constructor(group) {
+    this.group = group
     this.bindEventListeners()
     this.prevX = null
   }
@@ -8,7 +8,7 @@ export default class OrbitControls {
   bindEventListeners() {
     const handleMouseMove = event => {
       const dx = event.screenX - this.prevX
-      this.mesh.rotation.y += dx / 100
+      this.group.rotation.y += dx / 100
       this.prevX = event.screenX
     }
 
