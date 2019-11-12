@@ -32,13 +32,14 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   })
 
   function buildScene() {
-    return new THREE.Scene()
+    const scene = new THREE.Scene()
+    scene.background = new THREE.Color(backgroundColor)
+    return scene
   }
 
   function buildRender({ width, height }) {
     const webgl = new THREE.WebGLRenderer({ canvas: canvas })
     webgl.setSize(width, height)
-    webgl.setClearColor(backgroundColor, 1)
     return webgl
   }
 

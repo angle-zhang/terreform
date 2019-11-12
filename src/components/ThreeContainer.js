@@ -11,9 +11,9 @@ export default class ThreeContainer extends Component {
     // ref saves reference to the div which is passed to threeEntryPoint
     return (
       <div
-        ref={(element) => (this.threeRootElement = element)}
-        style={{ position: 'absolute', top: '0', zIndex: -1 }}
+        ref={element => (this.threeRootElement = element)}
+        style={{ position: 'absolute', top: '0', bottom: '0', zIndex: -1 }}
       />
-    );
+    )
   }
 }

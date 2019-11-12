@@ -40,17 +40,31 @@ class Biome {
 class StarterBiome extends Biome {
   constructor(scene, camera, position) {
     super(scene, camera)
-    this.setScene()
     this.setObjects(position)
   }
 
-  setScene() {}
+  setScene() {
+    const color = this._scene.background
+    new TWEEN.Tween(color)
+      .to(new THREE.Color(Math.random(), Math.random(), Math.random()), 1000)
+      .easing(TWEEN.Easing.Quadratic.Out)
+      .onUpdate(() => (this._scene.background = color))
+      .start()
+  }
 
   setObjects(position) {
-    var geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5)
-    var material = new THREE.MeshPhongMaterial({ color: 0xaaaaff })
+    var geometry = new THREE.BoxGeometry(1.5, 4, 1.5)
+    var material = new THREE.MeshPhongMaterial({ color: 0x777777 })
     this.group = new THREE.Mesh(geometry, material)
+    this._scene.add(this.group)
     this.group.position.set(...position)
+    // This is needed since world and local rotation is separate, and all the
+    // biomes are put into a group, which does not affect local rotation
+    this.group.rotateOnWorldAxis(
+      new THREE.Vector3(1, 0, 0),
+      new THREE.Vector3(...position).angleTo(new THREE.Vector3(0, 0, -1)) *
+        (Math.sign(position[1]) || 1)
+    )
   }
 
   animate() {}
@@ -58,16 +72,18 @@ class StarterBiome extends Biome {
 
 export default class Biomes {
   constructor(scene, camera) {
-    this.group = new THREE.Group()
+    this.group = new THREE.Object3D()
     this.biomes = [
       new StarterBiome(scene, camera, [0, 0, -6]),
-      new StarterBiome(scene, camera, [6, 0, 0]),
+      new StarterBiome(scene, camera, [0, -6, 0]),
       new StarterBiome(scene, camera, [0, 0, 6]),
-      new StarterBiome(scene, camera, [-6, 0, 0])
+      new StarterBiome(scene, camera, [0, 6, 0])
     ]
     this.biomes.forEach(biome => this.group.add(biome.group))
     scene.add(this.group)
     this.currentIndex = 0
+    this.biomes[this.currentIndex].setScene()
+    this.lastRotateTime = 0
   }
 
   getCurrent() {
@@ -79,14 +95,20 @@ export default class Biomes {
   }
 
   next() {
-    const coords = { y: this.group.rotation.y }
-    new TWEEN.Tween(coords)
-      .to({ y: this.group.rotation.y + Math.PI / 2 }, 1000)
-      .easing(TWEEN.Easing.Quadratic.Out)
-      .onUpdate(() => {
-        this.group.rotation.y = coords.y
-      })
-      .start()
-    this.currentIndex = (this.currentIndex + 1) % this.biomes.length
+    const DURATION = 1000
+    if (Date.now() - this.lastRotateTime > 1000) {
+      const coords = { x: this.group.rotation.x }
+      new TWEEN.Tween(coords)
+        .to({ x: this.group.rotation.x + Math.PI / 2 }, DURATION)
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .onUpdate(() => {
+          this.group.rotation.x = coords.x
+          this.getCurrent().group.updateMatrixWorld()
+        })
+        .start()
+      this.currentIndex = (this.currentIndex + 1) % this.biomes.length
+      this.lastRotateTime = Date.now()
+      this.getCurrent().setScene()
+    }
   }
 }
