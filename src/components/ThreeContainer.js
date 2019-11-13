@@ -4,7 +4,7 @@ export default class ThreeContainer extends Component {
   componentDidMount() {
     threeEntryPoint(this.threeRootElement, {
       backgroundColor: 0xffffff,
-      lighting: { color: 0xffdddd }
+      lighting: { color: 0xffffff }
     })
   }
   render() {

@@ -19,9 +19,11 @@ export class Flock {
   }
 
   render(scene) {
-    this.boids.forEach(boid => {
-      scene.add(boid.mesh)
-    })
+    this.boids.forEach(boid => scene.add(boid.mesh))
+  }
+
+  remove(scene) {
+    this.boids.forEach(boid => scene.remove(boid.mesh))
   }
 
   update() {

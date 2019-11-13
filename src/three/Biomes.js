@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 
-import {Flock} from './Boids.js'
+import { Flock } from './Boids.js'
 
 // define scene classes here
 // pseudo abstract class
@@ -54,8 +54,16 @@ class StarterBiome extends Biome {
       .onUpdate(() => (this._scene.background = color))
       .start()
 
-    this.flocks = new Array(3).fill().map(() => new Flock(20, [[-15, 25], [-10, 10]], 0.1))
+    this.flocks = new Array(3)
+      .fill()
+      .map(() => new Flock(20, [[-15, 25], [-10, 10]], 0.1))
     this.flocks.forEach(flock => flock.render(this._scene))
+  }
+
+  removeScene() {
+    if (this.flocks) {
+      this.flocks.forEach(flock => flock.remove(this._scene))
+    }
   }
 
   setObjects(position) {
@@ -116,6 +124,7 @@ export default class Biomes {
           this.getCurrent().group.updateMatrixWorld()
         })
         .start()
+      this.getCurrent().removeScene()
       this.currentIndex = (this.currentIndex + 1) % this.biomes.length
       this.lastRotateTime = Date.now()
       this.getCurrent().setScene()
