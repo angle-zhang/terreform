@@ -12,7 +12,7 @@ export default class ThreeContainer extends Component {
     return (
       <div
         ref={(element) => (this.threeRootElement = element)}
-        style={{ position: 'absolute', top: '0px', left: '-20vw', zIndex: -1 }}
+        style={{ position: 'absolute', top: '0', zIndex: -1 }}
       />
     );
   }

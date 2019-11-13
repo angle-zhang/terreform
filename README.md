@@ -1,4 +1,7 @@
 # terreform 
+## setup 
+`npm i` download node modules
+`npm run start` start dev server
 ## Tech stack
 ### Frontend 	
 	- Three/Tween.js
