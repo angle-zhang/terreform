@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 
+import {Flock} from './Boids.js'
+
 // define scene classes here
 // pseudo abstract class
 class Biome {
@@ -41,6 +43,7 @@ class StarterBiome extends Biome {
   constructor(scene, camera, position) {
     super(scene, camera)
     this.setObjects(position)
+    this.birds = []
   }
 
   setScene() {
@@ -50,11 +53,14 @@ class StarterBiome extends Biome {
       .easing(TWEEN.Easing.Quadratic.Out)
       .onUpdate(() => (this._scene.background = color))
       .start()
+
+    this.flock = new Flock(20, [[-15, 25], [-10, 10]], 0.1)
+    this.flock.render(this._scene)
   }
 
   setObjects(position) {
-    var geometry = new THREE.BoxGeometry(1.5, 4, 1.5)
-    var material = new THREE.MeshPhongMaterial({ color: 0x777777 })
+    const geometry = new THREE.BoxGeometry(1.5, 4, 1.5)
+    const material = new THREE.MeshPhongMaterial({ color: 0x777777 })
     this.group = new THREE.Mesh(geometry, material)
     this._scene.add(this.group)
     this.group.position.set(...position)
@@ -67,7 +73,11 @@ class StarterBiome extends Biome {
     )
   }
 
-  animate() {}
+  animate() {
+    if (this.flock) {
+      this.flock.update()
+    }
+  }
 }
 
 export default class Biomes {
@@ -91,7 +101,7 @@ export default class Biomes {
   }
 
   animate() {
-    this.biomes.forEach(biome => biome.animate)
+    this.biomes.forEach(biome => biome.animate())
   }
 
   next() {
