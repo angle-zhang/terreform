@@ -54,8 +54,8 @@ class StarterBiome extends Biome {
       .onUpdate(() => (this._scene.background = color))
       .start()
 
-    this.flock = new Flock(20, [[-15, 25], [-10, 10]], 0.1)
-    this.flock.render(this._scene)
+    this.flocks = new Array(3).fill().map(() => new Flock(20, [[-15, 25], [-10, 10]], 0.1))
+    this.flocks.forEach(flock => flock.render(this._scene))
   }
 
   setObjects(position) {
@@ -74,8 +74,8 @@ class StarterBiome extends Biome {
   }
 
   animate() {
-    if (this.flock) {
-      this.flock.update()
+    if (this.flocks) {
+      this.flocks.forEach(flock => flock.update())
     }
   }
 }

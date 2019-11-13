@@ -29,9 +29,9 @@ export class Flock {
       const v1 = this.ruleCoM(i)
       v1.divideScalar(400)
       const v2 = this.ruleVel(i)
-      v2.divideScalar(20)
+      v2.divideScalar(30)
       const v3 = this.ruleSep(i)
-      v3.divideScalar(500)
+      v3.divideScalar(150)
       const v = v1.add(v2).add(v3)
       boid.addVelocity(v.x, v.y)
       boid.updatePosition(this.bounds[0], this.bounds[1])
@@ -57,7 +57,7 @@ export class Flock {
       if (i != j) {
         const dx = boid.getPosition().x - this.boids[i].getPosition().x
         const dy = boid.getPosition().y - this.boids[i].getPosition().y
-        if (Math.hypot(dx, dy) < 2) {
+        if (Math.hypot(dx, dy) < 0.75) {
           v.x -= dx
           v.y -= dy
         }
