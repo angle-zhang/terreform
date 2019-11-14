@@ -71,11 +71,11 @@ export default class Biomes {
     this.currentIndex = 0
   }
 
-  async loadItem(name) {
-    let model = await getModel(name);
-    scene.add(model)
-    console.log('loading...')
-  }
+  // async loadItem(name) {
+  //   let model = await getModel(name);
+  //   scene.add(model)
+  //   console.log('loading...')
+  // }
 
   getCurrent() {
     return this.biomes[this.currentIndex]

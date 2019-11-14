@@ -11,7 +11,9 @@ import OrbitControls from './OrbitControls.js'
  *     intensity: 1
  *     position: { x, y, z }
  */
-export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
+
+//async
+export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const screenDimensions = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -40,6 +42,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   function buildRender({ width, height }) {
     let webgl = new THREE.WebGLRenderer({ "canvas": canvas });
     webgl.setSize(width, height);
+    webgl.setClearColor(backgroundColor, 1)
     return webgl;
   }
 
