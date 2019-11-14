@@ -11,15 +11,19 @@ import OrbitControls from './OrbitControls.js'
  *     intensity: 1
  *     position: { x, y, z }
  */
+
+//async
 export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const screenDimensions = {
     width: window.innerWidth,
     height: window.innerHeight
   }
+
   const scene = buildScene()
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
   const biomes = createBiomes(scene, camera)
+  // await biomes.loadItem('treebiome5')
   const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
 
@@ -32,14 +36,14 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   })
 
   function buildScene() {
-    return new THREE.Scene()
+    return new THREE.Scene();
   }
 
   function buildRender({ width, height }) {
-    const webgl = new THREE.WebGLRenderer({ canvas: canvas })
-    webgl.setSize(width, height)
+    let webgl = new THREE.WebGLRenderer({ "canvas": canvas });
+    webgl.setSize(width, height);
     webgl.setClearColor(backgroundColor, 1)
-    return webgl
+    return webgl;
   }
 
   function buildOrbitControls(group) {
@@ -62,29 +66,6 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
 
   function createBiomes(scene, camera) {
     return new Biomes(scene, camera)
-  }
-
-  function loadModel(name) {
-    let loader = new THREE.GLTFLoader()
-    loadString = `models/${name}/${name}.gltf` // depends on our directory structure for models
-    loader.load(
-      loadString,
-      gltf => {
-        scene.add(gltf.scene)
-        // Model settings
-        // gltf.animations
-        // gltf.scene
-        // gltf.scenes
-        // gltf.cameras
-        // gltf.asset
-      },
-      xrh => {
-        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-      },
-      err => {
-        console.log('An error occurred!')
-      }
-    )
   }
 
   function addLight(
