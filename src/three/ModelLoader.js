@@ -1,6 +1,8 @@
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+
 function loadModel(name) {
     return new Promise((resolve, reject) => {
-        new THREE.GLTFLoader().load(`models/${name}.glb`,
+        new GLTFLoader().load(`./${name}.glb`,
             gltf => {
                 resolve(gltf.scene.children[0])
             },

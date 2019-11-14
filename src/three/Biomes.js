@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
+import getModel from './ModelLoader.js'
 
 // define scene classes here
 // pseudo abstract class
@@ -44,7 +45,7 @@ class StarterBiome extends Biome {
     this.setObjects(position)
   }
 
-  setScene() {}
+  setScene() { }
 
   setObjects(position) {
     var geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5)
@@ -53,7 +54,7 @@ class StarterBiome extends Biome {
     this.group.position.set(...position)
   }
 
-  animate() {}
+  animate() { }
 }
 
 export default class Biomes {
@@ -68,6 +69,12 @@ export default class Biomes {
     this.biomes.forEach(biome => this.group.add(biome.group))
     scene.add(this.group)
     this.currentIndex = 0
+  }
+
+  async loadItem(name) {
+    let model = await getModel(name);
+    scene.add(model)
+    console.log('loading...')
   }
 
   getCurrent() {

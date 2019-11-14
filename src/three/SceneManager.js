@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
-import getModels from './ModelLoader.js'
 import OrbitControls from './OrbitControls.js'
 
 /**
@@ -12,7 +11,7 @@ import OrbitControls from './OrbitControls.js'
  *     intensity: 1
  *     position: { x, y, z }
  */
-export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
+export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const screenDimensions = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -22,6 +21,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
   const biomes = createBiomes(scene, camera)
+  // await biomes.loadItem('treebiome5')
   const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
 
@@ -63,36 +63,36 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
 
   function createBiomes(scene, camera) {
     return new Biomes(scene, camera)
+  }
 
-    function addLight(
-      scene,
-      {
-        color = 0xffffff,
-        intensity = 1,
-        position: { x, y, z } = { x: -1, y: 2, z: 4 }
-      }
-    ) {
-      const light = new THREE.DirectionalLight(color, intensity)
-      light.position.set(x, y, z)
-      scene.add(light)
+  function addLight(
+    scene,
+    {
+      color = 0xffffff,
+      intensity = 1,
+      position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
+  ) {
+    const light = new THREE.DirectionalLight(color, intensity)
+    light.position.set(x, y, z)
+    scene.add(light)
+  }
 
-    function update() {
-      // only update active scene
-      TWEEN.update()
-      biomes.animate()
-      renderer.render(scene, camera)
-    }
+  function update() {
+    // only update active scene
+    TWEEN.update()
+    biomes.animate()
+    renderer.render(scene, camera)
+  }
 
-    function onWindowResize({ width, height }) {
-      camera.aspect = width / height
-      camera.updateProjectionMatrix()
-      renderer.setSize(width, height)
-    }
+  function onWindowResize({ width, height }) {
+    camera.aspect = width / height
+    camera.updateProjectionMatrix()
+    renderer.setSize(width, height)
+  }
 
-    return {
-      update,
-      onWindowResize
-    }
+  return {
+    update,
+    onWindowResize
   }
 }
