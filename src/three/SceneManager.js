@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
+import getModel from './ModelLoader.js'
 
 /**
  * Options
@@ -12,8 +13,14 @@ import OrbitControls from './OrbitControls.js'
  *     position: { x, y, z }
  */
 
+const loadItem = async (name, scene) => {
+  let model = await getModel(name);
+  scene.add(model)
+  console.log('loading...')
+}
+
 //async
-export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
+export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const screenDimensions = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -23,7 +30,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
   const biomes = createBiomes(scene, camera)
-  // await biomes.loadItem('treebiome5')
+  await loadItem('treebiome5', scene)
   const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
 
@@ -96,6 +103,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
 
   return {
     update,
-    onWindowResize
+    onWindowResize,
+    scene
   }
 }

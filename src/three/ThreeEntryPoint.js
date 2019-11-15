@@ -1,7 +1,16 @@
 import SceneManager from './SceneManager';
-export default (containerElement, options) => {
+import getModel from './ModelLoader';
+
+const loadItem = async (name) => {
+  let model = await getModel(name);
+  scene.add(model)
+  console.log('loading...')
+}
+
+
+export default async (containerElement, options) => {
   const canvas = createCanvas(document, containerElement);
-  const sceneManager = new SceneManager(canvas, options);
+  const sceneManager = await SceneManager(canvas, options);
   bindEventListeners();
   render();
   function createCanvas(document, containerElement) {
