@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
+import getModel from './ModelLoader.js'
 
 /**
  * Options
@@ -12,26 +13,82 @@ import OrbitControls from './OrbitControls.js'
  *     position: { x, y, z }
  */
 
+const loadItem = async (name, scene) => {
+  let model = await getModel(name);
+  // scene.add(model)
+  console.log('loading into scene...')
+  return model
+}
+
+const loadAll = (modelNames) => {
+  let models = new Map()
+  modelNames.forEach(async (modelName) => models.set(modelName, await getModel(modelName)))
+  return models
+}
+
+const getPosition = (object) => {
+  let vec = new THREE.Vector3()
+  object.getWorldPosition(vec)
+  console.log('The location of the object is ' + JSON.stringify(vec))
+}
+
+const getScale = (object) => {
+  let vec = new THREE.Vector3()
+  object.getWorldScale(vec)
+  console.log('The scale of the object is ' + JSON.stringify(vec))
+}
+
+const separateCoordinates = (mesh) => {
+  let x = []
+  let y = []
+  let z = []
+  mesh.geometry.attributes.position.array.filter.forEach((coord, i) => {
+    switch (i % 3) {
+      case 0:
+        x.push(coord)
+        break
+      case 1:
+        y.push(coord)
+        break
+      case 2:
+        z.push(coord)
+        break
+    }
+  })
+  return [x, y, z]
+}
+
 //async
-export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
+export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const screenDimensions = {
     width: window.innerWidth,
     height: window.innerHeight
   }
-
   const scene = buildScene()
+  // scene.background = new THREE.Color(0x8FBCD4)
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
   const biomes = createBiomes(scene, camera)
-  // await biomes.loadItem('treebiome5')
-  const controls = buildOrbitControls(biomes.getCurrent().group)
+  // let duck = await loadItem('Duck', scene)
+  // duck.translateZ(-.8)
+  let treebiome = await loadItem('tree-1', scene)
+  getPosition(treebiome)
+  getScale(treebiome)
+  treebiome.position.set(0, 0, 0)
+
+  treebiome.scale.set(.1, .1, .1)
+  separateCoordinates(treebiome)
+  // console.log(treebiome.geometry.attributes.position.array)
+  // treebiome.translateX(-10)
+  getPosition(treebiome)
+  // const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
 
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {
     if (event.keyCode === 32) {
       biomes.next()
-      controls.group = biomes.getCurrent().group
+      // controls.group = biomes.getCurrent().group
     }
   })
 
@@ -42,9 +99,10 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   }
 
   function buildRender({ width, height }) {
-    const webgl = new THREE.WebGLRenderer({ canvas: canvas })
-    webgl.setSize(width, height)
-    return webgl
+    let webgl = new THREE.WebGLRenderer({ antialias: true, canvas: canvas });
+    webgl.setSize(width, height);
+    webgl.setClearColor(backgroundColor, 1)
+    return webgl;
   }
 
   function buildOrbitControls(group) {
@@ -52,7 +110,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   }
 
   function buildCamera({ width, height }) {
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100)
     camera.setViewOffset(
       window.innerWidth,
       window.innerHeight,
@@ -61,7 +119,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
       window.innerWidth,
       window.innerHeight
     )
-    camera.position.set(0, 0, 0)
+    camera.position.set(0, 0, 3)
     return camera
   }
 
@@ -73,7 +131,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
     scene,
     {
       color = 0xffffff,
-      intensity = 1,
+      intensity = 5,
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {
@@ -90,6 +148,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   }
 
   function onWindowResize({ width, height }) {
+    console.log('resizing')
     camera.aspect = width / height
     camera.updateProjectionMatrix()
     renderer.setSize(width, height)
@@ -97,6 +156,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
 
   return {
     update,
-    onWindowResize
+    onWindowResize,
+    scene
   }
 }
