@@ -96,7 +96,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {
-    const light = new THREE.HemisphereLight(color, 0x111111, intensity)
+    const light = new THREE.HemisphereLight(color, 0x3C6A6D, intensity)
     light.position.set(x, y, z)
     scene.add(light)
   }

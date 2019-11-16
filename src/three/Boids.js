@@ -101,7 +101,7 @@ class Boid {
   createMesh(x, y, z) {
     const geometry = new THREE.ConeGeometry(0.1, 0.5)
     const material = new THREE.MeshPhongMaterial({
-      color: 0x5577ff
+      color: 0x77ccff
     })
     const mesh = new THREE.Mesh(geometry, material)
     mesh.position.set(x, y, z)

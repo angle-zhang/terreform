@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 
 import { Flock } from './Boids.js'
+import { createCloud } from './Clouds.js'
 
 // define scene classes here
 // pseudo abstract class
@@ -54,15 +55,37 @@ class StarterBiome extends Biome {
       .onUpdate(() => (this._scene.background = color))
       .start()
 
-    this.flocks = new Array(3)
+    // Add clouds in random positions
+    const clouds = []
+    for (let i = 0; i < 15; i++) {
+      const cloud = createCloud(Math.random() * 5 + 3)
+      const x = Math.random() * 60 - 30
+      const z = Math.sign(Math.random() - 0.5) * Math.sqrt(30 ** 2 - x ** 2)
+      cloud.position.set(
+        x,
+        Math.random() * 15 - 10,
+        z
+      )
+      cloud.rotation.y = Math.atan2(x, z)
+      clouds.push(cloud)
+    }
+    this.clouds = new THREE.Object3D()
+    clouds.forEach(cloud => this.clouds.add(cloud))
+    this._scene.add(this.clouds)
+
+    this.flocks = new Array(2)
       .fill()
-      .map(() => new Flock(20, [[-15, 25], [-10, 10]], 0.1))
+      .map(() => new Flock(10, [[-15, 25], [-10, 10]], 0.1))
     this.flocks.forEach(flock => flock.render(this._scene))
   }
 
   removeScene() {
     if (this.flocks) {
       this.flocks.forEach(flock => flock.remove(this._scene))
+    }
+    if (this.clouds) {
+      console.log('hi')
+      this._scene.remove(this.clouds)
     }
   }
 
@@ -84,6 +107,10 @@ class StarterBiome extends Biome {
   animate() {
     if (this.flocks) {
       this.flocks.forEach(flock => flock.update())
+    }
+    if (this.clouds) {
+
+      this.clouds.rotateY(0.0005)
     }
   }
 }
