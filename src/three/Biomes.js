@@ -100,7 +100,7 @@ class StarterBiome extends Biome {
     this.group.rotateOnWorldAxis(
       new THREE.Vector3(1, 0, 0),
       new THREE.Vector3(...position).angleTo(new THREE.Vector3(0, 0, -1)) *
-        (Math.sign(position[1]) || 1)
+      (Math.sign(position[1]) || 1)
     )
   }
 
@@ -138,7 +138,7 @@ export default class Biomes {
   // }
 
   getCurrent() {
-    return this.biomes[this.currentIndex]
+    // return this.biomes[this.currentIndex]
   }
 
   animate() {
