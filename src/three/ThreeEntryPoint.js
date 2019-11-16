@@ -12,14 +12,15 @@ export default async (containerElement, options) => {
   const sceneManager = await SceneManager(canvas, options);
   bindEventListeners();
   render();
+
   function createCanvas(document, containerElement) {
-    const canvas = document.createElement('canvas');
-    containerElement.appendChild(canvas);
-    return canvas;
+    const canvas = document.createElement('canvas')
+    containerElement.appendChild(canvas)
+    return canvas
   }
   function bindEventListeners() {
-    window.onresize = resizeCanvas;
-    resizeCanvas();
+    window.onresize = resizeCanvas
+    resizeCanvas()
   }
   function resizeCanvas() {
     canvas.style.width = '100%';
@@ -29,7 +30,7 @@ export default async (containerElement, options) => {
     sceneManager.onWindowResize(canvas);
   }
   function render(time) {
-    requestAnimationFrame(render);
-    sceneManager.update();
+    requestAnimationFrame(render)
+    sceneManager.update()
   }
 }

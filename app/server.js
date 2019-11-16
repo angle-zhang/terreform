@@ -21,6 +21,14 @@ connection.once('open', () => {
 })
 
 
+// route biome and donation backend requests
+const biomeRouter = require('./routes/biome');
+const donationRouter = require('./routes/donation');
+
+// use the routers for these endpoints
+app.use('/api/biome', biomeRouter);
+app.use('/api/donation', donationRouter);
+
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
 

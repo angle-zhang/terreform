@@ -1,10 +1,10 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-models = ['']
+unloadedModels = ['forestbiome-bottom', 'forestbiome-top', 'rock-1', 'rock-2', 'rock-3', 'tree-1', 'tree-2', 'tree-3', 'tree-4']
 
 function loadModel(name) {
     return new Promise((resolve, reject) => {
-        new GLTFLoader().load(`./${name}.glb`,
+        new GLTFLoader().load(`./models/${name}.glb`,
             gltf => {
                 resolve(gltf.scene.children[0])
             },
@@ -26,5 +26,4 @@ const loadAll = (modelNames) => {
     return modelMap
 }
 
-
-export 
+export const loadedModels = loadAll(unloadedModels)
