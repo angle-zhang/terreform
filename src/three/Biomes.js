@@ -85,7 +85,6 @@ class StarterBiome extends Biome {
       this.flocks.forEach(flock => flock.remove(this._scene))
     }
     if (this.clouds) {
-      console.log('hi')
       this._scene.remove(this.clouds)
     }
   }

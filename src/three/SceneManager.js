@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
+import Dot from './Dot.js'
 
 /**
  * Options
@@ -22,6 +23,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const scene = buildScene()
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
+  const raycaster = buildRaycaster()
   const biomes = createBiomes(scene, camera)
   // await biomes.loadItem('treebiome5')
   const controls = buildOrbitControls(biomes.getCurrent().group)
@@ -69,6 +71,12 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
     return new Biomes(scene, camera)
   }
 
+  function buildRaycaster() {
+    const raycaster = new THREE.Raycaster()
+    raycaster.linePrecision = 0.1
+    return raycaster
+  }
+
   function addLight(
     scene,
     {
@@ -77,16 +85,29 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {
-    const light = new THREE.HemisphereLight(color, 0x3C6A6D, intensity)
+    const light = new THREE.HemisphereLight(color, 0x3c6a6d, intensity)
     light.position.set(x, y, z)
     scene.add(light)
   }
 
+  // DEMO
+  const dot = new Dot({
+    raycaster,
+    camera,
+    radius: 0.2,
+    position: [3, 0, -6],
+    handleClick: () => alert('You clicked!')
+  })
+  dot.render(scene)
+
+  let time = 0
   function update() {
     // only update active scene
     TWEEN.update()
     biomes.animate()
     renderer.render(scene, camera)
+    dot.update(time)
+    time += 1
   }
 
   function onWindowResize({ width, height }) {
