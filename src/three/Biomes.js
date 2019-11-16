@@ -59,16 +59,16 @@ class StarterBiome extends Biome {
 
 export default class Biomes {
   constructor(scene, camera) {
-    this.group = new THREE.Group()
-    this.biomes = [
-      new StarterBiome(scene, camera, [0, 0, -6]),
-      new StarterBiome(scene, camera, [6, 0, 0]),
-      new StarterBiome(scene, camera, [0, 0, 6]),
-      new StarterBiome(scene, camera, [-6, 0, 0])
-    ]
-    this.biomes.forEach(biome => this.group.add(biome.group))
-    scene.add(this.group)
-    this.currentIndex = 0
+    // this.group = new THREE.Group()
+    // this.biomes = [
+    //   new StarterBiome(scene, camera, [0, 0, -6]),
+    //   new StarterBiome(scene, camera, [6, 0, 0]),
+    //   new StarterBiome(scene, camera, [0, 0, 6]),
+    //   new StarterBiome(scene, camera, [-6, 0, 0])
+    // ]
+    // this.biomes.forEach(biome => this.group.add(biome.group))
+    // scene.add(this.group)
+    // this.currentIndex = 0
   }
 
   // async loadItem(name) {
@@ -78,22 +78,22 @@ export default class Biomes {
   // }
 
   getCurrent() {
-    return this.biomes[this.currentIndex]
+    // return this.biomes[this.currentIndex]
   }
 
   animate() {
-    this.biomes.forEach(biome => biome.animate)
+    // this.biomes.forEach(biome => biome.animate)
   }
 
   next() {
-    const coords = { y: this.group.rotation.y }
-    new TWEEN.Tween(coords)
-      .to({ y: this.group.rotation.y + Math.PI / 2 }, 1000)
-      .easing(TWEEN.Easing.Quadratic.Out)
-      .onUpdate(() => {
-        this.group.rotation.y = coords.y
-      })
-      .start()
-    this.currentIndex = (this.currentIndex + 1) % this.biomes.length
+    //   const coords = { y: this.group.rotation.y }
+    //   new TWEEN.Tween(coords)
+    //     .to({ y: this.group.rotation.y + Math.PI / 2 }, 1000)
+    //     .easing(TWEEN.Easing.Quadratic.Out)
+    //     .onUpdate(() => {
+    //       this.group.rotation.y = coords.y
+    //     })
+    //     .start()
+    //   this.currentIndex = (this.currentIndex + 1) % this.biomes.length
   }
 }

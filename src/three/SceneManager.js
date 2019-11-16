@@ -17,6 +17,25 @@ const loadItem = async (name, scene) => {
   let model = await getModel(name);
   scene.add(model)
   console.log('loading...')
+  return model
+}
+
+const loadAll = (modelNames) => {
+  let models = new Map()
+  modelNames.forEach(async (modelName) => models.set(modelName, await getModel(modelName)))
+  return models
+}
+
+const getPosition = (object) => {
+  let vec = new THREE.Vector3()
+  object.getWorldPosition(vec)
+  console.log('The location of the object is ' + JSON.stringify(vec))
+}
+
+const getScale = (object) => {
+  let vec = new THREE.Vector3()
+  object.getWorldScale(vec)
+  console.log('The scale of the obejct is ' + JSON.stringify(vec))
 }
 
 //async
@@ -25,20 +44,29 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     width: window.innerWidth,
     height: window.innerHeight
   }
-
   const scene = buildScene()
+  // scene.background = new THREE.Color(0x8FBCD4)
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
   const biomes = createBiomes(scene, camera)
-  await loadItem('treebiome5', scene)
-  const controls = buildOrbitControls(biomes.getCurrent().group)
+  // let duck = await loadItem('Duck', scene)
+  // duck.translateZ(-.8)
+  let treebiome = await loadItem('tree-1', scene)
+  getPosition(treebiome)
+  getScale(treebiome)
+  treebiome.position.set(0, 0, 0)
+
+  treebiome.scale.set(.1, .1, .1)
+  // treebiome.translateX(-10)
+  getPosition(treebiome)
+  // const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
 
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {
     if (event.keyCode === 32) {
       biomes.next()
-      controls.group = biomes.getCurrent().group
+      // controls.group = biomes.getCurrent().group
     }
   })
 
@@ -58,7 +86,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   }
 
   function buildCamera({ width, height }) {
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100)
     camera.setViewOffset(
       window.innerWidth,
       window.innerHeight,
@@ -67,7 +95,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
       window.innerWidth,
       window.innerHeight
     )
-    camera.position.set(0, 0, 0)
+    camera.position.set(0, 0, 3)
     return camera
   }
 
@@ -96,6 +124,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   }
 
   function onWindowResize({ width, height }) {
+    console.log('resizing')
     camera.aspect = width / height
     camera.updateProjectionMatrix()
     renderer.setSize(width, height)
