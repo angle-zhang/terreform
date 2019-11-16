@@ -1,6 +1,6 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-unloadedModels = ['forestbiome-bottom', 'forestbiome-top', 'rock-1', 'rock-2', 'rock-3', 'tree-1', 'tree-2', 'tree-3', 'tree-4']
+const unloadedModels = ['forestbiome-bottom', 'forestbiome-top', 'rock-1', 'rock-2', 'rock-3', 'tree-1', 'tree-2', 'tree-3', 'tree-4']
 
 function loadModel(name) {
     return new Promise((resolve, reject) => {

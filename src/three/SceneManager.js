@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
-import getModel from './ModelLoader.js'
+import { getModel, loadedModels } from './ModelLoader.js'
 
 /**
  * Options
@@ -42,7 +42,7 @@ const separateCoordinates = (mesh) => {
   let x = []
   let y = []
   let z = []
-  mesh.geometry.attributes.position.array.filter.forEach((coord, i) => {
+  mesh.geometry.attributes.position.array.forEach((coord, i) => {
     switch (i % 3) {
       case 0:
         x.push(coord)

@@ -1,5 +1,5 @@
 import SceneManager from './SceneManager';
-import getModel from './ModelLoader';
+import { getModel, loadedModels } from './ModelLoader';
 
 const loadItem = async (name) => {
   let model = await getModel(name);
