@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
+import getModel from './ModelLoader.js'
 
 import { Flock } from './Boids.js'
 import { createCloud } from './Clouds.js'
@@ -130,6 +131,12 @@ export default class Biomes {
     this.biomes[this.currentIndex].setScene()
     this.lastRotateTime = 0
   }
+
+  // async loadItem(name) {
+  //   let model = await getModel(name);
+  //   scene.add(model)
+  //   console.log('loading...')
+  // }
 
   getCurrent() {
     return this.biomes[this.currentIndex]
