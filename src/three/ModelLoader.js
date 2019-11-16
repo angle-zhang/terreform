@@ -1,5 +1,7 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
+models = ['']
+
 function loadModel(name) {
     return new Promise((resolve, reject) => {
         new GLTFLoader().load(`./${name}.glb`,
@@ -14,8 +16,15 @@ function loadModel(name) {
     })
 }
 
-async function getModel(name) {
+export async function getModel(name) {
     return await loadModel(name)
 }
 
-export default getModel
+const loadAll = (modelNames) => {
+    let modelMap = new Map()
+    modelNames.forEach(async (modelName) => modelMap.set(modelName, await getModel(modelName)))
+    return modelMap
+}
+
+
+export 

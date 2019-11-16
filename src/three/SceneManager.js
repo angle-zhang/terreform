@@ -15,8 +15,8 @@ import getModel from './ModelLoader.js'
 
 const loadItem = async (name, scene) => {
   let model = await getModel(name);
-  scene.add(model)
-  console.log('loading...')
+  // scene.add(model)
+  console.log('loading into scene...')
   return model
 }
 
@@ -35,7 +35,27 @@ const getPosition = (object) => {
 const getScale = (object) => {
   let vec = new THREE.Vector3()
   object.getWorldScale(vec)
-  console.log('The scale of the obejct is ' + JSON.stringify(vec))
+  console.log('The scale of the object is ' + JSON.stringify(vec))
+}
+
+const separateCoordinates = (mesh) => {
+  let x = []
+  let y = []
+  let z = []
+  mesh.geometry.attributes.position.array.filter.forEach((coord, i) => {
+    switch (i % 3) {
+      case 0:
+        x.push(coord)
+        break
+      case 1:
+        y.push(coord)
+        break
+      case 2:
+        z.push(coord)
+        break
+    }
+  })
+  return [x, y, z]
 }
 
 //async
@@ -57,6 +77,8 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   treebiome.position.set(0, 0, 0)
 
   treebiome.scale.set(.1, .1, .1)
+  separateCoordinates(treebiome)
+  // console.log(treebiome.geometry.attributes.position.array)
   // treebiome.translateX(-10)
   getPosition(treebiome)
   // const controls = buildOrbitControls(biomes.getCurrent().group)
@@ -75,7 +97,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   }
 
   function buildRender({ width, height }) {
-    let webgl = new THREE.WebGLRenderer({ "canvas": canvas });
+    let webgl = new THREE.WebGLRenderer({ antialias: true, canvas: canvas });
     webgl.setSize(width, height);
     webgl.setClearColor(backgroundColor, 1)
     return webgl;
@@ -107,7 +129,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     scene,
     {
       color = 0xffffff,
-      intensity = 1,
+      intensity = 5,
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {

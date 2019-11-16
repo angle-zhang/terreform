@@ -7,7 +7,6 @@ const loadItem = async (name) => {
   console.log('loading...')
 }
 
-
 export default async (containerElement, options) => {
   const canvas = createCanvas(document, containerElement);
   const sceneManager = await SceneManager(canvas, options);
@@ -25,8 +24,8 @@ export default async (containerElement, options) => {
   function resizeCanvas() {
     canvas.style.width = '100%';
     canvas.style.height = '100%';
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     sceneManager.onWindowResize(canvas);
   }
   function render(time) {
