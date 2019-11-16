@@ -97,6 +97,9 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
 
   return {
     update,
-    onWindowResize
+    onWindowResize,
+    callbacks: {
+      switchBiomes: () => biomes.next()
+    }
   }
 }
