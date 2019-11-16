@@ -13,13 +13,18 @@ app.use(express.json());
 
 // set up mongo database
 const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }
-);
+const options =  { 
+  useNewUrlParser: true, 
+  useCreateIndex: true, 
+  useUnifiedTopology: true, 
+  dbName: "terre"
+};
+
+mongoose.connect(uri, options);
 const connection = mongoose.connection;
 connection.once('open', () => {
   console.log("MongoDB database connection established successfully");
 })
-
 
 // route biome and donation backend requests
 const biomeRouter = require('./routes/biome');

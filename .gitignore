@@ -2,3 +2,6 @@
 /dist
 package-lock.json
 GG_tos.pdf
+
+# env variables
+.env
