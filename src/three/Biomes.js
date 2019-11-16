@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
-import getModel from './ModelLoader.js'
+import { getModel, loadedModels } from './ModelLoader.js'
 
 import { Flock } from './Boids.js'
 import { createCloud } from './Clouds.js'
