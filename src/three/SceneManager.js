@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
-import { getModel, loadedModels } from './ModelLoader.js'
+import { loadedModels, loadModels } from './ModelLoader.js'
 import Dot from './Dot.js'
 
 /**
@@ -13,54 +13,12 @@ import Dot from './Dot.js'
  *     intensity: 1
  *     position: { x, y, z }
  */
+export default async (
+  canvas,
+  { backgroundColor = 0x000000, lighting } = {}
+) => {
+  await loadModels()
 
-const loadItem = async (name, scene) => {
-  let model = await getModel(name);
-  // scene.add(model)
-  console.log('loading into scene...')
-  return model
-}
-
-const loadAll = (modelNames) => {
-  let models = new Map()
-  modelNames.forEach(async (modelName) => models.set(modelName, await getModel(modelName)))
-  return models
-}
-
-const getPosition = (object) => {
-  let vec = new THREE.Vector3()
-  object.getWorldPosition(vec)
-  console.log('The location of the object is ' + JSON.stringify(vec))
-}
-
-const getScale = (object) => {
-  let vec = new THREE.Vector3()
-  object.getWorldScale(vec)
-  console.log('The scale of the object is ' + JSON.stringify(vec))
-}
-
-const separateCoordinates = (mesh) => {
-  let x = []
-  let y = []
-  let z = []
-  mesh.geometry.attributes.position.array.forEach((coord, i) => {
-    switch (i % 3) {
-      case 0:
-        x.push(coord)
-        break
-      case 1:
-        y.push(coord)
-        break
-      case 2:
-        z.push(coord)
-        break
-    }
-  })
-  return [x, y, z]
-}
-
-//async
-export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const screenDimensions = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -70,20 +28,13 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   const camera = buildCamera(screenDimensions)
   const raycaster = buildRaycaster()
   const biomes = createBiomes(scene, camera)
-  // let duck = await loadItem('Duck', scene)
-  // duck.translateZ(-.8)
-  let treebiome = await loadItem('tree-1', scene)
-  getPosition(treebiome)
-  getScale(treebiome)
-  treebiome.position.set(0, 0, 0)
-
-  treebiome.scale.set(.1, .1, .1)
-  separateCoordinates(treebiome)
-  // console.log(treebiome.geometry.attributes.position.array)
-  // treebiome.translateX(-10)
-  getPosition(treebiome)
   const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
+
+  let treebiome = loadedModels['tree-1']
+  treebiome.position.set(0, 0, -6)
+  treebiome.scale.set(0.1, 0.1, 0.1)
+  scene.add(treebiome)
 
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {
@@ -100,10 +51,13 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   }
 
   function buildRender({ width, height }) {
-    let webgl = new THREE.WebGLRenderer({ antialias: true, canvas: canvas });
-    webgl.setSize(width, height);
-    webgl.setClearColor(backgroundColor, 1)
-    return webgl;
+    let renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas })
+    renderer.setSize(width, height)
+    renderer.setClearColor(backgroundColor, 1)
+    // Helps make loaded models brighter
+    renderer.gammaFactor = 2.2
+    renderer.gammaOutput = true
+    return renderer
   }
 
   function buildOrbitControls(group) {

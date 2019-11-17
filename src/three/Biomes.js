@@ -90,7 +90,7 @@ class StarterBiome extends Biome {
   }
 
   setObjects(position) {
-    const geometry = new THREE.BoxGeometry(1.5, 4, 1.5)
+    const geometry = new THREE.BoxGeometry(1.5, 0.1, 1.5)
     const material = new THREE.MeshPhongMaterial({ color: 0x777777 })
     this.group = new THREE.Mesh(geometry, material)
     this._scene.add(this.group)
