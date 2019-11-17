@@ -66,7 +66,6 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     height: window.innerHeight
   }
   const scene = buildScene()
-  // scene.background = new THREE.Color(0x8FBCD4)
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
   const raycaster = buildRaycaster()
@@ -83,14 +82,14 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   // console.log(treebiome.geometry.attributes.position.array)
   // treebiome.translateX(-10)
   getPosition(treebiome)
-  // const controls = buildOrbitControls(biomes.getCurrent().group)
+  const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
 
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {
     if (event.keyCode === 32) {
       biomes.next()
-      // controls.group = biomes.getCurrent().group
+      controls.group = biomes.getCurrent().group
     }
   })
 
@@ -139,7 +138,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     scene,
     {
       color = 0xffffff,
-      intensity = 5,
+      intensity = 1,
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {
@@ -169,7 +168,6 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   }
 
   function onWindowResize({ width, height }) {
-    console.log('resizing')
     camera.aspect = width / height
     camera.updateProjectionMatrix()
     renderer.setSize(width, height)

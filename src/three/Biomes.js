@@ -138,7 +138,7 @@ export default class Biomes {
   // }
 
   getCurrent() {
-    // return this.biomes[this.currentIndex]
+    return this.biomes[this.currentIndex]
   }
 
   animate() {
