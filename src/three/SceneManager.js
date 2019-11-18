@@ -126,7 +126,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   }
 
   function createBiomes(scene, camera) {
-    return new Biomes(scene, camera)
+    return new Biomes(scene, camera);
   }
 
   function buildRaycaster() {

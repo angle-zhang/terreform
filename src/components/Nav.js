@@ -1,48 +1,49 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
+import { EmptyLink, StyledLink } from './presentational/Button';
 
 const Nav = styled.nav`
   display: flex;
-  width: 85%;
+  width: 100%;
   margin: auto;
   justify-content: flex-end;
   align-items: center;
 `;
 
-const EmptyLink = styled(Link)`
-  text-decoration: none;
-  color: #000;
-`;
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: #000;
-  margin: 20px;
-  padding: 10px 20px;
-  border: 2px solid transparent;
-  border-radius: 5px;
-  transition: border 0.25s, background-color 0.25s;
-
-  &:hover {
+const Hamburger = styled.div`
+  & .content {
+    position: absolute;
+    visibility: hidden;
     background-color: #ddd;
-    border-bottom: 2px solid #00e676;
-    cursor: pointer;
+    height: 100vh;
+  }
+
+  &:hover .content {
+    visibility: visible;
   }
 `;
 
 const Header = styled.h1`
   margin-left: 30px;
   margin-right: auto;
-  border: 2px solid transparent;
-  transition: border 0.5s;
+  border: 2px 2px 0 2px solid transparent;
+  border-radius: 0px;
+  transition: all 0.2s ease;
+
+  user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 
   & img {
     width: 30px;
   }
 
   &:hover {
-    border-bottom: 2px solid #00e676;
+    box-shadow: 0 3px 0 #00c853;
+    cursor: pointer;
   }
 `;
 
@@ -51,7 +52,7 @@ const Navbar = () => {
     <Nav>
       <Header>
         <img src="leaf.svg" alt="Leaf" />
-        <EmptyLink to="/home">TERREFORM</EmptyLink>
+        <EmptyLink to="/home">TerreForm</EmptyLink>
       </Header>
 
       <StyledLink to="/donate">Donate</StyledLink>
