@@ -15,10 +15,10 @@ import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants'
  */
 
 const poissonDiskSampling = (radius, k, bounds) => {
-  let N = 2
-  let cellsize = (radius / Math.sqrt(N))
-  let width = bounds[1] - bounds[0]
-  let height = bounds[3] - bounds[2]
+  const N = 2
+  const cellsize = (radius / Math.sqrt(N))
+  const width = bounds[1] - bounds[0]
+  const height = bounds[3] - bounds[2]
   let points = []
   let active = []
 
@@ -29,7 +29,8 @@ const poissonDiskSampling = (radius, k, bounds) => {
   // console.log(ncells_width)
 
   const insertPoint = (grid, point) => {
-    grid[Math.floor(point[0] / cellsize)][Math.floor(point[1] / cellsize)] = true
+    // console.log(point[0] / cellsize, point[1] / cellsize)
+    grid[Math.floor(point[0] / cellsize)][Math.floor(point[1] / cellsize)] = point
   }
 
   let grid = []
@@ -40,18 +41,20 @@ const poissonDiskSampling = (radius, k, bounds) => {
     }
     grid.push(row)
   }
+  console.log('grid')
+  console.log(grid)
 
   const dist = (x1, y1, x2, y2) => {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
   }
 
-  const isValidPoint = (grid, gwidth, gheight, p, radius) => {
+  const isValidPoint = (gwidth, gheight, p) => {
     if (p[0] < 0 || p[0] >= width || p[1] < 0 || p[1] >= height) {
       return false
     }
 
-    let xindex = floor(p[0] / cellsize)
-    let yindex = floor(p[1] / cellsize)
+    let xindex = Math.floor(p[0] / cellsize)
+    let yindex = Math.floor(p[1] / cellsize)
     let i0 = Math.max(xindex - 1, 0)
     let i1 = Math.min(xindex + 1, gwidth - 1)
     let j0 = Math.max(yindex - 1, 0)
@@ -70,17 +73,19 @@ const poissonDiskSampling = (radius, k, bounds) => {
   }
 
   let randPoint = [Math.random() * width, Math.random() * height]
-  console.log(randPoint)
+  // console.log(randPoint)
   points.push(randPoint)
   active.push(randPoint)
+  // console.log(grid)
 
   insertPoint(grid, randPoint)
 
+
+
   while (active.length > 0) {
     let random_index = Math.floor(Math.random() * active.length)
-    console.log(random_index)
+    // let p = active[random_index]
     let p = active[random_index]
-
     let found = false
     for (let tries = 0; tries < k; tries++) {
       let theta = Math.random() * 2 * Math.PI
@@ -90,7 +95,8 @@ const poissonDiskSampling = (radius, k, bounds) => {
       let pnewy = p[1] + new_radius * Math.sin(theta)
       let pnew = [pnewx, pnewy]
 
-      if (!isValidPoint(grid, cellsize, ncells_width, ncells_height, pnew, radius)) {
+      if (!isValidPoint(ncells_width, ncells_height, pnew)) {
+        console.log('failed')
         continue
       }
 
@@ -102,12 +108,15 @@ const poissonDiskSampling = (radius, k, bounds) => {
     }
 
     if (!found) {
-      active = active.filter((element) => element[0] !== p[0] && element[1] !== p[1])
+      active = active.filter((element) => element[0] !== p[0] || element[1] !== p[1])
+      // console.log('active')
     }
   }
 
   console.log(points)
 }
+
+
 
 
 const loadItem = async (name, scene) => {
@@ -163,8 +172,16 @@ const getBounds = (coords) => {
   return [x[0], x[x.length - 1], z[0], z[z.length - 1]]
 }
 
+const removePoint = (arr, p) => {
+  arr = arr.filter((elem) => elem[0] !== p[0] || elem[1] !== p[1])
+  console.log(arr)
+}
+
+const a = [[1, 2], [1, 1], [2, 2], [3, 3]]
+
 //async
 export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
+  // removePoint(a, [1, 1])
   const screenDimensions = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -184,7 +201,9 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   treebiome.scale.set(.1, .1, .1)
   // console.log(separateCoordinates(treebiome))
   console.log(getBounds(separateCoordinates(treebiome)))
-  poissonDiskSampling(1, 0, [0, 2, 0, 4])
+  console.log('poisson disk')
+  poissonDiskSampling(1, 30, [0, 16, 0, 16])
+  console.log('poisson disk')
   // console.log(treebiome.geometry.attributes.position.array)
   // treebiome.translateX(-10)
   getPosition(treebiome)
