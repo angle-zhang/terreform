@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Home from './Home';
+import { StyledLink } from './presentational/Button';
 
 const Centered = styled.div`
-  height: 100%;
   display: flex;
-  text-align: center;
+  height: 100%;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 
   & p {
     margin-top: 40vh;
@@ -17,21 +17,10 @@ const Centered = styled.div`
   }
 `;
 
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: #000;
-  padding: 10px 20px;
+const ContinueLink = styled(StyledLink)`
   margin-top: 40vh;
   margin-left: 80%;
-  border: 2px solid transparent;
-  border-radius: 5px;
-  transition: all 0.4s;
-
-  &:hover {
-    color: #00c853;
-    background-color: #eee;
-    cursor: pointer;
-  }
+  color: #000;
 `;
 
 const introText = [
@@ -64,7 +53,7 @@ const Intro = () => {
   return (
     <Centered>
       <p style={{ opacity }}>{introText[count]}</p>
-      <StyledLink to="/home">Skip</StyledLink>
+      <ContinueLink to="/home">Skip</ContinueLink>
     </Centered>
   );
 };

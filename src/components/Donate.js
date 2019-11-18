@@ -1,73 +1,87 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Navbar from './Nav';
 import { makeDonation } from '../globalGiving';
 
-const useField = (type) => {
-  const [value, setValue] = useState('');
+/* custom field hook */
+const useField = (type, init = '') => {
+  const [value, setValue] = useState(init);
 
   const onChange = (e) => setValue(e.target.value);
 
-  return { type, value, onChange };
+  return [{ type, value, onChange }, setValue];
 };
 
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: #fff;
-  background-color: #00c853;
-  padding: 10px 23px;
-  margin-top: 10px;
-  margin-right: -10px;
-  border: 2px solid transparent;
-  border-radius: 5px;
-  transition: border 0.25s, background-color 0.25s;
-
-  &:hover {
-    background-color: #69f0ae;
-    cursor: pointer;
-  }
+const Overlay = styled.div`
+  background-color: rgba(56, 56, 56, 0.5);
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
 `;
 
 const Centered = styled.div`
+  position: absolute;
+  background-color: #fff;
+  border-radius: 25px;
+
   text-align: justify;
-  height: 100%;
-  width: 70%;
-  margin: auto;
+  height: 70%;
+  width: 490px;
+  margin-left: calc(50% - 265px);
+  overflow: auto;
+  overflow-x: hidden;
+  padding: 70px 40px 40px 40px;
 
   & h3,
   p {
-    margin-left: 30px;
+    font-size: 17px;
+    margin: 0 30px;
+  }
+`;
+
+const Icon = styled.img`
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  margin-left: 460px;
+  margin-top: -50px;
+  padding: 10px;
+  border-radius: 30px;
+
+  &:hover {
+    background-color: #eee;
   }
 `;
 
 const Row = styled.div`
+  width: 74%;
+  margin-left: 13%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: ${(props) => (props['flex-end'] ? 'flex-end' : 'center')};
 `;
 
 const Input = styled.div`
   width: 100%;
-  margin: 0px 20px;
+  margin: 0 10px;
 
   & label {
     position: absolute;
-    margin-top: -55px;
-    margin-left: 20px;
+    margin: -55px 0 0 15px;
     font-size: 14px;
     color: #777;
     transition: all 0.25s;
   }
 
   & input {
-    width: 100%;
+    width: 98%;
     height: 10px;
     font-family: 'Montserrat', sans-serif;
     font-size: 18px;
-    margin: 8px;
-    padding: 10px;
-    padding-top: 27px;
+    margin: 8px 0;
+    padding: 27px 0 10px 10px;
     background-color: #eee;
     border: 2px solid transparent;
     border-radius: 5px;
@@ -79,12 +93,18 @@ const Input = styled.div`
     border-radius: 5px 5px 0px 0px;
   }
 
+  & input:hover + label {
+    color: #00e676;
+  }
+
   & input:focus {
     outline: none;
   }
+`;
 
-  & input:hover + label {
-    color: #00e676;
+const FullInput = styled(Input)`
+  & input {
+    width: 99%;
   }
 `;
 
@@ -92,7 +112,7 @@ const Form = styled.div`
   label {
     position: absolute;
     margin-top: -65px;
-    margin-left: 37px;
+    margin-left: 15%;
     font-size: 14px;
     color: #777;
     transition: all 0.25s;
@@ -102,15 +122,12 @@ const Form = styled.div`
   #expiration-date,
   #cvv,
   #postal-code {
-    width: 97%;
+    width: 335px;
     height: 15px;
     font-family: 'Montserrat', sans-serif;
     font-size: 18px;
-    margin: 8px;
-    margin-left: 25px;
-    margin-bottom: 15px;
-    padding: 10px;
-    padding-top: 27px;
+    margin: 16px 0 16px 71px;
+    padding: 23px 0 8px 10px;
     background-color: #eee;
     border: 2px solid transparent;
     border-radius: 5px;
@@ -133,21 +150,22 @@ const Form = styled.div`
   }
 
   .button-container input {
+    padding: 10px 23px;
+    margin-top: 10px;
+    margin-right: -10px;
     text-decoration: none;
     font-family: 'Montserrat', sans-serif;
     font-size: 18px;
     color: #fff;
     background-color: #00c853;
-    padding: 10px 23px;
-    margin-top: 10px;
-    margin-right: -10px;
     border: 2px solid transparent;
     border-radius: 5px;
-    transition: border 0.25s, background-color 0.25s;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.25s;
   }
 
   .button-container input:hover {
-    background-color: #69f0ae;
+    background-color: #388e3c;
     cursor: pointer;
   }
 
@@ -156,17 +174,34 @@ const Form = styled.div`
   }
 `;
 
-const Donate = () => {
-  const projectId = useField('number');
-  const amount = useField('number');
-  const firstname = useField('text');
-  const lastname = useField('text');
-  // const email = useField('email');
+const Option = styled.div`
+  height: 100px;
+  width: 50%;
+  margin: 10px 0;
+  margin-left: 10px;
+  text-align: center;
+  line-height: 100px;
+  border-radius: 5px;
+  background-color: #eee;
+  font-size: 30px;
+
+  &:hover {
+    background-color: #ddd;
+    cursor: pointer;
+  }
+`;
+
+const Donate = ({ id, optionArr, onClose, description, title }) => {
+  const [projectId, setId] = useField('number', id);
+  const [amount, setAmount] = useField('number');
+  const [firstname, setFirst] = useField('text');
+  const [lastname, setLast] = useField('text');
   const [email, setEmail] = useState('');
   const [nonce, setNonce] = useState('');
 
-  const donation = (nonce) => {
-    console.log('email', email, 'name', firstname);
+  optionArr = optionArr.length ? optionArr : [[{ amount: 10 }, { amount: 30 }]];
+
+  const donate = (nonce) => {
     makeDonation({
       firstname: firstname.value,
       lastname: lastname.value,
@@ -178,21 +213,22 @@ const Donate = () => {
   };
 
   useEffect(() => {
-    const form = document.querySelector('#cardForm');
-    const authorization = 'sandbox_9qxtj3s4_346mrgcqwkppmnhx';
+    if (nonce) {
+      donate(nonce);
+    }
+  }, [nonce]);
 
-    braintree.client.create(
-      {
-        authorization: authorization
-      },
-      (err, clientInstance) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        createHostedFields(clientInstance);
+  useEffect(() => {
+    const form = document.querySelector('#cardForm');
+    const authorization = process.env.TEST_GATEWAY_KEY;
+
+    braintree.client.create({ authorization }, (err, clientInstance) => {
+      if (err) {
+        console.error(err);
+        return;
       }
-    );
+      createHostedFields(clientInstance);
+    });
 
     const createHostedFields = (clientInstance) => {
       braintree.hostedFields.create(
@@ -238,7 +274,6 @@ const Donate = () => {
             hostedFieldsInstance.tokenize((err, payload) => {
               if (err) console.error(err);
               console.log('Nonce:', payload.nonce);
-              // donation(payload.nonce);
               setNonce(payload.nonce);
             });
           };
@@ -249,26 +284,27 @@ const Donate = () => {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(nonce, email);
-    if (nonce) {
-      donation(nonce);
-    }
-  }, [nonce]);
-
   return (
     <div>
-      <Navbar />
+      <Overlay />
       <Centered>
-        <h3>The Earth Needs a Good Friend</h3>
-        <p style={{ lineHeight: '40px' }}>
-          When you support Friends of the Earth, you fuel the fight to protect
-          people and the planet over corporate profits. Together, we’re working
-          to build a system that promotes clean energy and solutions to climate
-          change. We’re fighting for a truly safe and healthy food system. And
-          we’re protecting marine ecosystems and the people who live and work
-          near them.
-        </p>
+        <Icon src="close.svg" onClick={onClose} />
+        <h3>{title}</h3>
+        <br />
+        <p style={{ lineHeight: '28px', textAlign: 'left' }}>{description}</p>
+        <br />
+        {optionArr.map((options) => (
+          <Row key={options[0].amount}>
+            {options.map((option) => (
+              <Option
+                key={option.amount}
+                onClick={() => setAmount(option.amount)}
+              >
+                ${option.amount}
+              </Option>
+            ))}
+          </Row>
+        ))}
         <Row>
           <Input>
             <input {...projectId} />
@@ -290,52 +326,52 @@ const Donate = () => {
           </Input>
         </Row>
         <Row>
-          <Input>
+          <FullInput>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="text"
             />
             <label>Email</label>
-          </Input>
+          </FullInput>
         </Row>
         <Form className="demo-frame">
           <form action="/" method="post" id="cardForm">
-            <div id="card-number" className="hosted-field"></div>
+            <div id="card-number" className="hosted-field" />
             <label className="hosted-fields--label" htmlFor="card-number">
               Card Number
             </label>
 
-            <div id="expiration-date" className="hosted-field"></div>
+            <div id="expiration-date" className="hosted-field" />
             <label className="hosted-fields--label" htmlFor="expiration-date">
               Expiration Date
             </label>
 
-            <div id="cvv" className="hosted-field"></div>
+            <div id="cvv" className="hosted-field" />
             <label className="hosted-fields--label" htmlFor="cvv">
               CVV
             </label>
 
-            <div id="postal-code" className="hosted-field"></div>
+            <div id="postal-code" className="hosted-field" />
             <label className="hosted-fields--label" htmlFor="postal-code">
               Postal Code
             </label>
 
-            <Row>
-              <div className="button-container">
-                <input
-                  type="submit"
-                  className="button button--small button--green"
-                  value="Contribute"
-                  id="submit"
-                />
-              </div>
-            </Row>
+            <div className="button-container" style={{ marginLeft: '70%' }}>
+              <input
+                type="submit"
+                className="button button--small button--green"
+                value="Contribute"
+                id="submit"
+              />
+            </div>
           </form>
         </Form>
       </Centered>
     </div>
   );
 };
+
+export const CardDonate = styled(Donate)``;
 
 export default Donate;
