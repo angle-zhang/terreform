@@ -40,6 +40,7 @@
     "dotenv": "^8.2.0",
     "dotenv-webpack": "^1.7.0",
     "mongodb": "^3.3.3",
+    "mongoose": "^5.7.11",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-hot-loader": "^4.6",
@@ -52,6 +53,7 @@
     "webpack-dev-server": "^3.8.2"
   },
   "dependencies": {
+    "@tweenjs/tween.js": "^18.3.2",
     "react-hot-loader": "^4.3.11"
   }
 }
