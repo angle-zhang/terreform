@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 
-import { getProjectIds, getToken, setToken } from './globalGiving';
+import { getAllProjects, getToken, setToken } from './globalGiving';
 
 import Intro from './components/Intro';
 import Donate from './components/Donate';
@@ -16,8 +16,10 @@ const Container = styled.div`
 `;
 
 const App = () => {
+  const [projects, setProjects] = useState([]);
+
   useEffect(() => {
-    getProjectIds();
+    getAllProjects().then((projects) => setProjects(projects));
     getToken().then((token) => {
       console.log('Token:', token);
       setToken(token);
@@ -28,8 +30,8 @@ const App = () => {
     <Container>
       <Router>
         <Switch>
-          <Route path="/home" component={Home} />
-          <Route path="/donate" component={Donate} />
+          <Route path="/home" component={() => <Home projects={projects} />} />
+          <Route path="/home" component={Donate} />
           <Route component={Intro} />
         </Switch>
       </Router>

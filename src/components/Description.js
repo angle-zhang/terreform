@@ -2,23 +2,23 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-const StyledLink = styled(Link)`
-  margin-left: 80%;
-  text-decoration: none;
-  color: #fff;
-  background-color: #00c853;
-  padding: 10px 23px;
-  border: 2px solid transparent;
-  border-radius: 5px;
-  transition: border 0.25s, background-color 0.25s;
+import { CardDonate } from './Donate';
+import Button from './presentational/Button';
 
-  &:hover {
-    background-color: #69f0ae;
-    cursor: pointer;
-  }
+const Container = styled.div`
+  position: absolute;
+  top: 50%;
+  width: 20vw;
+  margin-left: 15vw;
+  padding: 20px 40px;
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-50%);
 `;
 
 const TextDetail = styled.div`
+  text-align: left;
+  color: #fff;
+
   & h2,
   p {
     user-select: none;
@@ -29,40 +29,24 @@ const TextDetail = styled.div`
   }
 
   & h2 {
-    text-align: right;
+    font-size: 20px;
   }
 
   & p {
-    text-align: justify;
-    margin-bottom: 40px;
-    line-height: 45px;
+    margin-bottom: 30px;
+    line-height: 28px;
+    font-size: 15px;
   }
 `;
 
-const Container = styled.div`
-  width: 40vw;
-  margin-left: 53vw;
-  margin-top: 22vh;
-
-  // &:before {
-  //   content: '';
-  //   width: 0;
-  //   height: 0;
-  //   border-bottom: 300px solid transparent;
-  //   border-right: 100px solid transparent;
-  //   float: left;
-  //   shape-outside: polygon(0 0, 0 300px, 100px 300px);
-  // }
-`;
-
-const Description = ({ title, body }) => {
+const Description = ({ title, body, onDonate }) => {
   return (
     <Container>
       <TextDetail>
         <h2>{title.toUpperCase()}</h2>
         <p>{body}</p>
       </TextDetail>
-      <StyledLink to="/donate">Donate</StyledLink>
+      <Button onClick={onDonate}>Donate</Button>
     </Container>
   );
 };

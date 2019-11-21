@@ -21,11 +21,39 @@ connection.once('open', () => {
 })
 
 
+// route biome and donation backend requests
+const biomeRouter = require('./routes/biome');
+const donationRouter = require('./routes/donation');
+
+// use the routers for these endpoints
+app.use('/api/biome', biomeRouter);
+app.use('/api/donation', donationRouter);
+
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-// create a GET route
-app.get('/express_backend', (req, res) => {
-  res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
-});
+// get token using API key
+const apiKey = process.env.API_KEY;
+const tokenUrl = process.env.TOKEN_URL;
+const apiEmail = process.env.API_EMAIL;
+const apiPass = process.env.API_PASS;
+const testGatekey = process.env.TEST_GATE_KEY;
+const prodGatekey = process.env.PROD_GATE_KEY;
 
+app.get('/api/get_token', async (req, res) => {
+	const result = await axios.post(tokenUrl, {
+		auth_request: {
+			user: {
+				email: apiEmail,
+				password: apiPass
+			},
+			api_key: apiKey
+		}
+	});
+  	const tokenjson = await result.data;
+  	res.json({
+  		token: tokenjson.auth_response.access_token,
+  		test_gatekey: testGatekey,
+  		prod_gatekey: prodGatekey
+  	});
+});
