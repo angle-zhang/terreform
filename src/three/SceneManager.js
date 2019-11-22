@@ -48,11 +48,10 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     height: window.innerHeight
   }
   const scene = buildScene()
-  // scene.background = new THREE.Color(0x8FBCD4)
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
   const raycaster = buildRaycaster()
-  const biomes = createBiomes(scene, camera)
+  const biomes = createBiomes(scene, camera
   // let duck = await loadItem('Duck', scene)
   // duck.translateZ(-.8)
   let treebiome = await loadItem('tree-1', scene)
@@ -68,14 +67,14 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   // console.log(treebiome.geometry.attributes.position.array)
   // treebiome.translateX(-10)
   getPosition(treebiome)
-  // const controls = buildOrbitControls(biomes.getCurrent().group)
+  const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
 
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {
     if (event.keyCode === 32) {
       biomes.next()
-      // controls.group = biomes.getCurrent().group
+      controls.group = biomes.getCurrent().group
     }
   })
 
@@ -86,10 +85,13 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   }
 
   function buildRender({ width, height }) {
-    let webgl = new THREE.WebGLRenderer({ antialias: true, canvas: canvas });
-    webgl.setSize(width, height);
-    webgl.setClearColor(backgroundColor, 1)
-    return webgl;
+    let renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas })
+    renderer.setSize(width, height)
+    renderer.setClearColor(backgroundColor, 1)
+    // Helps make loaded models brighter
+    renderer.gammaFactor = 2.2
+    renderer.gammaOutput = true
+    return renderer
   }
 
   function buildOrbitControls(group) {
@@ -101,7 +103,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     camera.setViewOffset(
       window.innerWidth,
       window.innerHeight,
-      300,
+      -150,
       0,
       window.innerWidth,
       window.innerHeight
@@ -111,7 +113,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   }
 
   function createBiomes(scene, camera) {
-    return new Biomes(scene, camera)
+    return new Biomes(scene, camera);
   }
 
   function buildRaycaster() {
@@ -124,7 +126,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     scene,
     {
       color = 0xffffff,
-      intensity = 5,
+      intensity = 1,
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {
@@ -134,14 +136,14 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   }
 
   // DEMO
-  const dot = new Dot({
-    raycaster,
-    camera,
-    radius: 0.2,
-    position: [3, 0, -6],
-    handleClick: () => alert('You clicked!')
-  })
-  dot.render(scene)
+  // const dot = new Dot({
+  //   raycaster,
+  //   camera,
+  //   radius: 0.2,
+  //   position: [3, 0, -6],
+  //   handleClick: () => alert('You clicked!')
+  // })
+  // dot.render(scene)
 
   let time = 0
   function update() {
@@ -149,12 +151,11 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     TWEEN.update()
     biomes.animate()
     renderer.render(scene, camera)
-    dot.update(time)
+    // dot.update(time)
     time += 1
   }
 
   function onWindowResize({ width, height }) {
-    console.log('resizing')
     camera.aspect = width / height
     camera.updateProjectionMatrix()
     renderer.setSize(width, height)

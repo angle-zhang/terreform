@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 
+import { getAllProjects, getToken, setToken } from './globalGiving';
+
 import Intro from './components/Intro';
-// import Donate from './components/Donate';
+import Donate from './components/Donate';
 import Home from './components/Home';
 
 const Container = styled.div`
@@ -13,41 +15,28 @@ const Container = styled.div`
   font-size: 22px;
 `;
 
-class App extends Component {
-  state = {
-    data: null
-  };
+const App = () => {
+  const [projects, setProjects] = useState([]);
 
-  componentDidMount() {
-    // Call our fetch function below once the component mounts
-    this.callBackendAPI()
-      .then((res) => this.setState({ data: res.express }))
-      .catch((err) => console.log(err));
-  }
+  useEffect(() => {
+    getAllProjects().then((projects) => setProjects(projects));
+    getToken().then((token) => {
+      console.log('Token:', token);
+      setToken(token);
+    });
+  }, []);
 
-  // Fetches our GET route from the Express server. (Note the route we are fetching matches the GET route from server.js
-  callBackendAPI = async () => {
-    const response = await fetch('/express_backend');
-    const body = await response.json();
-
-    if (response.status !== 200) {
-      throw Error(body.message);
-    }
-    return body;
-  };
-
-  render() {
-    return (
-      <Container>
-        <Router>
-          <Switch>
-            <Route path="/home" component={Home} />
-            <Route component={Intro} />
-          </Switch>
-        </Router>
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      <Router>
+        <Switch>
+          <Route path="/home" component={() => <Home projects={projects} />} />
+          <Route path="/home" component={Donate} />
+          <Route component={Intro} />
+        </Switch>
+      </Router>
+    </Container>
+  );
+};
 
 export default hot(App);

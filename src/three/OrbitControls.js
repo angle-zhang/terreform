@@ -16,13 +16,14 @@ export default class OrbitControls {
       this.prevX = event.screenX
     }
 
-    document.addEventListener('mousedown', event => {
-      this.prevX = event.screenX
-      document.addEventListener('mousemove', handleMouseMove)
-    })
+    document.addEventListener('mousedown', (event) => {
+      this.prevX = event.screenX;
+      this.prevY = event.screenY;
+      document.addEventListener('mousemove', handleMouseMove);
+    });
 
     document.addEventListener('mouseup', () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-    })
+      document.removeEventListener('mousemove', handleMouseMove);
+    });
   }
 }

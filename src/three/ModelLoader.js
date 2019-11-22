@@ -1,29 +1,42 @@
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
-const unloadedModels = ['forestbiome-bottom', 'forestbiome-top', 'rock-1', 'rock-2', 'rock-3', 'tree-1', 'tree-2', 'tree-3', 'tree-4']
+const unloadedModels = [
+  'forestbiome-bottom',
+  'forestbiome-top',
+  'rock-1',
+  'rock-2',
+  'rock-3',
+  'tree-1',
+  'tree-2',
+  'tree-3',
+  'tree-4'
+]
 
-function loadModel(name) {
-    return new Promise((resolve, reject) => {
-        new GLTFLoader().load(`./models/${name}.glb`,
-            gltf => {
-                resolve(gltf.scene.children[0])
-            },
-            () => {
-            },
-            err => {
-                reject('An error occurred!' + err)
-            })
-    })
+export const loadModel = name => {
+  return new Promise((resolve, reject) => {
+    new GLTFLoader().load(
+      `./models/${name}.glb`,
+      gltf => {
+        resolve(gltf.scene.children[0])
+      },
+      () => {},
+      err => {
+        reject('An error occurred!' + err)
+      }
+    )
+  })
 }
 
-export async function getModel(name) {
-    return await loadModel(name)
+export let loadedModels = null
+
+export const loadModels = async () => {
+  loadedModels = await loadAll(unloadedModels)
 }
 
-const loadAll = (modelNames) => {
-    let modelMap = new Map()
-    modelNames.forEach(async (modelName) => modelMap.set(modelName, await getModel(modelName)))
-    return modelMap
+const loadAll = async modelNames => {
+  const modelMap = {}
+  await Promise.all(modelNames.map(async modelName => {
+    modelMap[modelName] = await loadModel(modelName)
+  }))
+  return modelMap
 }
-
-export const loadedModels = loadAll(unloadedModels)
