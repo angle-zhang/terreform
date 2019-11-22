@@ -37,7 +37,7 @@ const Button = styled.div`
   background-color: #00c853;
   border: 2px solid transparent;
   border-radius: 25px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  // box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   transition: background-color 0.2s;
 
   &:hover {
