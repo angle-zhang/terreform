@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
-import { loadedModels, loadModels } from './ModelLoader.js'
+import { loadModels } from './ModelLoader.js'
 import Dot from './Dot.js'
 
 /**
@@ -30,11 +30,6 @@ export default async (
   const biomes = createBiomes(scene, camera)
   const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
-
-  let treebiome = loadedModels['tree-1']
-  treebiome.position.set(0, 0, -6)
-  treebiome.scale.set(0.1, 0.1, 0.1)
-  scene.add(treebiome)
 
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {
@@ -69,7 +64,7 @@ export default async (
     camera.setViewOffset(
       window.innerWidth,
       window.innerHeight,
-      300,
+      -150,
       0,
       window.innerWidth,
       window.innerHeight
@@ -102,14 +97,14 @@ export default async (
   }
 
   // DEMO
-  const dot = new Dot({
-    raycaster,
-    camera,
-    radius: 0.2,
-    position: [3, 0, -6],
-    handleClick: () => alert('You clicked!')
-  })
-  dot.render(scene)
+  // const dot = new Dot({
+  //   raycaster,
+  //   camera,
+  //   radius: 0.2,
+  //   position: [3, 0, -6],
+  //   handleClick: () => alert('You clicked!')
+  // })
+  // dot.render(scene)
 
   let time = 0
   function update() {
@@ -117,7 +112,7 @@ export default async (
     TWEEN.update()
     biomes.animate()
     renderer.render(scene, camera)
-    dot.update(time)
+    // dot.update(time)
     time += 1
   }
 

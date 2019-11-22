@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
-import { getModel, loadedModels } from './ModelLoader.js'
+import { loadedModels } from './ModelLoader.js'
 
 import { Flock } from './Boids.js'
 import { createCloud } from './Clouds.js'
@@ -90,10 +90,8 @@ class StarterBiome extends Biome {
   }
 
   setObjects(position) {
-    const geometry = new THREE.BoxGeometry(1.5, 0.1, 1.5)
-    const material = new THREE.MeshPhongMaterial({ color: 0x777777 })
-    this.group = new THREE.Mesh(geometry, material)
-    this._scene.add(this.group)
+    this.group = loadedModels['tree-1'].clone()
+    this.group.scale.set(0.2, 0.2, 0.2)
     this.group.position.set(...position)
     // This is needed since world and local rotation is separate, and all the
     // biomes are put into a group, which does not affect local rotation
