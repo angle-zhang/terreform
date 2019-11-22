@@ -35,6 +35,10 @@ const Centered = styled.div`
   overflow-x: hidden;
   padding: 70px 40px 40px 40px;
 
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   & h3,
   p {
     font-size: 17px;
