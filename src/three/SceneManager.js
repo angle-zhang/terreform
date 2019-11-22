@@ -65,6 +65,11 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     width: window.innerWidth,
     height: window.innerHeight
   }
+  // console.log(loadedModels)
+  // Testing if the models have loaded
+  loadedModels.forEach((val, key) => {
+    console.log(val)
+  })
   const scene = buildScene()
   // scene.background = new THREE.Color(0x8FBCD4)
   const renderer = buildRender(screenDimensions)
