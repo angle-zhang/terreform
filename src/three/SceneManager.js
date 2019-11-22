@@ -79,7 +79,7 @@ export default async (
   }
 
   function createBiomes(scene, camera) {
-    return new Biomes(scene, camera)
+    return new Biomes(scene, camera);
   }
 
   function buildRaycaster() {
