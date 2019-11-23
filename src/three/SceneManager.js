@@ -51,7 +51,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
   const raycaster = buildRaycaster()
-  const biomes = createBiomes(scene, camera
+  const biomes = createBiomes(scene, camera)
   // let duck = await loadItem('Duck', scene)
   // duck.translateZ(-.8)
   let treebiome = await loadItem('tree-1', scene)
