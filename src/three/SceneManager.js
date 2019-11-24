@@ -17,80 +17,23 @@ import Dot from './Dot.js'
  */
 
 const loadItem = (name, scene) => {
-  // let model = await getModel(name);
-  const model = (loadedModels.get(name))
+  const model = loadedModels[name]
   scene.add(model)
   console.log('loading into scene... ' + name)
   return model
 }
 
-const getPosition = (object) => {
-  let vec = new THREE.Vector3()
-  object.getWorldPosition(vec)
-  console.log('The location of the object is ' + JSON.stringify(vec))
-}
-
-const getScale = (object) => {
-  let vec = new THREE.Vector3()
-  object.getWorldScale(vec)
-  console.log('The scale of the object is ' + JSON.stringify(vec))
-}
-
-//async
 export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const screenDimensions = {
     width: window.innerWidth,
     height: window.innerHeight
   }
-  // console.log(loadedModels)
-  // Testing if the models have loaded
-  // loadedModels.forEach((val, key) => {
-  //   console.log(val)
-  // })
   const scene = buildScene()
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
   const raycaster = buildRaycaster()
   const biomes = createBiomes(scene, camera)
-  // let duck = await loadItem('Duck', scene)
-  // duck.translateZ(-.8)
-  let treebiome = loadItem('forestbiome-bottom', scene)
-  // treebiome.scale.set(.1, .1, .1)
-
-  // let treebiome = await loadItem('tree-1', scene)
-  getPosition(treebiome)
-  getScale(treebiome)
-<<<<<<< HEAD
-  // treebiome.position.set(0, 0, 0)
-
-  // treebiome.scale.set(1.3, 1.3, 1.3)
-  // separateCoordinates(treebiome)
-||||||| merged common ancestors
-  treebiome.position.set(0, 0, 0)
-
-  treebiome.scale.set(.1, .1, .1)
-  separateCoordinates(treebiome)
-=======
-  treebiome.position.set(0, 0, 0)
-  treebiome.scale.set(.1, .1, .1)
-  // console.log(separateCoordinates(treebiome))
-  console.log(getBounds(separateCoordinates(treebiome)))
-  console.log('poisson disk')
-  poissonDiskSampling(1, 30, [0, 16, 0, 16])
-  console.log('poisson disk')
->>>>>>> master
-  // console.log(treebiome.geometry.attributes.position.array)
-  // treebiome.translateX(-10)
-<<<<<<< HEAD
-  // getPosition(treebiome)
-  // const controls = buildOrbitControls(biomes.getCurrent().group)
-||||||| merged common ancestors
-  getPosition(treebiome)
-  // const controls = buildOrbitControls(biomes.getCurrent().group)
-=======
-  getPosition(treebiome)
   const controls = buildOrbitControls(biomes.getCurrent().group)
->>>>>>> master
   addLight(scene, lighting)
 
   // TEMPORARY way to switch biomes
@@ -149,13 +92,7 @@ export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
     scene,
     {
       color = 0xffffff,
-<<<<<<< HEAD
-      intensity = 3,
-||||||| merged common ancestors
-      intensity = 5,
-=======
-      intensity = 1,
->>>>>>> master
+      intensity = 1, // 3?
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {

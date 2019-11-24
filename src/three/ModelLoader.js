@@ -19,7 +19,7 @@ export const loadModel = name => {
       gltf => {
         resolve(gltf.scene.children[0])
       },
-      () => {},
+      () => { },
       err => {
         reject('An error occurred!' + err)
       }
@@ -27,16 +27,12 @@ export const loadModel = name => {
   })
 }
 
-export let loadedModels = null
-
-export const loadModels = async () => {
-  loadedModels = await loadAll(unloadedModels)
-}
-
-const loadAll = async modelNames => {
+const loadAll = modelNames => {
   const modelMap = {}
-  await Promise.all(modelNames.map(async modelName => {
+  modelNames.map(async modelName => {
     modelMap[modelName] = await loadModel(modelName)
-  }))
+  })
   return modelMap
 }
+
+export const loadedModels = loadAll(unloadedModels)

@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import { loadedModels } from './ModelLoader.js'
+import { separateCoordinates, getBounds, getPosition, getScale } from './NodeGen'
+import { poissonDiskSampling } from './PoissonDiskSampling.js'
 
 import { Flock } from './Boids.js'
 import { createCloud } from './Clouds.js'
@@ -90,7 +92,18 @@ class StarterBiome extends Biome {
   }
 
   setObjects(position) {
-    this.group = loadedModels['tree-1'].clone()
+    this.group = new THREE.Group()
+    let tree = loadedModels['tree-1'].clone()
+    let biome = loadedModels['forestbiome-bottom'].clone()
+    this.group.add(tree)
+    this.group.add(biome)
+    let biomeBounds = getBounds(separateCoordinates(biome))
+    // console.log(separateCoordinates(biome))
+    console.log(biomeBounds)
+    // console.log(poissonDiskSampling(.3, 20, biomeBounds))
+    tree.scale.set(.6, .6, .6)
+    biome.scale.set(15, 15, 15)
+
     this.group.scale.set(0.2, 0.2, 0.2)
     this.group.position.set(...position)
     // This is needed since world and local rotation is separate, and all the
@@ -118,9 +131,9 @@ export default class Biomes {
     this.group = new THREE.Object3D()
     this.biomes = [
       new StarterBiome(scene, camera, [0, 0, -6]),
-      new StarterBiome(scene, camera, [0, -6, 0]),
-      new StarterBiome(scene, camera, [0, 0, 6]),
-      new StarterBiome(scene, camera, [0, 6, 0])
+      // new StarterBiome(scene, camera, [0, -6, 0]),
+      // new StarterBiome(scene, camera, [0, 0, 6]),
+      // new StarterBiome(scene, camera, [0, 6, 0])
     ]
     this.biomes.forEach(biome => this.group.add(biome.group))
     scene.add(this.group)
@@ -128,12 +141,6 @@ export default class Biomes {
     this.biomes[this.currentIndex].setScene()
     this.lastRotateTime = 0
   }
-
-  // async loadItem(name) {
-  //   let model = await getModel(name);
-  //   scene.add(model)
-  //   console.log('loading...')
-  // }
 
   getCurrent() {
     return this.biomes[this.currentIndex]

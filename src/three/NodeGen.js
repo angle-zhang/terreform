@@ -1,5 +1,3 @@
-import poissonDiskSampling from './PoissonDiskSampling.js'
-
 export const separateCoordinates = (mesh) => {
     let x = []
     let y = []
@@ -26,4 +24,16 @@ export const getBounds = (coords) => {
     x.sort((a, b) => a - b)
     z.sort((a, b) => a - b)
     return [x[0], x[x.length - 1], z[0], z[z.length - 1]]
+}
+
+export const getPosition = (object) => {
+    let vec = new THREE.Vector3()
+    object.getWorldPosition(vec)
+    console.log('The location of the object is ' + JSON.stringify(vec))
+}
+
+export const getScale = (object) => {
+    let vec = new THREE.Vector3()
+    object.getWorldScale(vec)
+    console.log('The scale of the object is ' + JSON.stringify(vec))
 }
