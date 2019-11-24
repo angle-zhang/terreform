@@ -4,7 +4,7 @@ import threeEntryPoint from '../three/ThreeEntryPoint'
 export default class ThreeContainer extends Component {
   componentDidMount() {
     threeEntryPoint(this.threeRootElement, {
-      backgroundColor: 0xffffff,
+      backgroundColor: 0xffffff, // changes background color?
       lighting: { color: 0xffffff }
     })
   }

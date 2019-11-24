@@ -14,17 +14,12 @@ import Dot from './Dot.js'
  *     position: { x, y, z }
  */
 
-const loadItem = async (name, scene) => {
-  let model = await getModel(name);
-  // scene.add(model)
-  console.log('loading into scene...')
+const loadItem = (name, scene) => {
+  // let model = await getModel(name);
+  const model = (loadedModels.get(name))
+  scene.add(model)
+  console.log('loading into scene... ' + name)
   return model
-}
-
-const loadAll = (modelNames) => {
-  let models = new Map()
-  modelNames.forEach(async (modelName) => models.set(modelName, await getModel(modelName)))
-  return models
 }
 
 const getPosition = (object) => {
@@ -60,16 +55,16 @@ const separateCoordinates = (mesh) => {
 }
 
 //async
-export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
+export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   const screenDimensions = {
     width: window.innerWidth,
     height: window.innerHeight
   }
   // console.log(loadedModels)
   // Testing if the models have loaded
-  loadedModels.forEach((val, key) => {
-    console.log(val)
-  })
+  // loadedModels.forEach((val, key) => {
+  //   console.log(val)
+  // })
   const scene = buildScene()
   // scene.background = new THREE.Color(0x8FBCD4)
   const renderer = buildRender(screenDimensions)
@@ -78,16 +73,19 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   const biomes = createBiomes(scene, camera)
   // let duck = await loadItem('Duck', scene)
   // duck.translateZ(-.8)
-  let treebiome = await loadItem('tree-1', scene)
+  let treebiome = loadItem('forestbiome-bottom', scene)
+  // treebiome.scale.set(.1, .1, .1)
+
+  // let treebiome = await loadItem('tree-1', scene)
   getPosition(treebiome)
   getScale(treebiome)
-  treebiome.position.set(0, 0, 0)
+  // treebiome.position.set(0, 0, 0)
 
-  treebiome.scale.set(.1, .1, .1)
-  separateCoordinates(treebiome)
+  // treebiome.scale.set(1.3, 1.3, 1.3)
+  // separateCoordinates(treebiome)
   // console.log(treebiome.geometry.attributes.position.array)
   // treebiome.translateX(-10)
-  getPosition(treebiome)
+  // getPosition(treebiome)
   // const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
 
@@ -126,7 +124,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
       window.innerWidth,
       window.innerHeight
     )
-    camera.position.set(0, 0, 3)
+    camera.position.set(-2, 0, 5)
     return camera
   }
 
@@ -144,7 +142,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     scene,
     {
       color = 0xffffff,
-      intensity = 5,
+      intensity = 3,
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {
