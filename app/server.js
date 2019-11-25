@@ -9,19 +9,24 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+var corsOptions = {
+  origin: 'http://localhost:3000/',
+  optionsSuccessStatus: 200 
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // set up mongo database
 const uri = process.env.ATLAS_URI;
-const options =  { 
+const DBoptions =  { 
   useNewUrlParser: true, 
   useCreateIndex: true, 
   useUnifiedTopology: true, 
   dbName: "terre"
 };
 
-mongoose.connect(uri, options);
+mongoose.connect(uri, DBoptions);
 const connection = mongoose.connection;
 connection.once('open', () => {
   console.log("MongoDB database connection established successfully");

@@ -32,15 +32,15 @@
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "axios": "^0.19.0",
     "babel-loader": "^8.0.2",
     "babel-polyfill": "^6.26.0",
     "cors": "^2.8.5",
     "css-loader": "^1.0.0",
     "dotenv": "^8.2.0",
-    "fetch": "^1.1.0",
+    "dotenv-webpack": "^1.7.0",
     "mongodb": "^3.3.3",
     "mongoose": "^5.7.11",
-    "node-fetch": "^2.6.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-hot-loader": "^4.6",
@@ -53,14 +53,8 @@
     "webpack-dev-server": "^3.8.2"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "axios": "^0.19.0",
-    "react-hot-loader": "^4.3.11",
-    "request": "^2.88.0",
-    "three-orbit-controls": "^82.1.0"
-=======
     "@tweenjs/tween.js": "^18.3.2",
-    "react-hot-loader": "^4.3.11"
->>>>>>> 9925e2a27735dea45f9fc0c48eaf78cccd519974
+    "react-hot-loader": "^4.3.11",
+    "tween": "^0.9.0"
   }
 }
