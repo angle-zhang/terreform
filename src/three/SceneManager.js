@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
-import { getModel, loadedModels } from './ModelLoader.js'
+import { getModel, loadModels, loadModel } from './ModelLoader.js'
 import poissonDiskSampling from './PoissonDiskSampling.js'
 import { getBounds, separateCoordinates } from './NodeGen.js'
 import Dot from './Dot.js'
@@ -43,6 +43,8 @@ const getScale = (object) => {
 
 //async
 export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
+  await loadModels()
+
   const screenDimensions = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -52,21 +54,6 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   const camera = buildCamera(screenDimensions)
   const raycaster = buildRaycaster()
   const biomes = createBiomes(scene, camera)
-  // let duck = await loadItem('Duck', scene)
-  // duck.translateZ(-.8)
-  let treebiome = await loadItem('tree-1', scene)
-  getPosition(treebiome)
-  getScale(treebiome)
-  treebiome.position.set(0, 0, 0)
-  treebiome.scale.set(.1, .1, .1)
-  // console.log(separateCoordinates(treebiome))
-  console.log(getBounds(separateCoordinates(treebiome)))
-  console.log('poisson disk')
-  poissonDiskSampling(1, 30, [0, 16, 0, 16])
-  console.log('poisson disk')
-  // console.log(treebiome.geometry.attributes.position.array)
-  // treebiome.translateX(-10)
-  getPosition(treebiome)
   const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
 
