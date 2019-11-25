@@ -18,12 +18,9 @@ export const poissonDiskSampling = (radius, k, bounds) => {
         }
         grid.push(row)
     }
-    // console.log('grid')
-    // console.log(grid)
 
     // HELPERS
     const insertPoint = (grid, point) => {
-        // console.log(point[0] / cellsize, point[1] / cellsize)
         grid[Math.floor(point[0] / cellsize)][Math.floor(point[1] / cellsize)] = point
     }
 
@@ -57,16 +54,14 @@ export const poissonDiskSampling = (radius, k, bounds) => {
 
     // ALGORITHM
     let randPoint = [Math.random() * width, Math.random() * height]
-    // console.log(randPoint)
     points.push(randPoint)
     active.push(randPoint)
-    // console.log(grid)
+
 
     insertPoint(grid, randPoint)
 
     while (active.length > 0) {
         let random_index = Math.floor(Math.random() * active.length)
-        // let p = active[random_index]
         let p = active[random_index]
         let found = false
         for (let tries = 0; tries < k; tries++) {
@@ -88,10 +83,8 @@ export const poissonDiskSampling = (radius, k, bounds) => {
         }
         if (!found) {
             active = active.filter((element) => element[0] !== p[0] || element[1] !== p[1])
-            // console.log('active')
         }
     }
 
-    // console.log(points)
-    return points
+    return points.map(point => [point[0] + bounds[0], point[1] + bounds[2]])
 }
