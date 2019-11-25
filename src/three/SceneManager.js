@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
-import { getModel, loadedModels } from './ModelLoader.js'
+import { getModel, loadModels, loadModel } from './ModelLoader.js'
 import poissonDiskSampling from './PoissonDiskSampling.js'
 import { getBounds, separateCoordinates } from './NodeGen.js'
 import Dot from './Dot.js'
@@ -23,7 +23,9 @@ const loadItem = (name, scene) => {
   return model
 }
 
-export default (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
+export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
+  await loadModels()
+
   const screenDimensions = {
     width: window.innerWidth,
     height: window.innerHeight
