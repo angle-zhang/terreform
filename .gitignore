@@ -2,9 +2,4 @@
 /dist
 package-lock.json
 GG_tos.pdf
-<<<<<<< HEAD
-=======
-
-# env variables
->>>>>>> 9925e2a27735dea45f9fc0c48eaf78cccd519974
 .env
