@@ -32,9 +32,10 @@ const Progress = styled.div`
   width: 20px;
   height: 30vh;
   border-radius: 20px;
-  background-color: #444;
+  background-color: #353535;
 
   & #waveShape {
+    bottom: 0;
     animation: wave 0.7s infinite linear;
   }
 
@@ -42,9 +43,11 @@ const Progress = styled.div`
     position: absolute;
     width: 100%;
     margin-left: -50%;
+    z-index: 1;
     bottom: -1px;
-    animation: wipe 0.5s ease-in-out forwards;
+    // animation: wipe 0.5s forwards;
     border-radius: 0 0 20px 20px;
+    transition: height 0.3s ease-in-out;
   }
 
   @keyframes wave {
@@ -69,6 +72,7 @@ const Progress = styled.div`
     ${NoSelect}
     position: absolute;
     width: 50px;
+    z-index: 2;
     margin-left: -14.5px;
     margin-top: ${(props) => 30 - props.fill * 30 + 2 + 'vh'};
     transform: rotate(90deg);
@@ -79,15 +83,16 @@ const Progress = styled.div`
 
 export const ProgressBar = ({ percent, goal, donations }) => {
   const limitPercent = percent > 0.2 ? percent : 0.2;
-  console.log(limitPercent);
+  const limitPercent = percent > 0.1 ? parseFloat(percent.toFixed(2)) : 0.1;
+
   return (
     <ProgressWrapper>
       <p>
         <b>{'$' + goal}</b>
       </p>
       <p>goal</p>
-      <Progress fill={limitPercent} key={+new Date()}>
-        <svg width="20px" viewBox="0 0 20 20" id="waveContainer">
+      <Progress fill={limitPercent}>
+        <svg width="20px" viewBox="0 0 25 25" id="waveContainer">
           <path
             fill="#fff"
             id="waveShape"
@@ -102,7 +107,7 @@ export const ProgressBar = ({ percent, goal, donations }) => {
         style={{
           position: 'absolute',
           width: '100px',
-          top: '355px'
+          top: '365px'
         }}
       >
         <b>{donations}</b> donations
