@@ -30,7 +30,7 @@ const Progress = styled.div`
   margin: 10px 40px;
   position: absolute;
   width: 20px;
-  height: 30vh;
+  height: 35vh;
   border-radius: 20px;
   background-color: #353535;
 
@@ -43,9 +43,9 @@ const Progress = styled.div`
     position: absolute;
     width: 100%;
     margin-left: -50%;
+    height: ${(props) => `calc(${props.fill} * (35vh + 300px))`};
     z-index: 1;
     bottom: -1px;
-    // animation: wipe 0.5s forwards;
     border-radius: 0 0 20px 20px;
     transition: height 0.3s ease-in-out;
   }
@@ -59,22 +59,13 @@ const Progress = styled.div`
     }
   }
 
-  @keyframes wipe {
-    0% {
-      height: 0;
-    }
-    100% {
-      height: ${(props) => `calc(${props.fill} * (30vh + 300px))`};
-    }
-  }
-
   & p {
     ${NoSelect}
     position: absolute;
     width: 50px;
     z-index: 2;
     margin-left: -14.5px;
-    margin-top: ${(props) => 30 - props.fill * 30 + 2 + 'vh'};
+    margin-top: ${(props) => 35 - props.fill * 33 + 2 + 'vh'};
     transform: rotate(90deg);
     color: #353535;
     font-size: 15px;
@@ -82,8 +73,7 @@ const Progress = styled.div`
 `;
 
 export const ProgressBar = ({ percent, goal, donations }) => {
-  const limitPercent = percent > 0.2 ? percent : 0.2;
-  const limitPercent = percent > 0.1 ? parseFloat(percent.toFixed(2)) : 0.1;
+  const limitPercent = percent > 0.15 ? parseFloat(percent.toFixed(2)) : 0.15;
 
   return (
     <ProgressWrapper>
@@ -98,7 +88,7 @@ export const ProgressBar = ({ percent, goal, donations }) => {
             id="waveShape"
             d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4
 	c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9
-	c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z"
+	c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V500H500z"
           />
         </svg>
         <p>{'$' + percent * goal}</p>
@@ -107,7 +97,7 @@ export const ProgressBar = ({ percent, goal, donations }) => {
         style={{
           position: 'absolute',
           width: '100px',
-          top: '365px'
+          top: '400px'
         }}
       >
         <b>{donations}</b> donations

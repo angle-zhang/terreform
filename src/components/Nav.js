@@ -53,29 +53,27 @@ const Hamburger = styled.div`
     position: absolute;
     display: flex;
     flex-direction: row;
-    // align-items: right;
     justify-content: flex-end;
     top: calc(1vh + 20px);
     right: 10vw;
-    // width: 15vw;
     width: 100vw;
     height: 10vh;
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
     opacity: ${(props) => (props.closed ? 0 : 1)};
     z-index: 1;
-    transition: all 0.2s;
+    transition: all 0.5s;
   }
 
   & .content a:nth-of-type(1) {
-    animation: fade-3 2.2s forwards;
+    animation: fade-3 1.8s forwards;
   }
 
   & .content a:nth-of-type(2) {
-    animation: fade-2 2.2s forwards;
+    animation: fade-2 1.8s forwards;
   }
 
   & .content a:nth-of-type(3) {
-    animation: fade-1 2.2s forwards;
+    animation: fade-1 1.8s forwards;
   }
 
   @keyframes fade-1 {
@@ -146,7 +144,7 @@ const AnimatedHam = styled.div`
   &:before {
     animation: ${(props) =>
       props.animateIn
-        ? 'collapse-spin 1s forwards'
+        ? 'collapse-spin .7s forwards'
         : props.animateOut
         ? 'open-spin .7s forwards'
         : ''};
@@ -164,7 +162,7 @@ const AnimatedHam = styled.div`
   &:after {
     animation: ${(props) =>
       props.animateIn
-        ? 'collapse-spin-1 1s forwards'
+        ? 'collapse-spin-1 .7s forwards'
         : props.animateOut
         ? 'open-spin-1 .7s forwards'
         : ''};

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import Navbar from './Nav';
-import { makeDonation } from '../globalGiving';
+import { makeDonation, getGatewayKey } from '../globalGiving';
 
 /* custom field hook */
 const useField = (type, init = '') => {
@@ -205,8 +205,8 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
 
   optionArr = optionArr.length ? optionArr : [[{ amount: 10 }, { amount: 30 }]];
 
-  const donate = (nonce) => {
-    makeDonation({
+  const donate = async (nonce) => {
+    const res = await makeDonation({
       firstname: firstname.value,
       lastname: lastname.value,
       email,
@@ -214,6 +214,7 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
       projectId: parseInt(projectId.value),
       nonce: nonce
     });
+    console.log(res.data);
   };
 
   useEffect(() => {
@@ -224,7 +225,7 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
 
   useEffect(() => {
     const form = document.querySelector('#cardForm');
-    const authorization = process.env.TEST_GATEWAY_KEY;
+    const authorization = getGatewayKey();
 
     braintree.client.create({ authorization }, (err, clientInstance) => {
       if (err) {
