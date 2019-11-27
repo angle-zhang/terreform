@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import shortid from 'shortid';
 
 export const NoSelect = css`
   user-select: none;
@@ -30,17 +31,62 @@ const Progress = styled.div`
   margin: 10px 40px;
   position: absolute;
   width: 20px;
-  background-color: #777;
-  height: ${(props) => (!props.background ? props.fill * 30 + 'vh' : '30vh')};
-  border-radius: ${(props) => (!props.background ? '20px 20px 0 0' : '20px')};
-  background-color: ${(props) => (props.background ? '#fff' : '#444')};
+  // background-color: #777;
+
+  height: 30vh;
+  border-radius: 20px;
+  background-color: #353535;
+
+  & #waveShape {
+    bottom: 0;
+    animation: wave 0.7s infinite linear;
+  }
+
+  & #waveContainer {
+    position: absolute;
+    width: 100%;
+    margin-left: -50%;
+    z-index: 1;
+    bottom: -1px;
+    height: ${(props) => {
+      const res = `calc((30vh + 300px) * (${props.fill}))`;
+      console.log(props.fill, res);
+      return res;
+    }};
+    // animation: wipe 0.5s forwards;
+    border-radius: 0 0 20px 20px;
+    transition: height 0.3s ease-in-out;
+  }
+
+  @keyframes wave {
+    0% {
+      transform: translate(-150px, 0);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes wipe {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: ${(props) => {
+        const res = `calc((30vh + 300px) * (${props.fill}))`;
+        console.log(props.fill, res);
+        return res;
+      }};
+    }
+  }
 
   & p {
     ${NoSelect}
     position: absolute;
     width: 50px;
+    z-index: 2;
     margin-left: -14.5px;
-    margin-top: ${(props) => props.fill * 30 + 2 + 'vh'};
+    margin-top: ${(props) => 30 - props.fill * 30 + 1 + 'vh'};
     transform: rotate(90deg);
     color: #353535;
     font-size: 15px;
@@ -48,14 +94,24 @@ const Progress = styled.div`
 `;
 
 export const ProgressBar = ({ percent, goal, donations }) => {
-  const limitPercent = percent > 0.2 ? percent : 0.2;
+  const limitPercent = percent > 0.1 ? parseFloat(percent.toFixed(2)) : 0.1;
+
   return (
     <ProgressWrapper>
       <p>
         <b>{'$' + goal}</b>
       </p>
       <p>goal</p>
-      <Progress background fill={1 - limitPercent}>
+      <Progress fill={limitPercent}>
+        <svg width="20px" viewBox="0 0 25 25" id="waveContainer">
+          <path
+            fill="#fff"
+            id="waveShape"
+            d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4
+	c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9
+	c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z"
+          />
+        </svg>
         <p>{'$' + percent * goal}</p>
       </Progress>
       <Progress fill={1 - limitPercent} />
@@ -63,7 +119,7 @@ export const ProgressBar = ({ percent, goal, donations }) => {
         style={{
           position: 'absolute',
           width: '100px',
-          top: '385px'
+          top: '365px'
         }}
       >
         <b>{donations}</b> donations
