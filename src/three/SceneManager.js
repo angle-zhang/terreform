@@ -97,12 +97,13 @@ export default async (
     camera.setViewOffset(
       window.innerWidth,
       window.innerHeight,
-      -150,
+      -1 * window.innerWidth / 7,
       0,
       window.innerWidth,
       window.innerHeight
     )
-    camera.position.set(0, 0, 3)
+    camera.position.set(0, 0, 0)
+    camera.rotation.set(0, 0, 0)
     return camera
   }
 

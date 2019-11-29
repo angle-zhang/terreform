@@ -90,14 +90,14 @@ class StarterBiome extends Biome {
   }
 
   setObjects(position) {
-    this.group = loadedModels['tree-1'].clone()
-    this.group.scale.set(0.2, 0.2, 0.2)
+    const top = loadedModels['forestbiome-top'].clone()
+    top.scale.set(2, 2, 2)
+    const bottom = loadedModels['forestbiome-bottom'].clone()
+    bottom.scale.set(2, 2, 2)
+    this.group = new THREE.Object3D()
+    this.group.add(top)
+    this.group.add(bottom)
     this.group.position.set(...position)
-    var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
-    var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-    var mesh = new THREE.Mesh( geometry, material );
-    mesh.position.set(...position)
-    this._scene.add( mesh );
 
     // This is needed since world and local rotation is separate, and all the
     // biomes are put into a group, which does not affect local rotation
@@ -106,6 +106,8 @@ class StarterBiome extends Biome {
       new THREE.Vector3(...position).angleTo(new THREE.Vector3(0, 0, -1)) *
       (Math.sign(position[1]) || 1)
     )
+
+    this.group.rotation.set(this.group.rotation.x + Math.PI / 8, 0, 0)
   }
 
   animate() {
