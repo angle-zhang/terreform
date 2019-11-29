@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
-import { getModel, loadModels, loadModel } from './ModelLoader.js'
+import { loadedModels, loadModels} from './ModelLoader.js'
 import poissonDiskSampling from './PoissonDiskSampling.js'
 import { getBounds, separateCoordinates } from './NodeGen.js'
 import Dot from './Dot.js'
@@ -37,7 +37,8 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   const biomes = createBiomes(scene, camera)
   const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
-
+  scene.add(loadedModels['tree-1'])
+    
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {
     if (event.keyCode === 32) {

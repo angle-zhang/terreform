@@ -93,19 +93,21 @@ class StarterBiome extends Biome {
 
   setObjects(position) {
     this.group = new THREE.Group()
-    let tree = loadedModels['tree-1'].clone()
-    let biome = loadedModels['forestbiome-bottom'].clone()
-    this.group.add(tree)
-    this.group.add(biome)
-    let biomeBounds = getBounds(separateCoordinates(biome))
-    // console.log(separateCoordinates(biome))
-    console.log(biomeBounds)
-    // console.log(poissonDiskSampling(.3, 20, biomeBounds))
-    tree.scale.set(.6, .6, .6)
-    biome.scale.set(15, 15, 15)
+    // console.log(loadedModels)
+    // let tree = loadedModels['tree-1']
+    // console.log(tree)
+    // let biome = loadedModels['forestbiome-bottom'].clone()
+    // this.group.add(tree)
+    // this.group.add(biome)
+    // let biomeBounds = getBounds(separateCoordinates(biome))
+    // // console.log(separateCoordinates(biome))
+    // console.log(biomeBounds)
+    // // console.log(poissonDiskSampling(.3, 20, biomeBounds))
+    // tree.scale.set(.6, .6, .6)
+    // biome.scale.set(15, 15, 15)
 
-    this.group.scale.set(0.2, 0.2, 0.2)
-    this.group.position.set(...position)
+    // this.group.scale.set(0.2, 0.2, 0.2)
+    // this.group.position.set(...position)
     // This is needed since world and local rotation is separate, and all the
     // biomes are put into a group, which does not affect local rotation
     this.group.rotateOnWorldAxis(

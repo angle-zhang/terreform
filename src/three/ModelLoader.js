@@ -12,7 +12,7 @@ const unloadedModels = [
   'tree-4'
 ]
 
-export const loadModel = name => {
+const loadModel = name => {
   return new Promise((resolve, reject) => {
     new GLTFLoader().load(
       `./models/${name}.glb`,
@@ -27,12 +27,16 @@ export const loadModel = name => {
   })
 }
 
-const loadAll = modelNames => {
-  const modelMap = {}
-  modelNames.map(async modelName => {
-    modelMap[modelName] = await loadModel(modelName)
-  })
-  return modelMap
+export let loadedModels = null
+
+export const loadModels = async () => {
+  loadedModels = await loadAll(unloadedModels)
 }
 
-export const loadedModels = loadAll(unloadedModels)
+const loadAll = async modelNames => {
+  const modelMap = {}
+  await Promise.all(modelNames.map(async modelName => {
+    modelMap[modelName] = loadModel(modelName)
+  }))
+  return modelMap
+}
