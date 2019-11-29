@@ -4,10 +4,6 @@ let API_TOKEN = '';
 let GATEWAY_KEY = '';
 const API_KEY = process.env.API_KEY;
 
-// const API_EMAIL = process.env.API_EMAIL;
-// const API_PASS = process.env.API_PASS;
-// const TEST_GATEWAY_KEY = process.env.TEST_GATEWAY_KEY;
-
 const projectIds = [
   43209,
   43238,
@@ -35,16 +31,14 @@ export const getAllProjects = () => {
   return Promise.all(projects);
 };
 
-export const setToken = (token) => (API_TOKEN = token);
-
-export const setGatewayKey = (key) => (GATEWAY_KEY = key);
-
-export const getGatewayKey = () => GATEWAY_KEY;
-
-export const getToken = async () => {
-  const res = await axios.get('http://localhost:5000/api/get_token');
+export const initKeys = async (test = true) => {
+  const res = await axios.get('http://localhost:5000/api/get_token/');
+  API_TOKEN = res.data.token;
+  GATEWAY_KEY = test ? res.data.test_gatekey : res.data.prod_gatekey;
   return res.data;
 };
+
+export const getGatewayKey = () => GATEWAY_KEY;
 
 export const makeDonation = async ({
   firstname,

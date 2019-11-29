@@ -20,7 +20,7 @@ const Centered = styled.div`
 const ContinueLink = styled(StyledLink)`
   margin-top: 40vh;
   margin-left: 80%;
-  color: #000;
+  color: #a9adb6;
 `;
 
 const introText = [

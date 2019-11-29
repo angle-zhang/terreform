@@ -3,12 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 
-import {
-  getAllProjects,
-  getToken,
-  setToken,
-  setGatewayKey
-} from './globalGiving';
+import { getAllProjects, initKeys } from './globalGiving';
 
 import Intro from './components/Intro';
 import Donate from './components/Donate';
@@ -26,10 +21,8 @@ const App = () => {
 
   useEffect(() => {
     getAllProjects().then((projects) => setProjects(projects));
-    getToken().then((data) => {
+    initKeys().then((data) => {
       console.log('Key data:', data);
-      setToken(data.token);
-      setGatewayKey(data.test_gatekey);
       setLoading(false);
     });
   }, []);
@@ -45,7 +38,7 @@ const App = () => {
             }
           />
           <Route path="/home" component={Donate} />
-          <Route component={Intro} />
+          <Route component={() => <Intro loading={loading} />} />
         </Switch>
       </Router>
     </Container>
