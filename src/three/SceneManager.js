@@ -3,7 +3,7 @@ import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
 import { getModel, loadModels, loadModel } from './ModelLoader.js'
-import poissonDiskSampling from './PoissonDiskSampling.js'
+import { poissonDiskSampling } from './PoissonDiskSampling.js'
 import { getBounds, separateCoordinates } from './NodeGen.js'
 import Dot from './Dot.js'
 
@@ -17,33 +17,40 @@ import Dot from './Dot.js'
  */
 
 const loadItem = async (name, scene) => {
-  let model = await getModel(name);
+  let model = await getModel(name)
   // scene.add(model)
   console.log('loading into scene...')
   return model
 }
 
-const loadAll = (modelNames) => {
+const loadAll = modelNames => {
   let models = new Map()
-  modelNames.forEach(async (modelName) => models.set(modelName, await getModel(modelName)))
+  modelNames.forEach(async modelName =>
+    models.set(modelName, await getModel(modelName))
+  )
   return models
 }
 
-const getPosition = (object) => {
+const getPosition = object => {
   let vec = new THREE.Vector3()
   object.getWorldPosition(vec)
   console.log('The location of the object is ' + JSON.stringify(vec))
 }
 
-const getScale = (object) => {
+const getScale = object => {
   let vec = new THREE.Vector3()
   object.getWorldScale(vec)
   console.log('The scale of the object is ' + JSON.stringify(vec))
 }
 
 //async
-export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
+export default async (
+  canvas,
+  { backgroundColor = 0x000000, lighting } = {}
+) => {
   await loadModels()
+
+  console.log(poissonDiskSampling(0.1, 10, [-1, 1, -1, 1]))
 
   const screenDimensions = {
     width: window.innerWidth,
@@ -100,7 +107,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   }
 
   function createBiomes(scene, camera) {
-    return new Biomes(scene, camera);
+    return new Biomes(scene, camera)
   }
 
   function buildRaycaster() {

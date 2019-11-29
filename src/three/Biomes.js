@@ -93,6 +93,12 @@ class StarterBiome extends Biome {
     this.group = loadedModels['tree-1'].clone()
     this.group.scale.set(0.2, 0.2, 0.2)
     this.group.position.set(...position)
+    var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
+    var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+    var mesh = new THREE.Mesh( geometry, material );
+    mesh.position.set(...position)
+    this._scene.add( mesh );
+
     // This is needed since world and local rotation is separate, and all the
     // biomes are put into a group, which does not affect local rotation
     this.group.rotateOnWorldAxis(
