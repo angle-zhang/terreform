@@ -57,3 +57,11 @@ export const getNodes = (poissonNodes, vertices) => {
     })
     return nodes
 }
+
+export const renderNodes = (nodes, model,  scene) => {
+    nodes.forEach(([x, y, z]) => {
+        let a = model.clone()
+        a.position.set(x, y + 0.03, z)
+        scene.add(a)
+    })
+}
