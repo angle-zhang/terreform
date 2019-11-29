@@ -4,7 +4,7 @@
   "description": "donate and see what happens ;) ",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development",
+    "start": "node app/server.js & webpack-dev-server --mode development",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode development",
     "production": "webpack --mode production"
@@ -45,6 +45,7 @@
     "react-dom": "^16.10.2",
     "react-hot-loader": "^4.6",
     "react-router-dom": "^5.1.2",
+    "shortid": "^2.2.15",
     "style-loader": "^0.23.0",
     "styled-components": "^4.4.0",
     "three": "^0.109.0",
