@@ -32,7 +32,7 @@ export const getAllProjects = () => {
 };
 
 export const initKeys = async (test = true) => {
-  const res = await axios.get('http://localhost:5000/api/get_token/');
+  const res = await axios.get('/api/get_token/');
   API_TOKEN = res.data.token;
   GATEWAY_KEY = test ? res.data.test_gatekey : res.data.prod_gatekey;
   return res.data;
