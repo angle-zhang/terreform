@@ -37,7 +37,6 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   const biomes = createBiomes(scene, camera)
   const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
-  scene.add(loadedModels['tree-1'])
     
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {

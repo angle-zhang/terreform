@@ -26,6 +26,14 @@ export const getBounds = (coords) => {
     return [x[0], x[x.length - 1], z[0], z[z.length - 1]]
 }
 
+export const getPoissonBounds = (biomeCoords, modelCoords) => {
+  let biomeBounds = getBounds(biomeCoords)
+  let modelBounds = getBounds(modelCoords)
+  console.log(modelBounds)
+  let modelWidth = Math.abs(Math.max(modelBounds[2] - modelBounds[0], modelBounds[3] - modelBounds[1]))
+  return biomeBounds.map(coord => coord < 0 ? coord + modelWidth : coord - modelWidth)
+}
+
 export const getPosition = (object) => {
     let vec = new THREE.Vector3()
     object.getWorldPosition(vec)
@@ -40,7 +48,7 @@ export const getScale = (object) => {
 
 export const getNodes = (poissonNodes, vertices) => {
     let nodes = []
-    poissonNodes.forEach((p_node, j) => {
+    poissonNodes.forEach((p_node) => {
         let min = Math.hypot(p_node[0] - vertices[0][0], p_node[1] - vertices[0][2])
         let y = vertices[1][0]
         vertices[0].forEach((coord, j) => {
@@ -49,7 +57,7 @@ export const getNodes = (poissonNodes, vertices) => {
             let d = Math.hypot(del_x, del_z)
             if (d < min) {
                 min = d
-                y = vertices[1][i]
+                y = vertices[1][j]
             }
         })
         let node = [p_node[0], y, p_node[1]]
@@ -58,10 +66,10 @@ export const getNodes = (poissonNodes, vertices) => {
     return nodes
 }
 
-export const renderNodes = (nodes, model,  scene) => {
+export const renderNodes = (nodes, model, group, scale) => {
     nodes.forEach(([x, y, z]) => {
         let a = model.clone()
-        a.position.set(x, y + 0.03, z)
-        scene.add(a)
+        a.position.set(x, y + scale * .01, z)
+        group.add(a)
     })
 }

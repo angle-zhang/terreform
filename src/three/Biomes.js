@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import { loadedModels } from './ModelLoader.js'
-import { separateCoordinates, getBounds, getPosition, getScale } from './NodeGen'
+import { separateCoordinates, getBounds, getPosition, getScale, getNodes, renderNodes, getPoissonBounds } from './NodeGen'
 import { poissonDiskSampling } from './PoissonDiskSampling.js'
 
 import { Flock } from './Boids.js'
@@ -49,7 +49,7 @@ class StarterBiome extends Biome {
     this.setObjects(position)
     this.birds = []
   }
-
+  
   setScene() {
     const color = this._scene.background
     new TWEEN.Tween(color)
@@ -93,21 +93,31 @@ class StarterBiome extends Biome {
 
   setObjects(position) {
     this.group = new THREE.Group()
-    // console.log(loadedModels)
-    // let tree = loadedModels['tree-1']
-    // console.log(tree)
-    // let biome = loadedModels['forestbiome-bottom'].clone()
-    // this.group.add(tree)
-    // this.group.add(biome)
-    // let biomeBounds = getBounds(separateCoordinates(biome))
-    // // console.log(separateCoordinates(biome))
-    // console.log(biomeBounds)
-    // // console.log(poissonDiskSampling(.3, 20, biomeBounds))
-    // tree.scale.set(.6, .6, .6)
+    let tree = loadedModels['tree-1']  
+    let biomeBottom = loadedModels['forestbiome-bottom'].clone()
+    let biomeTop = loadedModels['forestbiome-top'].clone()
     // biome.scale.set(15, 15, 15)
-
-    // this.group.scale.set(0.2, 0.2, 0.2)
-    // this.group.position.set(...position)
+    this.group.add(biomeBottom)
+    this.group.add(biomeTop)
+    
+    let biomeBottomCoordinates = separateCoordinates(biomeBottom)
+    let treeCoordinates = separateCoordinates(tree)
+    console.log(treeCoordinates)
+    let biomeBounds = getPoissonBounds(biomeBottomCoordinates, treeCoordinates)
+    console.log(biomeBounds)
+    let biomePoisson = poissonDiskSampling(.2, 15, biomeBounds)
+    let biomeTopCoordinates = separateCoordinates(biomeTop)    
+    let biomeNodes = getNodes(biomePoisson, biomeTopCoordinates)
+    console.log(biomeNodes)
+    let scale = 5
+    renderNodes(biomeNodes, tree, this.group, scale) 
+    // poissonDiskSampling(.3, 20, biomeBounds((separateCoordinates(biome))))
+    // console.log(biomeBounds)
+    // console.log(poissonDiskSampling(.3, 20, biomeBounds))
+    // tree.scale.set(.2, .2, .2)
+    
+    this.group.scale.set(scale, scale, scale)
+    this.group.position.set(...position)
     // This is needed since world and local rotation is separate, and all the
     // biomes are put into a group, which does not affect local rotation
     this.group.rotateOnWorldAxis(

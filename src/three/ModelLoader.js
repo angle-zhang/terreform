@@ -36,7 +36,7 @@ export const loadModels = async () => {
 const loadAll = async modelNames => {
   const modelMap = {}
   await Promise.all(modelNames.map(async modelName => {
-    modelMap[modelName] = loadModel(modelName)
+    modelMap[modelName] = await loadModel(modelName)
   }))
   return modelMap
 }
