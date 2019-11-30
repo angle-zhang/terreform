@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const axios = require('axios');
 
 // global environment variables
 require('dotenv').config();
@@ -13,13 +14,15 @@ app.use(express.json());
 
 // set up mongo database
 const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }
-);
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true
+});
 const connection = mongoose.connection;
 connection.once('open', () => {
-  console.log("MongoDB database connection established successfully");
-})
-
+  console.log('MongoDB database connection established successfully');
+});
 
 // route biome and donation backend requests
 const biomeRouter = require('./routes/biome');
@@ -41,19 +44,20 @@ const testGatekey = process.env.TEST_GATE_KEY;
 const prodGatekey = process.env.PROD_GATE_KEY;
 
 app.get('/api/get_token', async (req, res) => {
-	const result = await axios.post(tokenUrl, {
-		auth_request: {
-			user: {
-				email: apiEmail,
-				password: apiPass
-			},
-			api_key: apiKey
-		}
-	});
-  	const tokenjson = await result.data;
-  	res.json({
-  		token: tokenjson.auth_response.access_token,
-  		test_gatekey: testGatekey,
-  		prod_gatekey: prodGatekey
-  	});
+  const result = await axios.post(tokenUrl, {
+    auth_request: {
+      user: {
+        email: apiEmail,
+        password: apiPass
+      },
+      api_key: apiKey
+    }
+  });
+  const tokenjson = await result.data;
+  res.json({
+    token: tokenjson.auth_response.access_token,
+    test_gatekey: testGatekey,
+    prod_gatekey: prodGatekey
+  });
 });
+

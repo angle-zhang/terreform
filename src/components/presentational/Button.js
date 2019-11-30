@@ -17,7 +17,7 @@ export const StyledLink = styled(Link)`
   color: #fff;
   border: 2px 2px 0 2px solid transparent;
   border-radius: 0;
-  transition: all 0.1s ease-in-out;
+  transition: all 0.2s ease-in-out;
 
   &:hover {
     // box-shadow: 0 3px 0 #00c853;

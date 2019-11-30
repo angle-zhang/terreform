@@ -97,7 +97,7 @@ export const ProgressBar = ({ percent, goal, donations }) => {
         style={{
           position: 'absolute',
           width: '100px',
-          top: '400px'
+          top: '40.5vh'
         }}
       >
         <b>{donations}</b> donations
@@ -125,6 +125,7 @@ const StyledIndicator = styled.div`
 
   & img:hover {
     background-color: rgba(100, 100, 100, 0.5);
+    cursor: pointer;
   }
 
   & img:nth-of-type(1):hover {

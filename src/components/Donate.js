@@ -57,6 +57,7 @@ const Icon = styled.img`
 
   &:hover {
     background-color: #eee;
+    cursor: pointer;
   }
 `;
 
