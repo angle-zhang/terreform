@@ -12,14 +12,14 @@ const unloadedModels = [
   'tree-4'
 ]
 
-export const loadModel = name => {
+const loadModel = name => {
   return new Promise((resolve, reject) => {
     new GLTFLoader().load(
       `./models/${name}.glb`,
       gltf => {
         resolve(gltf.scene.children[0])
       },
-      () => {},
+      () => { },
       err => {
         reject('An error occurred!' + err)
       }

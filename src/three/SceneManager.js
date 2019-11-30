@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
-import { getModel, loadModels, loadModel } from './ModelLoader.js'
+import { loadedModels, loadModels} from './ModelLoader.js'
 import poissonDiskSampling from './PoissonDiskSampling.js'
 import { getBounds, separateCoordinates } from './NodeGen.js'
 import Dot from './Dot.js'
@@ -16,32 +16,13 @@ import Dot from './Dot.js'
  *     position: { x, y, z }
  */
 
-const loadItem = async (name, scene) => {
-  let model = await getModel(name);
-  // scene.add(model)
-  console.log('loading into scene...')
+const loadItem = (name, scene) => {
+  const model = loadedModels[name]
+  scene.add(model)
+  console.log('loading into scene... ' + name)
   return model
 }
 
-const loadAll = (modelNames) => {
-  let models = new Map()
-  modelNames.forEach(async (modelName) => models.set(modelName, await getModel(modelName)))
-  return models
-}
-
-const getPosition = (object) => {
-  let vec = new THREE.Vector3()
-  object.getWorldPosition(vec)
-  console.log('The location of the object is ' + JSON.stringify(vec))
-}
-
-const getScale = (object) => {
-  let vec = new THREE.Vector3()
-  object.getWorldScale(vec)
-  console.log('The scale of the object is ' + JSON.stringify(vec))
-}
-
-//async
 export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
   await loadModels()
 
@@ -56,7 +37,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   const biomes = createBiomes(scene, camera)
   const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
-
+    
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {
     if (event.keyCode === 32) {
@@ -95,7 +76,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
       window.innerWidth,
       window.innerHeight
     )
-    camera.position.set(0, 0, 3)
+    camera.position.set(-2, 0, 5)
     return camera
   }
 
@@ -113,7 +94,7 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     scene,
     {
       color = 0xffffff,
-      intensity = 1,
+      intensity = 1, // 3?
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {
