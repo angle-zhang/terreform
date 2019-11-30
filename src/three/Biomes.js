@@ -44,9 +44,9 @@ class Biome {
 
 // a starter biome class
 class StarterBiome extends Biome {
-  constructor(scene, camera, position) {
+  constructor(scene, camera, position, biome, model) {
     super(scene, camera)
-    this.setObjects(position)
+    this.setObjects(position, biome, model)
     this.birds = []
   }
   
@@ -91,33 +91,31 @@ class StarterBiome extends Biome {
     }
   }
 
-  setObjects(position) {
-    this.group = new THREE.Group()
-    let tree = loadedModels['tree-1']  
-    let biomeBottom = loadedModels['forestbiome-bottom'].clone()
-    let biomeTop = loadedModels['forestbiome-top'].clone()
-    // biome.scale.set(15, 15, 15)
-    this.group.add(biomeBottom)
-    this.group.add(biomeTop)
-    
+  createBiome(biome, model, group, scale) {
+    let loadedModel = loadedModels[model]
+    let biomeBottom = loadedModels[biome[0]].clone()
+    let biomeTop = loadedModels[biome[1]].clone()
+
     let biomeBottomCoordinates = separateCoordinates(biomeBottom)
-    let treeCoordinates = separateCoordinates(tree)
-    console.log(treeCoordinates)
-    let biomeBounds = getPoissonBounds(biomeBottomCoordinates, treeCoordinates)
-    console.log(biomeBounds)
-    let biomePoisson = poissonDiskSampling(.2, 15, biomeBounds)
-    let biomeTopCoordinates = separateCoordinates(biomeTop)    
+    let biomeTopCoordinates = separateCoordinates(biomeTop)
+    let modelCoordinates = separateCoordinates(loadedModel)
+
+    let biomeBounds = getPoissonBounds(biomeBottomCoordinates, modelCoordinates)
+    let biomePoisson = poissonDiskSampling(.2, 20, biomeBounds)
     let biomeNodes = getNodes(biomePoisson, biomeTopCoordinates)
-    console.log(biomeNodes)
+
+    group.add(biomeBottom)
+    group.add(biomeTop)
+    renderNodes(biomeNodes, loadedModel, group, scale)
+  }
+
+  setObjects(position, biome, model) {
+    this.group = new THREE.Group()
     let scale = 5
-    renderNodes(biomeNodes, tree, this.group, scale) 
-    // poissonDiskSampling(.3, 20, biomeBounds((separateCoordinates(biome))))
-    // console.log(biomeBounds)
-    // console.log(poissonDiskSampling(.3, 20, biomeBounds))
-    // tree.scale.set(.2, .2, .2)
-    
+    this.createBiome(biome, model, this.group, scale)    
     this.group.scale.set(scale, scale, scale)
     this.group.position.set(...position)
+
     // This is needed since world and local rotation is separate, and all the
     // biomes are put into a group, which does not affect local rotation
     this.group.rotateOnWorldAxis(
@@ -142,7 +140,7 @@ export default class Biomes {
   constructor(scene, camera) {
     this.group = new THREE.Object3D()
     this.biomes = [
-      new StarterBiome(scene, camera, [0, 0, -6]),
+      new StarterBiome(scene, camera, [0, 0, -6], ['forestbiome-bottom', 'forestbiome-top'], 'tree-1'),
       // new StarterBiome(scene, camera, [0, -6, 0]),
       // new StarterBiome(scene, camera, [0, 0, 6]),
       // new StarterBiome(scene, camera, [0, 6, 0])
