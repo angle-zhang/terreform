@@ -70,7 +70,7 @@ export const renderNodes = (nodes, models, group, scale) => {
     nodes.forEach(([x, y, z]) => {
       const rand = Math.floor(Math.random() * models.length)
       let a = models[rand].clone()
-      a.position.set(x, y + scale * .01, z)
+      a.position.set(x, y + scale * .005, z)
       group.add(a)
     })
 }

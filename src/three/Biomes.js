@@ -145,7 +145,7 @@ export default class Biomes {
       // create different biomes here
       // added parameters biome = ['biome-bottom', 'biome-top'], model = 'asset'
 
-      new StarterBiome(scene, camera, [0, 0, -6], ['forestbiome-bottom', 'forestbiome-top'], ['tree-1', 'tree-2', 'tree-3', 'tree-4']),
+      new StarterBiome(scene, camera, [0, 0, -6], ['forestbiome-bottom', 'forestbiome-top'], ['tree-1', 'tree-2', 'tree-3', 'tree-4', 'rock-1', 'rock-2', 'rock-3']),
       // new StarterBiome(scene, camera, [0, -6, 0]),
       // new StarterBiome(scene, camera, [0, 0, 6]),
       // new StarterBiome(scene, camera, [0, 6, 0])
