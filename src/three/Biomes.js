@@ -44,9 +44,9 @@ class Biome {
 
 // a starter biome class
 class StarterBiome extends Biome {
-  constructor(scene, camera, position, biome, model) {
+  constructor(scene, camera, position, biome, models) {
     super(scene, camera)
-    this.setObjects(position, biome, model)
+    this.setObjects(position, biome, models)
     this.birds = []
   }
   
@@ -91,14 +91,16 @@ class StarterBiome extends Biome {
     }
   }
 
-  createBiome(biome, model, group, scale) {
-    let loadedModel = loadedModels[model]
+  createBiome(biome, models, group, scale) {
+    let biomeModels = models.map(model => loadedModels[model])
     let biomeBottom = loadedModels[biome[0]].clone()
     let biomeTop = loadedModels[biome[1]].clone()
 
+     console.log(biomeModels)
+
     let biomeBottomCoordinates = separateCoordinates(biomeBottom)
     let biomeTopCoordinates = separateCoordinates(biomeTop)
-    let modelCoordinates = separateCoordinates(loadedModel)
+    let modelCoordinates = separateCoordinates(biomeModels[0])
 
     let biomeBounds = getPoissonBounds(biomeBottomCoordinates, modelCoordinates)
     let biomePoisson = poissonDiskSampling(.2, 20, biomeBounds)
@@ -106,13 +108,13 @@ class StarterBiome extends Biome {
 
     group.add(biomeBottom)
     group.add(biomeTop)
-    renderNodes(biomeNodes, loadedModel, group, scale)
+    renderNodes(biomeNodes, biomeModels, group, scale)
   }
 
-  setObjects(position, biome, model) {
+  setObjects(position, biome, models) {
     this.group = new THREE.Group()
     let scale = 5
-    this.createBiome(biome, model, this.group, scale)    
+    this.createBiome(biome, models, this.group, scale)    
     this.group.scale.set(scale, scale, scale)
     this.group.position.set(...position)
 
@@ -140,7 +142,10 @@ export default class Biomes {
   constructor(scene, camera) {
     this.group = new THREE.Object3D()
     this.biomes = [
-      new StarterBiome(scene, camera, [0, 0, -6], ['forestbiome-bottom', 'forestbiome-top'], 'tree-1'),
+      // create different biomes here
+      // added parameters biome = ['biome-bottom', 'biome-top'], model = 'asset'
+
+      new StarterBiome(scene, camera, [0, 0, -6], ['forestbiome-bottom', 'forestbiome-top'], ['tree-1', 'tree-2', 'tree-3', 'tree-4']),
       // new StarterBiome(scene, camera, [0, -6, 0]),
       // new StarterBiome(scene, camera, [0, 0, 6]),
       // new StarterBiome(scene, camera, [0, 6, 0])

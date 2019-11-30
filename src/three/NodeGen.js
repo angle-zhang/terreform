@@ -66,10 +66,11 @@ export const getNodes = (poissonNodes, vertices) => {
     return nodes
 }
 
-export const renderNodes = (nodes, model, group, scale) => {
+export const renderNodes = (nodes, models, group, scale) => {
     nodes.forEach(([x, y, z]) => {
-        let a = model.clone()
-        a.position.set(x, y + scale * .01, z)
-        group.add(a)
+      const rand = Math.floor(Math.random() * models.length)
+      let a = models[rand].clone()
+      a.position.set(x, y + scale * .01, z)
+      group.add(a)
     })
 }
