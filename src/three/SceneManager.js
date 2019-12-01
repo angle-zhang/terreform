@@ -132,6 +132,9 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
   return {
     update,
     onWindowResize,
+    callbacks: {
+      switchBiomes: () => biomes.next()
+    },
     scene
   }
 }

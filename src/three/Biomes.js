@@ -166,8 +166,8 @@ export default class Biomes {
   }
 
   next() {
-    const DURATION = 1000
-    if (Date.now() - this.lastRotateTime > 1000) {
+    const DURATION = 500
+    if (Date.now() - this.lastRotateTime > DURATION) {
       const coords = { x: this.group.rotation.x }
       new TWEEN.Tween(coords)
         .to({ x: this.group.rotation.x + Math.PI / 2 }, DURATION)

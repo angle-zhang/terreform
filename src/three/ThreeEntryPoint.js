@@ -26,4 +26,5 @@ export default async (containerElement, options) => {
     requestAnimationFrame(render)
     sceneManager.update()
   }
+  return sceneManager.callbacks
 }

@@ -11,7 +11,7 @@ export class Flock {
             [
               Math.random() * (bounds[0][1] - bounds[0][0]) + bounds[0][1],
               Math.random() * (bounds[1][1] - bounds[1][0]) + bounds[1][1],
-              -6
+              -10
             ],
             velocityMagnitude
           )
