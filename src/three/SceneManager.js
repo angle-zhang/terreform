@@ -2,10 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
 import OrbitControls from './OrbitControls.js'
-import { loadedModels, loadModels} from './ModelLoader.js'
-import poissonDiskSampling from './PoissonDiskSampling.js'
-import { getBounds, separateCoordinates } from './NodeGen.js'
-import Dot from './Dot.js'
+import { loadModels } from './ModelLoader.js'
 
 /**
  * Options
@@ -15,15 +12,10 @@ import Dot from './Dot.js'
  *     intensity: 1
  *     position: { x, y, z }
  */
-
-const loadItem = (name, scene) => {
-  const model = loadedModels[name]
-  scene.add(model)
-  console.log('loading into scene... ' + name)
-  return model
-}
-
-export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => {
+export default async (
+  canvas,
+  { backgroundColor = 0x000000, lighting } = {}
+) => {
   await loadModels()
 
   const screenDimensions = {
@@ -71,17 +63,18 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     camera.setViewOffset(
       window.innerWidth,
       window.innerHeight,
-      -150,
+      -1 * window.innerWidth / 7,
       0,
       window.innerWidth,
       window.innerHeight
     )
-    camera.position.set(-2, 0, 5)
+    camera.position.set(0, 0, 0)
+    camera.rotation.set(0, 0, 0)
     return camera
   }
 
   function createBiomes(scene, camera) {
-    return new Biomes(scene, camera);
+    return new Biomes(scene, camera)
   }
 
   function buildRaycaster() {
@@ -94,33 +87,24 @@ export default async (canvas, { backgroundColor = 0x000000, lighting } = {}) => 
     scene,
     {
       color = 0xffffff,
-      intensity = 1, // 3?
+      intensity = 0.35,
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {
     const light = new THREE.HemisphereLight(color, 0x3c6a6d, intensity)
     light.position.set(x, y, z)
     scene.add(light)
+
+    const dir = new THREE.DirectionalLight(color, 0.75)
+    dir.position.set(x, y, z)
+    scene.add(dir)
   }
 
-  // DEMO
-  // const dot = new Dot({
-  //   raycaster,
-  //   camera,
-  //   radius: 0.2,
-  //   position: [3, 0, -6],
-  //   handleClick: () => alert('You clicked!')
-  // })
-  // dot.render(scene)
-
-  let time = 0
   function update() {
     // only update active scene
     TWEEN.update()
     biomes.animate()
     renderer.render(scene, camera)
-    // dot.update(time)
-    time += 1
   }
 
   function onWindowResize({ width, height }) {

@@ -9,7 +9,8 @@ const unloadedModels = [
   'tree-1',
   'tree-2',
   'tree-3',
-  'tree-4'
+  'tree-4',
+  'bird'
 ]
 
 const loadModel = name => {

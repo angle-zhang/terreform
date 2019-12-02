@@ -10,9 +10,7 @@ export default class OrbitControls {
   bindEventListeners() {
     const handleMouseMove = event => {
       const dx = event.screenX - this.prevX
-      // console.log(this.group.getWorldDirection())
-      // this.group.rotation.y += dx / 100
-      this.group.rotateOnAxis(new THREE.Vector3(0, 1, 0), dx / 100)
+      this.group.rotateOnAxis(new THREE.Vector3(0, 1, 0), dx / 200)
       this.prevX = event.screenX
     }
 
