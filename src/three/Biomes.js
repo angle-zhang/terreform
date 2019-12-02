@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import { loadedModels } from './ModelLoader.js'
 
-import { groupVertices, sampleVertices } from './Vertices'
+import { groupVertices, sampleVertices, chance } from './Vertices'
 
 import { Flock } from './Boids.js'
 import { createCloud } from './Clouds.js'
@@ -137,10 +137,19 @@ class TreeBiome extends Biome {
       ]
     )
     randomVertices.forEach(([x, y, z]) => {
-      const tree = loadedModels['tree-1'].clone()
-      tree.scale.set(0.03, 0.03, 0.03)
-      tree.position.set(x * 2, y * 2, z * 2)
-      this.group.add(tree)
+      const models = [
+        { name: 'rock-1', scale: [0.05, 0.05, 0.05] },
+        { name: 'rock-2', scale: [0.1, 0.1, 0.1] },
+        { name: 'tree-1', scale: [0.03, 0.03, 0.03] },
+        { name: 'tree-2', scale: [0.03, 0.03, 0.03] },
+        { name: 'tree-3', scale: [0.03, 0.03, 0.03] }
+      ]
+      const model = models[chance.weighted([0, 1, 2, 3, 4], [1, 1, 2, 2, 2])]
+      const object = loadedModels[model.name].clone()
+      const scaleMultiplier = chance.floating({ min: 0.9, max: 1 })
+      object.scale.set(...model.scale.map(v => v * scaleMultiplier))
+      object.position.set(x * 2, y * 2 + 0.01, z * 2)
+      this.group.add(object)
     })
 
     this.group.position.set(...position)

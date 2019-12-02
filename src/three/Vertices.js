@@ -1,6 +1,6 @@
 import Chance from 'chance'
 
-const chance = new Chance(1)
+export const chance = new Chance(1)
 
 export const groupVertices = mesh => {
   const arr = mesh.geometry.attributes.position.array
@@ -17,6 +17,14 @@ export const groupVertices = mesh => {
 
 export const sampleVertices = (vertices, n, [gridX, gridY], bounds) => {
   const [[bx0, bx1], [by0, by1]] = bounds
+  const seen = {}
+  vertices.filter((pt) => {
+    if (seen[pt]) {
+      return false
+    }
+    seen[pt] = true
+    return true
+  })
   const isWithinBounds = ([x, , z]) =>
     Math.abs(x - bx0) < (bx1 - bx0) / gridX ||
     Math.abs(x - bx1) < (bx1 - bx0) / gridX ||
