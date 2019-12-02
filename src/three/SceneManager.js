@@ -87,7 +87,7 @@ export default async (
     scene,
     {
       color = 0xffffff,
-      intensity = 0.35
+      intensity = 0.35,
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {
