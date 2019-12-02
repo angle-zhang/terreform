@@ -48,7 +48,7 @@ class EnvironmentBiome extends Biome {
     super(scene, camera)
     this.setObjects()
   }
-
+  
   setScene() {
     // Add clouds in random positions
     const clouds = []

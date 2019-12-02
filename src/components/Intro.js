@@ -20,7 +20,7 @@ const Centered = styled.div`
 const ContinueLink = styled(StyledLink)`
   margin-top: 40vh;
   margin-left: 80%;
-  color: #000;
+  color: #a9adb6;
 `;
 
 const introText = [
@@ -33,7 +33,7 @@ const introText = [
   "The world's largest glacier will disappear in 50 years."
 ];
 
-const Intro = () => {
+const Intro = ({ loading }) => {
   const [count, setCount] = useState(0);
   const [opacity, setOpacity] = useState(1);
 
@@ -53,7 +53,7 @@ const Intro = () => {
   return (
     <Centered>
       <p style={{ opacity }}>{introText[count]}</p>
-      <ContinueLink to="/home">Skip</ContinueLink>
+      {!loading ? <ContinueLink to="/home">Skip</ContinueLink> : ''}
     </Centered>
   );
 };

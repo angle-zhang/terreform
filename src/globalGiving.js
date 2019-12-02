@@ -1,10 +1,8 @@
 import axios from 'axios';
 
 let API_TOKEN = '';
+let GATEWAY_KEY = '';
 const API_KEY = process.env.API_KEY;
-const GG_EMAIL = process.env.GG_EMAIL;
-const GG_PASSWORD = process.env.GG_PASSWORD;
-const TEST_GATEWAY_KEY = process.env.TEST_GATEWAY_KEY;
 
 const projectIds = [
   43209,
@@ -33,21 +31,14 @@ export const getAllProjects = () => {
   return Promise.all(projects);
 };
 
-export const setToken = (token) => (API_TOKEN = token);
-
-export const getToken = async () => {
-  const tokenUrl = 'https://api.globalgiving.org/api/userservice/tokens';
-  const res = await axios.post(tokenUrl, {
-    auth_request: {
-      user: {
-        email: GG_EMAIL,
-        password: GG_PASSWORD
-      },
-      api_key: API_KEY
-    }
-  });
-  return res.data.auth_response.access_token;
+export const initKeys = async (test = true) => {
+  const res = await axios.get('/api/get_token/');
+  API_TOKEN = res.data.token;
+  GATEWAY_KEY = test ? res.data.test_gatekey : res.data.prod_gatekey;
+  return res.data;
 };
+
+export const getGatewayKey = () => GATEWAY_KEY;
 
 export const makeDonation = async ({
   firstname,
@@ -55,9 +46,12 @@ export const makeDonation = async ({
   email,
   amount,
   projectId,
-  nonce
+  nonce,
+  test = true
 }) => {
-  const donationUrl = `https://api.globalgiving.org/api/secure/givingservice/donationsclient?api_key=${API_KEY}&api_token=${API_TOKEN}&is_test=true`;
+  let donationUrl = `https://api.globalgiving.org/api/secure/givingservice/donationsclient?api_key=${API_KEY}&api_token=${API_TOKEN}`;
+  donationUrl = test ? donationUrl + '&is_test=true' : donationUrl;
+
   const res = await axios.post(donationUrl, {
     donation: {
       refcode: 'terreform_refcode',
@@ -73,10 +67,10 @@ export const makeDonation = async ({
         firstname,
         lastname,
         paymentGateway: 'braintree',
-        paymentGatewayKey: TEST_GATEWAY_KEY,
+        paymentGatewayKey: GATEWAY_KEY,
         paymentGatewayNonce: nonce
       }
     }
   });
-  return res.data;
+  return res;
 };

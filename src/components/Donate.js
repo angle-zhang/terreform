@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import Navbar from './Nav';
-import { makeDonation } from '../globalGiving';
+import { makeDonation, getGatewayKey } from '../globalGiving';
 
 /* custom field hook */
 const useField = (type, init = '') => {
@@ -57,6 +57,7 @@ const Icon = styled.img`
 
   &:hover {
     background-color: #eee;
+    cursor: pointer;
   }
 `;
 
@@ -126,7 +127,7 @@ const Form = styled.div`
   #expiration-date,
   #cvv,
   #postal-code {
-    width: 335px;
+    width: 343px;
     height: 15px;
     font-family: 'Montserrat', sans-serif;
     font-size: 18px;
@@ -186,11 +187,11 @@ const Option = styled.div`
   text-align: center;
   line-height: 100px;
   border-radius: 5px;
-  background-color: #eee;
+  background-color: ${(props) => (props.selected ? '#00d26c' : '#eee')};
   font-size: 30px;
 
   &:hover {
-    background-color: #ddd;
+    background-color: ${(props) => (props.selected ? '#00d26c' : '#ddd')};
     cursor: pointer;
   }
 `;
@@ -205,8 +206,8 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
 
   optionArr = optionArr.length ? optionArr : [[{ amount: 10 }, { amount: 30 }]];
 
-  const donate = (nonce) => {
-    makeDonation({
+  const donate = async (nonce) => {
+    const res = await makeDonation({
       firstname: firstname.value,
       lastname: lastname.value,
       email,
@@ -214,6 +215,7 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
       projectId: parseInt(projectId.value),
       nonce: nonce
     });
+    console.log(res.data);
   };
 
   useEffect(() => {
@@ -224,7 +226,7 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
 
   useEffect(() => {
     const form = document.querySelector('#cardForm');
-    const authorization = process.env.TEST_GATEWAY_KEY;
+    const authorization = getGatewayKey();
 
     braintree.client.create({ authorization }, (err, clientInstance) => {
       if (err) {
@@ -288,6 +290,19 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
     };
   }, []);
 
+  const removedRow = (
+    <Row>
+      <Input>
+        <input {...projectId} />
+        <label>Project ID</label>
+      </Input>
+      <Input>
+        <input {...amount} />
+        <label>Amount</label>
+      </Input>
+    </Row>
+  );
+
   return (
     <div>
       <Overlay />
@@ -302,23 +317,16 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
             {options.map((option) => (
               <Option
                 key={option.amount}
-                onClick={() => setAmount(option.amount)}
+                onClick={() => {
+                  setAmount(option.amount);
+                }}
+                selected={amount.value === option.amount}
               >
                 ${option.amount}
               </Option>
             ))}
           </Row>
         ))}
-        <Row>
-          <Input>
-            <input {...projectId} />
-            <label>Project ID</label>
-          </Input>
-          <Input>
-            <input {...amount} />
-            <label>Amount</label>
-          </Input>
-        </Row>
         <Row>
           <Input>
             <input {...firstname} />

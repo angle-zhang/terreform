@@ -29,7 +29,7 @@ export default async (
   const biomes = createBiomes(scene, camera)
   const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
-
+    
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {
     if (event.keyCode === 32) {
@@ -87,7 +87,7 @@ export default async (
     scene,
     {
       color = 0xffffff,
-      intensity = 0.35,
+      intensity = 0.35
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {
@@ -116,6 +116,9 @@ export default async (
   return {
     update,
     onWindowResize,
+    callbacks: {
+      switchBiomes: () => biomes.next()
+    },
     scene
   }
 }
