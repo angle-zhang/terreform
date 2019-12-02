@@ -38,6 +38,16 @@ export const initKeys = async (test = true) => {
   return res.data;
 };
 
+export const initBiomeData = async () => {
+  const res = await axios.get('/api/biome/');
+  return res.data;
+};
+
+export const initDonationData = async () => {
+  const res = await axios.get('/api/donation/');
+  return res.data;
+};
+
 export const getGatewayKey = () => GATEWAY_KEY;
 
 export const makeDonation = async ({

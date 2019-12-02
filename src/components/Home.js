@@ -6,44 +6,61 @@ import Navbar from './Nav';
 import { CardDonate } from './Donate';
 import ThreeContainer from './ThreeContainer.js';
 import Description from './Description';
+import DonationPopup, { SuccessPopup } from './Popup';
 import { NoSelect, ProgressBar, ArrowIndicator } from './presentational/Other';
 
-/* split arr into arrays of size n */
-const split = (arr, n) => {
+const splitAndLimit = (arr) => {
   const newArr = [];
-  for (let i = 0; i < arr.length; i += n) {
-    newArr.push(arr.slice(i, i + n));
+  let lim = arr.length;
+  if (arr.length > 5) {
+    lim = 5;
+    newArr.push(arr.slice(0, 3));
+    newArr.push(arr.slice(3, 5));
+  } else if (arr.length > 2) {
+    lim = 2;
+    newArr.push(arr.slice(0, 2));
   }
   return newArr;
 };
 
-const Home = ({ projects }) => {
+const Home = ({ projects, donationIds, getDonationDetails }) => {
   const maxPage = projects.length;
   const [page, setPage] = useState(0);
   const [donating, toggleDonating] = useState(false);
+  const [popupProps, setPopupProps] = useState({ hide: true });
+
+  const [i, seti] = useState(1);
+
+  const renderPopup = (id, x, y) => {
+    setPopupProps({
+      donation: getDonationDetails(id),
+      x,
+      y,
+      hide: false
+    });
+    return () => {
+      setPopupProps({ ...popupProps, hide: true });
+    };
+  };
 
   return (
-    <div>
+    <div onClick={(e) => renderPopup(1, e.clientX, e.clientY)}>
       <Navbar />
-      <ThreeContainer />
-      {projects.length ? (
-        <div>
-          <Description
-            title={projects[page].title}
-            body={projects[page].summary}
-            onDonate={() => toggleDonating((val) => !val)}
-          />
-          <ProgressBar
-            percent={
-              parseInt(projects[page].funding) / parseInt(projects[page].goal)
-            }
-            goal={projects[page].goal}
-            donations={projects[page].numberOfDonations}
-          />
-        </div>
-      ) : (
-        ''
-      )}
+      <SuccessPopup />
+      <ThreeContainer renderPopup={renderPopup} donationIds={donationIds} />
+      <DonationPopup {...popupProps} />
+      <Description
+        title={projects[page].title}
+        body={projects[page].summary}
+        onDonate={() => toggleDonating((val) => !val)}
+      />
+      <ProgressBar
+        percent={
+          parseInt(projects[page].funding) / parseInt(projects[page].goal)
+        }
+        goal={projects[page].goal}
+        donations={projects[page].numberOfDonations}
+      />
       <ArrowIndicator
         onUp={() => setPage(page == maxPage - 1 ? 0 : page + 1)}
         onDown={() => setPage(page == 0 ? maxPage - 1 : page - 1)}
@@ -58,10 +75,7 @@ const Home = ({ projects }) => {
           title={projects[page].title}
           optionArr={
             projects[page].donationOptions
-              ? split(
-                  projects[page].donationOptions.donationOption.slice(0, 5),
-                  3
-                )
+              ? splitAndLimit(projects[page].donationOptions.donationOption)
               : []
           }
         />

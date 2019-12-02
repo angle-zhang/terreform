@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import Navbar from './Nav';
 import { makeDonation, getGatewayKey } from '../globalGiving';
+import { Loading } from './presentational/Other';
 
 /* custom field hook */
 const useField = (type, init = '') => {
@@ -12,6 +13,31 @@ const useField = (type, init = '') => {
 
   return [{ type, value, onChange }, setValue];
 };
+
+const TextDetail = styled.div`
+  text-align: left;
+  color: #000;
+
+  & h1,
+  p {
+    user-select: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+
+  & h1 {
+    font-size: 36px;
+  }
+
+  & p {
+    font-family: 'Nunito Pro', sans-serif;
+    font-size: 15px;
+    margin-bottom: 30px;
+    line-height: 28px;
+  }
+`;
 
 const Overlay = styled.div`
   background-color: rgba(56, 56, 56, 0.5);
@@ -66,6 +92,24 @@ const Row = styled.div`
   margin-left: 13%;
   display: flex;
   justify-content: ${(props) => (props['flex-end'] ? 'flex-end' : 'center')};
+  align-items: center;
+`;
+
+const Error = styled.div`
+  color: #e91e63;
+  width: 100%;
+  margin-left: -10px;
+  font-size: 17px;
+  opacity: ${(props) => (props.show ? 1 : 0)};
+  transition: all 0.2s;
+`;
+
+const Divider = styled.div`
+  text-align: left;
+  font-weight: bold;
+  font-size: 22px;
+  margin: 15px 14.5%;
+  width: 74%;
 `;
 
 const Input = styled.div`
@@ -77,7 +121,7 @@ const Input = styled.div`
     margin: -55px 0 0 15px;
     font-size: 14px;
     color: #777;
-    transition: all 0.25s;
+    transition: all 0.2s;
   }
 
   & input {
@@ -90,16 +134,16 @@ const Input = styled.div`
     background-color: #eee;
     border: 2px solid transparent;
     border-radius: 5px;
-    transition: all 0.25s;
+    transition: all 0.2s;
   }
 
   & input:hover {
-    border-bottom: 2px solid #00e676;
+    box-shadow: 0 2px 0 #222;
     border-radius: 5px 5px 0px 0px;
   }
 
   & input:hover + label {
-    color: #00e676;
+    color: #222;
   }
 
   & input:focus {
@@ -114,13 +158,15 @@ const FullInput = styled(Input)`
 `;
 
 const Form = styled.div`
+  visibility: ${(props) => (props.loading ? 'hidden' : 'visible')}
+
   label {
     position: absolute;
-    margin-top: -65px;
+    margin-top: -60px;
     margin-left: 15%;
     font-size: 14px;
     color: #777;
-    transition: all 0.25s;
+    transition: all 0.2s;
   }
 
   #card-number,
@@ -134,16 +180,16 @@ const Form = styled.div`
     margin: 16px 0 16px 71px;
     padding: 23px 0 8px 10px;
     background-color: #eee;
-    border: 2px solid transparent;
+    border: 2px 2px 0 2px solid transparent;
     border-radius: 5px;
-    transition: all 0.25s;
+    transition: all 0.2s;
   }
 
   #card-number:hover,
   #expiration-date:hover,
   #cvv:hover,
   #postal-code:hover {
-    border-bottom: 2px solid #00e676;
+    box-shadow: 0 2px 0 #222;
     border-radius: 5px 5px 0px 0px;
   }
 
@@ -151,30 +197,38 @@ const Form = styled.div`
   #expiration-date:hover + label,
   #cvv:hover + label,
   #postal-code:hover + label {
-    color: #00e676;
+    color: #222;
   }
 
-  .button-container input {
+  .loading svg {
+    margin-top: 75px;
+    visibility: ${(props) => (props.loading ? 'visible' : 'hidden')}
+  }
+
+  & .button-container input {
     padding: 10px 23px;
-    margin-top: 10px;
-    margin-right: -10px;
+    // margin-top: 10px;
+    margin-right: -20px;
     text-decoration: none;
     font-family: 'Montserrat', sans-serif;
     font-size: 18px;
-    color: #fff;
-    background-color: #00c853;
+    color: ${(props) => (props.disabled ? '#ccc' : '#fff')}
+    background-color: ${(props) =>
+      props.disabled ? '#eee' : 'rgba(130, 167, 127, 1);'}
     border: 2px solid transparent;
     border-radius: 5px;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: ${(props) =>
+      props.disabled ? '' : '0 1px 2px 0 rgba(0, 0, 0, 0.2)'};
     transition: all 0.25s;
   }
 
-  .button-container input:hover {
-    background-color: #388e3c;
-    cursor: pointer;
+  & .button-container input:hover {
+    background-color: ${(props) =>
+      props.disabled ? '#eee' : 'rgba(130, 167, 127, 0.7);'}
+    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
   }
 
-  .button-container input:focus {
+  & .button-container input:focus {
     outline: none;
   }
 `;
@@ -186,12 +240,36 @@ const Option = styled.div`
   margin-left: 10px;
   text-align: center;
   line-height: 100px;
-  border-radius: 5px;
-  background-color: ${(props) => (props.selected ? '#00d26c' : '#eee')};
-  font-size: 30px;
+  border-radius: 10px;
+  background-color: ${(props) => (props.selected ? '#222' : '#eee')};
+  color: ${(props) => (props.selected ? '#fff' : '#222')};
+  font-size: 35px;
+  font-weight: bold;
+
+  & input {
+    font-family: 'SF Pro', sans-serif;
+    font-size: 30px;
+    padding: 5px;
+    position: relative;
+    background-color: #fff;
+    border: none;
+    width: 50px;
+    height: 35px;
+    border-radius: 10px;
+  }
+
+  & input::-webkit-outer-spin-button,
+  & input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  & input:focus {
+    outline: none;
+  }
 
   &:hover {
-    background-color: ${(props) => (props.selected ? '#00d26c' : '#ddd')};
+    background-color: ${(props) => (props.selected ? '#222' : '#ddd')};
     cursor: pointer;
   }
 `;
@@ -199,23 +277,76 @@ const Option = styled.div`
 const Donate = ({ id, optionArr, onClose, description, title }) => {
   const [projectId, setId] = useField('number', id);
   const [amount, setAmount] = useField('number');
+  const [customAmount, setCustomAmount] = useState('');
   const [firstname, setFirst] = useField('text');
   const [lastname, setLast] = useField('text');
   const [email, setEmail] = useState('');
   const [nonce, setNonce] = useState('');
 
+  const [invalidInput, setInvalidInput] = useState(true);
+  const [loadingForm, setLoadingForm] = useState(true);
+  const [processing, setProcessing] = useState(false);
+  const [success, setSuccess] = useState({ status: false });
+  const [error, setError] = useState('');
+
+  const node = useRef();
+
+  const handleClick = (e) => {
+    if (node.current.contains(e.target)) {
+      return;
+    }
+    onClose();
+  };
+
   optionArr = optionArr.length ? optionArr : [[{ amount: 10 }, { amount: 30 }]];
 
+  const checkInvalid = () => {
+    const validInputs = document.getElementsByClassName(
+      'braintree-hosted-fields-valid'
+    );
+    if (validInputs.length !== 4) {
+      return 'Invalid payment information.';
+    } else if (!email) {
+      return 'Missing email.';
+    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      return 'Invalid email.';
+    } else if (!firstname.value || !lastname.value) {
+      return 'Missing name.';
+    } else if (!amount.value) {
+      return 'Select an amount.';
+    }
+    return '';
+  };
+
   const donate = async (nonce) => {
-    const res = await makeDonation({
-      firstname: firstname.value,
-      lastname: lastname.value,
-      email,
-      amount: parseInt(amount.value),
-      projectId: parseInt(projectId.value),
-      nonce: nonce
-    });
-    console.log(res.data);
+    setProcessing(true);
+    try {
+      const res = await makeDonation({
+        firstname: firstname.value,
+        lastname: lastname.value,
+        email,
+        amount: parseInt(amount.value),
+        projectId: parseInt(projectId.value),
+        nonce: nonce
+      });
+      console.log(res.data);
+      setSuccess({ status: true, donation: res.data.donation });
+    } catch (err) {
+      console.error(err);
+      onClose();
+      setTimeout(
+        () =>
+          alert(
+            'There was a problem with your transaction! If the problem persists, please contact us.'
+          ),
+        250
+      );
+    }
+    setAmount('');
+    setFirst('');
+    setLast('');
+    setEmail('');
+    setProcessing(false);
   };
 
   useEffect(() => {
@@ -223,6 +354,11 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
       donate(nonce);
     }
   }, [nonce]);
+
+  useEffect(() => {
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  });
 
   useEffect(() => {
     const form = document.querySelector('#cardForm');
@@ -247,12 +383,11 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
               'font-weight': 'lighter',
               color: '#ccc'
             },
-            ':focus': {
-              color: 'black',
-              border: '3px solid blue'
-            },
             '.valid': {
-              color: '#8bdda8'
+              color: 'rgba(130, 167, 127, 1)'
+            },
+            '.invalid': {
+              color: '#e91e63'
             }
           },
           fields: {
@@ -285,6 +420,7 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
           };
 
           form.addEventListener('submit', teardown, false);
+          setLoadingForm(false);
         }
       );
     };
@@ -303,16 +439,60 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
     </Row>
   );
 
+  if (success.status) {
+    return (
+      <div>
+        <Overlay />
+        <Centered ref={node}>
+          <Icon src="close.svg" onClick={onClose} />
+          <h2 style={{ textAlign: 'center' }}>Thank You.</h2>
+          <h3 style={{ textAlign: 'center' }}>
+            You have successfully donated ${success.donation.amount}! Your
+            receipt number is "{success.donation.receipt.receiptNumber}".
+          </h3>
+          <p style={{ textAlign: 'center' }}>
+            Your contribution will help plant more trees, build more homes,
+            improve air quality, and protect our oceans. With every donation,
+            another tree is planted.
+          </p>
+        </Centered>
+      </div>
+    );
+  }
+
+  if (processing) {
+    return (
+      <div>
+        <Overlay />
+        <Centered ref={node}>
+          <Icon src="close.svg" onClick={onClose} />
+          <h3 style={{ textAlign: 'center', marginTop: '40%' }}>
+            Confirming Purchase
+          </h3>
+          <br />
+          <br />
+          <br />
+          <Row>
+            <Loading />
+          </Row>
+        </Centered>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Overlay />
-      <Centered>
+      <Centered ref={node}>
         <Icon src="close.svg" onClick={onClose} />
-        <h3>{title}</h3>
-        <br />
-        <p style={{ lineHeight: '28px', textAlign: 'left' }}>{description}</p>
-        <br />
-        {optionArr.map((options) => (
+        <TextDetail>
+          <h3>{title}</h3>
+          <br />
+          <p>{description}</p>
+          <br />
+        </TextDetail>
+
+        {optionArr.map((options, i) => (
           <Row key={options[0].amount}>
             {options.map((option) => (
               <Option
@@ -325,8 +505,32 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
                 ${option.amount}
               </Option>
             ))}
+            {i === optionArr.length - 1 ? (
+              <Option
+                onClick={() => {
+                  setAmount(customAmount);
+                }}
+                selected={customAmount && amount.value === customAmount}
+              >
+                $
+                <input
+                  type="number"
+                  min={1}
+                  value={customAmount}
+                  onChange={(e) => {
+                    if (e.target.value >= 0) {
+                      setCustomAmount(parseInt(e.target.value));
+                      setAmount(parseInt(e.target.value));
+                    }
+                  }}
+                />
+              </Option>
+            ) : (
+              ''
+            )}
           </Row>
         ))}
+        <Divider>Your Information</Divider>
         <Row>
           <Input>
             <input {...firstname} />
@@ -347,7 +551,11 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
             <label>Email</label>
           </FullInput>
         </Row>
-        <Form className="demo-frame">
+        <Divider>Payment Information</Divider>
+        <Form className="demo-frame" loading={loadingForm}>
+          <Row className="loading">
+            <Loading />
+          </Row>
           <form action="/" method="post" id="cardForm">
             <div id="card-number" className="hosted-field" />
             <label className="hosted-fields--label" htmlFor="card-number">
@@ -369,14 +577,28 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
               Postal Code
             </label>
 
-            <div className="button-container" style={{ marginLeft: '70%' }}>
-              <input
-                type="submit"
-                className="button button--small button--green"
-                value="Contribute"
-                id="submit"
-              />
-            </div>
+            <Row>
+              <Error show={error}>{error}</Error>
+              <div className="button-container">
+                <input
+                  type="submit"
+                  className="button button--small button--green"
+                  value="Contribute"
+                  id="submit"
+                  onClick={(e) => {
+                    const err = checkInvalid();
+                    if (err) {
+                      e.preventDefault();
+                      setError('');
+                      setTimeout(() => {
+                        setError(err);
+                      }, 200);
+                      return;
+                    }
+                  }}
+                />
+              </div>
+            </Row>
           </form>
         </Form>
       </Centered>
