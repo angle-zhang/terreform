@@ -29,6 +29,7 @@ router.route('/:id').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+/*
 // delete a donation by id request
 router.route('/:id').delete((req, res) => {
   Donation.findByIdAndDelete(req.params.id)
@@ -50,6 +51,6 @@ router.route('/update/:id').post((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
     })
     .catch(err => res.status(400).json('Error: ' + err));
-});
+});*/
 
 module.exports = router;

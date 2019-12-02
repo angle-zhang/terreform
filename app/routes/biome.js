@@ -15,4 +15,16 @@ router.route('/:id').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+//Add a donation to the biome's donation list
+router.route('/:id/add').post((req, res) => {
+	Biome.findById(req.params.id)
+		.then(biome => {
+			biome.donation_list.push(req.body.donation);
+			biome.save()
+        		.then(() => res.json('Biome donation list updated!'))
+        		.catch(err => res.status(400).json('Error: ' + err));
+		})
+		.catch(err => res.status(400).json('Error: ' + err));
+});
+
 module.exports = router;
