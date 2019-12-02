@@ -50,8 +50,6 @@ export default async (
 ) => {
   await loadModels()
 
-  console.log(poissonDiskSampling(0.1, 10, [-1, 1, -1, 1]))
-
   const screenDimensions = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -121,13 +119,17 @@ export default async (
     scene,
     {
       color = 0xffffff,
-      intensity = 1,
+      intensity = 0.5,
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {
     const light = new THREE.HemisphereLight(color, 0x3c6a6d, intensity)
     light.position.set(x, y, z)
     scene.add(light)
+
+    const dir = new THREE.DirectionalLight(color, 0.5)
+    dir.position.set(x, y, z)
+    scene.add(dir)
   }
 
   // DEMO
