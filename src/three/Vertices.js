@@ -37,11 +37,5 @@ export const sampleVertices = (vertices, n, [gridX, gridY], bounds) => {
       return true
     })
     .sort(() => 0.5 - chance.random())
-  return shuffledVertices.splice(0, n).map(pt => {
-    const dx = (0.15 * (bx1 - bx0)) / gridX
-    const dy = (0.15 * (by1 - by0)) / gridY
-    pt[0] += chance.floating({ min: -1 * dx, max: -1 * dy })
-    pt[2] += chance.floating({ min: -1 * dx, max: -1 * dy })
-    return pt
-  })
+  return shuffledVertices.splice(0, n)
 }

@@ -141,12 +141,17 @@ class TreeBiome extends Biome {
     const models = [
       { name: 'rock-1', scale: [0.05, 0.05, 0.05] },
       { name: 'rock-2', scale: [0.1, 0.1, 0.1] },
+      { name: 'rock-3', scale: [0.05, 0.05, 0.05] },
       { name: 'tree-1', scale: [0.03, 0.03, 0.03] },
       { name: 'tree-2', scale: [0.03, 0.03, 0.03] },
-      { name: 'tree-3', scale: [0.03, 0.03, 0.03] }
+      { name: 'tree-3', scale: [0.03, 0.03, 0.03] },
+      { name: 'tree-4', scale: [0.03, 0.03, 0.03] }
     ]
     randomVertices.forEach(([x, y, z]) => {
-      const model = models[this.chance.weighted([0, 1, 2, 3, 4], [1, 1, 2, 2, 2])]
+      const model =
+        models[
+          this.chance.weighted([0, 1, 2, 3, 4, 5, 6], [1, 1, 1, 2, 2, 2, 2])
+        ]
       const object = loadedModels[model.name].clone()
       const scaleMultiplier = chance.floating({ min: 0.9, max: 1 })
       object.scale.set(...model.scale.map(v => v * scaleMultiplier))
