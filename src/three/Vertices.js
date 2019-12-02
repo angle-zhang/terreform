@@ -1,7 +1,5 @@
 import Chance from 'chance'
 
-export const chance = new Chance(1)
-
 export const groupVertices = mesh => {
   const arr = mesh.geometry.attributes.position.array
   const vertices = []
@@ -16,6 +14,7 @@ export const groupVertices = mesh => {
 }
 
 export const sampleVertices = (vertices, n, [gridX, gridY], bounds) => {
+  const chance = new Chance(1)
   const [[bx0, bx1], [by0, by1]] = bounds
   const seen = {}
   vertices.filter((pt) => {
