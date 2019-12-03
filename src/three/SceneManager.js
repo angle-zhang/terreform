@@ -87,11 +87,11 @@ export default async (
     scene,
     {
       color = 0xffffff,
-      intensity = 0.35,
+      intensity = 0.2,
       position: { x, y, z } = { x: -1, y: 2, z: 4 }
     }
   ) {
-    const light = new THREE.HemisphereLight(color, 0x3c6a6d, intensity)
+    const light = new THREE.AmbientLight(color, intensity)
     light.position.set(x, y, z)
     scene.add(light)
 

@@ -14,7 +14,7 @@ export const groupVertices = mesh => {
 }
 
 export const sampleVertices = (vertices, n, [gridX, gridY], bounds) => {
-  const chance = new Chance(1)
+  const chance = new Chance(3)
   const [[bx0, bx1], [by0, by1]] = bounds
   const seen = {}
   vertices.filter((pt) => {

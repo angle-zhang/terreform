@@ -101,7 +101,7 @@ class Boid {
 
   createMesh(x, y, z) {
     const mesh = loadedModels['bird'].clone()
-    mesh.scale.set(0.05, 0.05, 0.05)
+    mesh.scale.set(0.03, 0.03, 0.03)
     mesh.eulerOrder = 'ZXY'
     // mesh.scale.set(1, 1, 1)
     mesh.rotation.set(0, Math.PI / -2, 0)

@@ -48,7 +48,7 @@ class EnvironmentBiome extends Biome {
     super(scene, camera)
     this.setObjects()
   }
-  
+
   setScene() {
     // Add clouds in random positions
     const clouds = []
@@ -99,22 +99,50 @@ class EnvironmentBiome extends Biome {
   }
 }
 
-class TreeBiome extends Biome {
-  constructor(scene, camera, position) {
+class StandardBiome extends Biome {
+  constructor(scene, camera, options) {
     super(scene, camera)
+    const { color, position } = options
+    this.color = color
     this.chance = new Chance(10)
     this.setObjects(position)
   }
 
   setScene() {
     const oldColor = this._scene.background
-    const newColor = 0x8dd7d4
     const duration = 1000
     new TWEEN.Tween(oldColor)
-      .to(new THREE.Color(newColor), duration)
+      .to(new THREE.Color(this.color), duration)
       .easing(TWEEN.Easing.Quadratic.Out)
       .onUpdate(() => (this._scene.background = oldColor))
       .start()
+  }
+
+  positionGroup(position) {
+    this.group.position.set(...position)
+
+    // This is needed since world and local rotation is separate, and all the
+    // biomes are put into a group, which does not affect local rotation
+    this.group.rotateOnWorldAxis(
+      new THREE.Vector3(1, 0, 0),
+      new THREE.Vector3(...position).angleTo(new THREE.Vector3(0, 0, -1)) *
+        (Math.sign(position[1]) || 1)
+    )
+
+    this.group.rotation.set(this.group.rotation.x + Math.PI / 8, 0, 0)
+
+  }
+
+  removeScene() {}
+
+  animate() {}
+}
+
+class MarineBiome extends StandardBiome {
+  constructor(scene, camera, position) {
+    super(scene, camera, { position, color: 0x8dd7d4 })
+    this.chance = new Chance(10)
+    this.setObjects(position)
   }
 
   removeScene() {}
@@ -122,10 +150,63 @@ class TreeBiome extends Biome {
   setObjects(position) {
     this.group = new THREE.Object3D()
 
-    const top = loadedModels['forestbiome-top'].clone()
+    const top = loadedModels['marine-biome-top'].clone()
+    top.scale.set(0.25, 0.25, 0.25)
+    top.position.set(0, -0.5, 0)
+    this.group.add(top)
+    const bottom = loadedModels['marine-biome-bottom'].clone()
+    bottom.scale.set(0.25, 0.25, 0.25)
+    bottom.position.set(0, -0.5, 0)
+    this.group.add(bottom)
+    const water = loadedModels['marine-biome-water'].clone()
+    water.scale.set(0.25, 0.25, 0.25)
+    water.position.set(0, 0.25, 0)
+    this.group.add(water)
+
+    const vertices = groupVertices(top)
+    const randomVertices = sampleVertices(
+      vertices,
+      30,
+      [20, 20],
+      [
+        [-1, 1],
+        [-1, 1]
+      ]
+    )
+    const models = [
+      { name: 'seaweed-1', scale: [0.01, 0.01, 0.01] },
+      { name: 'seaweed-2', scale: [0.01, 0.01, 0.01] },
+      { name: 'coral-1', scale: [0.05, 0.05, 0.05] },
+      { name: 'coral-2', scale: [0.05, 0.05, 0.05] }
+    ]
+    randomVertices.forEach(([x, y, z]) => {
+      const model = models[this.chance.weighted([0, 1, 2, 3], [1, 1, 1, 1])]
+
+      const object = loadedModels[model.name].clone()
+      const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
+      object.scale.set(...model.scale.map(v => v * scaleMultiplier))
+      object.position.set(x * 0.25, y * 0.25 + -0.49, z * 0.25)
+      this.group.add(object)
+    })
+
+    this.positionGroup(position)
+  }
+
+  animate() {}
+}
+
+class ForestBiome extends StandardBiome {
+  constructor(scene, camera, position) {
+    super(scene, camera, { position, color: 0x8dd7d4 })
+  }
+
+  setObjects(position) {
+    this.group = new THREE.Object3D()
+
+    const top = loadedModels['forest-biome-top'].clone()
     top.scale.set(2, 2, 2)
     this.group.add(top)
-    const bottom = loadedModels['forestbiome-bottom'].clone()
+    const bottom = loadedModels['forest-biome-bottom'].clone()
     bottom.scale.set(2, 2, 2)
     this.group.add(bottom)
     const vertices = groupVertices(top)
@@ -138,6 +219,7 @@ class TreeBiome extends Biome {
         [-1, 1]
       ]
     )
+
     const models = [
       { name: 'rock-1', scale: [0.05, 0.05, 0.05] },
       { name: 'rock-2', scale: [0.1, 0.1, 0.1] },
@@ -153,23 +235,60 @@ class TreeBiome extends Biome {
           this.chance.weighted([0, 1, 2, 3, 4, 5, 6], [1, 1, 1, 2, 2, 2, 2])
         ]
       const object = loadedModels[model.name].clone()
-      const scaleMultiplier = chance.floating({ min: 0.9, max: 1 })
+      const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
       object.scale.set(...model.scale.map(v => v * scaleMultiplier))
       object.position.set(x * 2, y * 2 + 0.01, z * 2)
       this.group.add(object)
     })
 
-    this.group.position.set(...position)
+    this.positionGroup(position)
+  }
+}
 
-    // This is needed since world and local rotation is separate, and all the
-    // biomes are put into a group, which does not affect local rotation
-    this.group.rotateOnWorldAxis(
-      new THREE.Vector3(1, 0, 0),
-      new THREE.Vector3(...position).angleTo(new THREE.Vector3(0, 0, -1)) *
-        (Math.sign(position[1]) || 1)
+class AgricultureBiome extends StandardBiome {
+  constructor(scene, camera, position) {
+    super(scene, camera, { position, color: 0x8dd7d4 })
+    this.chance = new Chance(10)
+    this.setObjects(position)
+  }
+
+  removeScene() {}
+
+  setObjects(position) {
+    this.group = new THREE.Object3D()
+
+    const top = loadedModels['agri-biome-top'].clone()
+    top.scale.set(2, 2, 2)
+    this.group.add(top)
+    const bottom = loadedModels['agri-biome-bottom'].clone()
+    bottom.scale.set(2, 2, 2)
+    this.group.add(bottom)
+    for (let i = 0; i < 3; i++) {
+      const solarPanel = loadedModels['solar-panel'].clone()
+      solarPanel.scale.set(2, 2, 2)
+      solarPanel.position.set(1.5, 0, i / 1.5 - 1.5)
+      this.group.add(solarPanel)
+    }
+
+    const vertices = groupVertices(top.children[0])
+    const randomVertices = sampleVertices(
+      vertices,
+      30,
+      [20, 20],
+      [
+        [-1, 1],
+        [-1, 1]
+      ]
     )
 
-    this.group.rotation.set(this.group.rotation.x + Math.PI / 8, 0, 0)
+    randomVertices.forEach(([x, y, z]) => {
+      const object = loadedModels['crops'].clone()
+      object.scale.set(1.5, 1.5, 1.5)
+      object.position.set(x * 2, y * 2 + 0.01, z * 2)
+      this.group.add(object)
+    })
+
+    this.positionGroup(position)
   }
 
   animate() {}
@@ -179,10 +298,9 @@ export default class Biomes {
   constructor(scene, camera) {
     this.scene = scene
     this.biomes = [
-      new TreeBiome(scene, camera, [0, 0, -6]),
-      new TreeBiome(scene, camera, [0, 0, -6]),
-      new TreeBiome(scene, camera, [0, 0, -6]),
-      new TreeBiome(scene, camera, [0, 0, -6])
+      new ForestBiome(scene, camera, [0, 0, -6]),
+      new AgricultureBiome(scene, camera, [0, 0, -6]),
+      new MarineBiome(scene, camera, [0, 0, -6]),
     ]
     this.currentIndex = 0
     this.biomes[this.currentIndex].setScene()
@@ -193,26 +311,30 @@ export default class Biomes {
   }
 
   removeBiome(i) {
+    const biome = this.biomes[i]
     const coords = { y: this.biomes[i].group.position.y }
+    biome.removeScene()
     new TWEEN.Tween(coords)
       .to({ y: -10 }, 1000)
       .easing(TWEEN.Easing.Quadratic.Out)
       .onUpdate(() => {
-        this.biomes[i].group.position.y = coords.y
+        biome.group.position.y = coords.y
       })
       .start()
-    setTimeout(() => this.scene.remove(this.biomes[i].group), 1000)
+    setTimeout(() => this.scene.remove(biome.group), 1000)
   }
 
   renderCurrentBiome() {
-    this.biomes[this.currentIndex].group.position.y = 10
-    this.scene.add(this.biomes[this.currentIndex].group)
-    const coords = { y: this.biomes[this.currentIndex].group.position.y }
+    const biome = this.biomes[this.currentIndex]
+    biome.group.position.y = 10
+    biome.setScene()
+    this.scene.add(biome.group)
+    const coords = { y: biome.group.position.y }
     new TWEEN.Tween(coords)
       .to({ y: 0 }, 1000)
       .easing(TWEEN.Easing.Quadratic.Out)
       .onUpdate(() => {
-        this.biomes[this.currentIndex].group.position.y = coords.y
+        biome.group.position.y = coords.y
       })
       .start()
   }
