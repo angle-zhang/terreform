@@ -57,16 +57,7 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
   };
 
   return (
-    <div
-      onClick={(e) => {
-        const cleanup1 = renderPopup(1, e.clientX, e.clientY);
-        const cleanup2 = renderSuccess(1, e.clientX, e.clientY);
-        setTimeout(() => {
-          cleanup1();
-          cleanup2();
-        }, 1000);
-      }}
-    >
+    <div>
       <Navbar />
       <ThreeContainer renderPopup={renderPopup} donationIds={donationIds} />
       <DonationPopup {...popupProps} />
