@@ -3,7 +3,7 @@ import TWEEN from '@tweenjs/tween.js'
 import { loadedModels } from './ModelLoader.js'
 import Chance from 'chance'
 
-import { groupVertices, sampleVertices } from './Vertices'
+import { groupVertices, sampleVertices, sample } from './Vertices'
 
 import { Flock } from './Boids.js'
 import { createCloud } from './Clouds.js'
@@ -123,14 +123,13 @@ class StandardBiome extends Biome {
 
     // This is needed since world and local rotation is separate, and all the
     // biomes are put into a group, which does not affect local rotation
-    this.group.rotateOnWorldAxis(
-      new THREE.Vector3(1, 0, 0),
-      new THREE.Vector3(...position).angleTo(new THREE.Vector3(0, 0, -1)) *
-        (Math.sign(position[1]) || 1)
-    )
+    // this.group.rotateOnWorldAxis(
+    //   new THREE.Vector3(1, 0, 0),
+    //   new THREE.Vector3(...position).angleTo(new THREE.Vector3(0, 0, -1)) *
+    //     (Math.sign(position[1]) || 1)
+    // )
 
     this.group.rotation.set(this.group.rotation.x + Math.PI / 8, 0, 0)
-
   }
 
   removeScene() {}
@@ -153,6 +152,7 @@ class MarineBiome extends StandardBiome {
     const top = loadedModels['marine-biome-top'].clone()
     top.scale.set(0.25, 0.25, 0.25)
     top.position.set(0, -0.5, 0)
+    top.receiveShadow = true
     this.group.add(top)
     const bottom = loadedModels['marine-biome-bottom'].clone()
     bottom.scale.set(0.25, 0.25, 0.25)
@@ -164,25 +164,25 @@ class MarineBiome extends StandardBiome {
     this.group.add(water)
 
     const vertices = groupVertices(top)
-    const randomVertices = sampleVertices(
+    const randomVertices = sample(
       vertices,
-      30,
-      [20, 20],
+      50,
+      [18, 18],
       [
-        [-1, 1],
-        [-1, 1]
+        [-7, 7],
+        [-7, 7]
       ]
     )
     const models = [
-      { name: 'seaweed-1', scale: [0.01, 0.01, 0.01] },
-      { name: 'seaweed-2', scale: [0.01, 0.01, 0.01] },
+      { name: 'seaweed-1', scale: [0.02, 0.02, 0.02] },
+      { name: 'seaweed-2', scale: [0.02, 0.02, 0.02] },
       { name: 'coral-1', scale: [0.05, 0.05, 0.05] },
       { name: 'coral-2', scale: [0.05, 0.05, 0.05] }
     ]
     randomVertices.forEach(([x, y, z]) => {
-      const model = models[this.chance.weighted([0, 1, 2, 3], [1, 1, 1, 1])]
-
+      const model = models[this.chance.weighted([0, 1, 2, 3], [2, 2, 1, 1])]
       const object = loadedModels[model.name].clone()
+      object.castShadow = true
       const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
       object.scale.set(...model.scale.map(v => v * scaleMultiplier))
       object.position.set(x * 0.25, y * 0.25 + -0.49, z * 0.25)
@@ -205,23 +205,24 @@ class ForestBiome extends StandardBiome {
 
     const top = loadedModels['forest-biome-top'].clone()
     top.scale.set(2, 2, 2)
+    top.receiveShadow = true
     this.group.add(top)
     const bottom = loadedModels['forest-biome-bottom'].clone()
     bottom.scale.set(2, 2, 2)
     this.group.add(bottom)
     const vertices = groupVertices(top)
-    const randomVertices = sampleVertices(
+    const randomVertices = sample(
       vertices,
-      30,
-      [20, 20],
+      50,
+      [18, 18],
       [
-        [-1, 1],
-        [-1, 1]
+        [-1 + 2 / 19, 1 - 2 / 19],
+        [-1 + 2 / 19, 1 - 2 / 19]
       ]
     )
 
     const models = [
-      { name: 'rock-1', scale: [0.05, 0.05, 0.05] },
+      { name: 'rock-1', scale: [0.06, 0.06, 0.06] },
       { name: 'rock-2', scale: [0.1, 0.1, 0.1] },
       { name: 'rock-3', scale: [0.05, 0.05, 0.05] },
       { name: 'tree-1', scale: [0.03, 0.03, 0.03] },
@@ -235,6 +236,7 @@ class ForestBiome extends StandardBiome {
           this.chance.weighted([0, 1, 2, 3, 4, 5, 6], [1, 1, 1, 2, 2, 2, 2])
         ]
       const object = loadedModels[model.name].clone()
+      object.castShadow = true
       const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
       object.scale.set(...model.scale.map(v => v * scaleMultiplier))
       object.position.set(x * 2, y * 2 + 0.01, z * 2)
@@ -247,7 +249,7 @@ class ForestBiome extends StandardBiome {
 
 class AgricultureBiome extends StandardBiome {
   constructor(scene, camera, position) {
-    super(scene, camera, { position, color: 0x8dd7d4 })
+    super(scene, camera, { position, color: 0xfce9cf })
     this.chance = new Chance(10)
     this.setObjects(position)
   }
@@ -259,32 +261,37 @@ class AgricultureBiome extends StandardBiome {
 
     const top = loadedModels['agri-biome-top'].clone()
     top.scale.set(2, 2, 2)
+    top.children[0].receiveShadow = true
     this.group.add(top)
     const bottom = loadedModels['agri-biome-bottom'].clone()
     bottom.scale.set(2, 2, 2)
     this.group.add(bottom)
+
     for (let i = 0; i < 3; i++) {
       const solarPanel = loadedModels['solar-panel'].clone()
+      solarPanel.castShadow = true
       solarPanel.scale.set(2, 2, 2)
       solarPanel.position.set(1.5, 0, i / 1.5 - 1.5)
       this.group.add(solarPanel)
     }
 
     const vertices = groupVertices(top.children[0])
-    const randomVertices = sampleVertices(
+    const randomVertices = sample(
       vertices,
       30,
-      [20, 20],
+      [8, 20],
       [
-        [-1, 1],
-        [-1, 1]
+        [-1 + 2 / 21, 1 - 12 / 21],
+        [-1 + 2 / 21, 1 - 2 / 21]
       ]
     )
 
     randomVertices.forEach(([x, y, z]) => {
       const object = loadedModels['crops'].clone()
-      object.scale.set(1.5, 1.5, 1.5)
-      object.position.set(x * 2, y * 2 + 0.01, z * 2)
+      object.castShadow = true;
+      const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
+      object.scale.set(scaleMultiplier * 3, scaleMultiplier * 3, scaleMultiplier * 3)
+      object.position.set(x * 2, y * 2 + 0.075, z * 2)
       this.group.add(object)
     })
 
@@ -300,7 +307,7 @@ export default class Biomes {
     this.biomes = [
       new ForestBiome(scene, camera, [0, 0, -6]),
       new AgricultureBiome(scene, camera, [0, 0, -6]),
-      new MarineBiome(scene, camera, [0, 0, -6]),
+      new MarineBiome(scene, camera, [0, 0, -6])
     ]
     this.currentIndex = 0
     this.biomes[this.currentIndex].setScene()

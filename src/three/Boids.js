@@ -102,7 +102,7 @@ class Boid {
   createMesh(x, y, z) {
     const mesh = loadedModels['bird'].clone()
     mesh.scale.set(0.03, 0.03, 0.03)
-    mesh.eulerOrder = 'ZXY'
+    mesh.rotation.order = 'ZXY'
     // mesh.scale.set(1, 1, 1)
     mesh.rotation.set(0, Math.PI / -2, 0)
     // const geometry = new THREE.ConeGeometry(0.1, 0.5)

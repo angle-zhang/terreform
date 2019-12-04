@@ -27,8 +27,8 @@ export default async (
   const camera = buildCamera(screenDimensions)
   const raycaster = buildRaycaster()
   const biomes = createBiomes(scene, camera)
-  const controls = buildOrbitControls(biomes.getCurrent().group)
   addLight(scene, lighting)
+  const controls = buildOrbitControls(biomes.getCurrent().group)
     
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {
@@ -51,6 +51,8 @@ export default async (
     // Helps make loaded models brighter
     renderer.gammaFactor = 2.2
     renderer.gammaOutput = true
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMapSoft = true ;
     return renderer
   }
 
@@ -87,17 +89,18 @@ export default async (
     scene,
     {
       color = 0xffffff,
-      intensity = 0.2,
-      position: { x, y, z } = { x: -1, y: 2, z: 4 }
+      intensity = 0.4,
+      position: { x, y, z } = { x: -4, y: 2, z: 0 }
     }
   ) {
     const light = new THREE.AmbientLight(color, intensity)
-    light.position.set(x, y, z)
     scene.add(light)
 
-    const dir = new THREE.DirectionalLight(color, 0.75)
+    const dir = new THREE.PointLight(color, 0.75)
     dir.position.set(x, y, z)
+    dir.castShadow = true
     scene.add(dir)
+    return dir
   }
 
   function update() {
