@@ -13,13 +13,14 @@ const Container = styled.div`
   padding: 20px 40px;
   background-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-50%);
+  z-index: 0;
 `;
 
 const TextDetail = styled.div`
   text-align: left;
   color: #fff;
 
-  & h2,
+  & h1,
   p {
     user-select: none;
     -webkit-user-select: none;
@@ -28,14 +29,17 @@ const TextDetail = styled.div`
     -ms-user-select: none;
   }
 
-  & h2 {
-    font-size: 20px;
+  & h1 {
+    font-size: 36px;
   }
 
   & p {
+    font-family: 'Nunito Pro', sans-serif;
+    font-size: 15px;
     margin-bottom: 30px;
     line-height: 28px;
-    font-size: 15px;
+    max-height: 200px;
+    overflow: auto;
   }
 `;
 
@@ -43,7 +47,7 @@ const Description = ({ title, body, onDonate }) => {
   return (
     <Container>
       <TextDetail>
-        <h2>{title.toUpperCase()}</h2>
+        <h1>{title}</h1>
         <p>{body}</p>
       </TextDetail>
       <Button onClick={onDonate}>Donate</Button>

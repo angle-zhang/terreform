@@ -12,11 +12,12 @@ export const NoSelect = css`
 const ProgressWrapper = styled.div`
   position: absolute;
   top: 50%;
-  right: 5vw;
+  right: 2vw;
   width: 100px;
   height: 40vh;
   text-align: center;
   transform: translateY(-50%);
+  font-family: 'Quicksand';
 
   & p {
     ${NoSelect}
@@ -65,7 +66,7 @@ const Progress = styled.div`
     width: 50px;
     z-index: 2;
     margin-left: -14.5px;
-    margin-top: ${(props) => 35 - props.fill * 33 + 2 + 'vh'};
+    margin-top: ${(props) => 35 - props.fill * 31 + 1 + 'vh'};
     transform: rotate(90deg);
     color: #353535;
     font-size: 15px;
@@ -109,7 +110,8 @@ export const ProgressBar = ({ percent, goal, donations }) => {
 const StyledIndicator = styled.div`
   position: absolute;
   top: 45%;
-  margin-left: 5vw;
+  margin-left: 2vw;
+  font-family: 'Quicksand';
 
   & img {
     ${NoSelect}
@@ -154,5 +156,57 @@ export const ArrowIndicator = ({ onUp, onDown, current, max }) => {
       </p>
       <img src="arrow-down.svg" alt="Arrow down" onClick={onDown} />
     </StyledIndicator>
+  );
+};
+
+const StyledSvg = styled.svg`
+  position: absolute;
+  animation: 2s linear infinite svg-animate;
+
+  & circle {
+    fill: transparent;
+    stroke: #ccc;
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dasharray: 283;
+    // stroke-dashoffset: 75;
+    transform-origin: 50% 50%;
+    animation: 1.4s ease-in-out infinite both circle-animate;
+  }
+
+  @keyframes circle-animate {
+    0%,
+    15% {
+      stroke-dashoffset: 280;
+      transform: rotate(0);
+    }
+
+    40%,
+    65% {
+      stroke-dashoffset: 75;
+      transform: rotate(45deg);
+    }
+
+    100% {
+      stroke-dashoffset: 280;
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes svg-animate {
+    0% {
+      transform: rotateZ(0deg);
+    }
+    100% {
+      transform: rotateZ(360deg);
+    }
+  }
+`;
+
+export const Loading = () => {
+  return (
+    <StyledSvg viewBox="0 0 100 100" width="100px">
+      <circle cx="50" cy="50" r="45" />
+    </StyledSvg>
   );
 };
