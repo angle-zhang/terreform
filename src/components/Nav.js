@@ -103,7 +103,7 @@ const AnimatedHam = styled.div`
   // margin: auto 33px;
   // position: absolute;
   // right: 5vw;
-  margin-right: calc(5vw + 25px);
+  margin-right: calc(2vw + 25px);
   margin-left: 15px;
   width: 35px;
   cursor: pointer;

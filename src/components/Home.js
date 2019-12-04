@@ -28,6 +28,7 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
   const [page, setPage] = useState(0);
   const [donating, toggleDonating] = useState(false);
   const [popupProps, setPopupProps] = useState({ hide: true });
+  const [successProps, setSuccessProps] = useState({ hide: true });
 
   const [i, seti] = useState(1);
 
@@ -43,12 +44,33 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
     };
   };
 
+  const renderSuccess = (id, x, y) => {
+    setSuccessProps({
+      donation: getDonationDetails(id),
+      x,
+      y,
+      hide: false
+    });
+    return () => {
+      setSuccessProps({ ...popupProps, hide: true });
+    };
+  };
+
   return (
-    <div onClick={(e) => renderPopup(1, e.clientX, e.clientY)}>
+    <div
+      onClick={(e) => {
+        const cleanup1 = renderPopup(1, e.clientX, e.clientY);
+        const cleanup2 = renderSuccess(1, e.clientX, e.clientY);
+        setTimeout(() => {
+          cleanup1();
+          cleanup2();
+        }, 1000);
+      }}
+    >
       <Navbar />
-      <SuccessPopup />
       <ThreeContainer renderPopup={renderPopup} donationIds={donationIds} />
       <DonationPopup {...popupProps} />
+      <SuccessPopup {...successProps} />
       <Description
         title={projects[page].title}
         body={projects[page].summary}

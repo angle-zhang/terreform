@@ -12,7 +12,7 @@ export const NoSelect = css`
 const ProgressWrapper = styled.div`
   position: absolute;
   top: 50%;
-  right: 5vw;
+  right: 2vw;
   width: 100px;
   height: 40vh;
   text-align: center;
@@ -110,7 +110,7 @@ export const ProgressBar = ({ percent, goal, donations }) => {
 const StyledIndicator = styled.div`
   position: absolute;
   top: 45%;
-  margin-left: 5vw;
+  margin-left: 2vw;
   font-family: 'Quicksand';
 
   & img {

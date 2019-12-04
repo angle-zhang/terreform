@@ -2,21 +2,26 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Row = styled.div`
-  width: 74%;
-  margin-left: 13%;
+  width: 90%;
+  margin-left: 5%;
+  margin: ${(props) => (props['space-around'] ? '20px 0 20px 5%' : '0 5%')}
   display: flex;
   justify-content: ${(props) => (props['flex-end'] ? 'flex-end' : 'center')};
   align-items: center;
+  text-align: center;
 `;
 
 const StyledPopup = styled.div`
+  width: 200px;
   position: absolute;
   left: ${(props) => props.x + 'px'}
   top: ${(props) => props.y + 'px'}
-  z-index: 2;
+  z-index: 3;
   transform: translateX(-50%);
+  pointer-events: none;
 
   & h3,p {
+    font-size: 16px;
     text-align: center;
     margin: 5px;
   }
@@ -36,36 +41,62 @@ const DonationPopup = ({ donation, x, y, hide }) => {
 };
 
 const Success = styled.div`
+  position: absolute;
+  left: ${(props) => props.x + 'px'}
+  top: ${(props) => props.y + 'px'}
   width: 380px;
-  padding: 20px;
-  background-color: #fff;
+  padding: 30px 30px 20px 30px;
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
-  z-index: 5;
+  font-size: 20px;
+  z-index: 2;
+  transform: translateX(-50%);
 `;
 
 const Icon = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 `;
 
-export const SuccessPopup = ({ donation }) => {
+const MiniIcon = styled.img`
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+`;
+
+const TextInfo = styled.p`
+  font-size: 15px;
+  color: #7c7c7c;
+`;
+
+export const SuccessPopup = ({ donation, x, y, hide }) => {
+  if (hide) {
+    return '';
+  }
+
   return (
-    <Success>
+    <Success x={x} y={y}>
       <Row>
-        <b>Test Me</b> 12/1/2019
+        <p>
+          <b>{donation.username}</b> {donation.date}
+        </p>
       </Row>
-      <br />
       <Row>
         <Icon src="check.svg" />
       </Row>
-      <br />
-      <Row>
+      <Row space-around>
         Your virtual tree has been successfully planted. Share this post or go
         home.
       </Row>
       <Row>
-        <Icon src="home.svg" />
-        <Icon src="share.svg" />
+        <Row>
+          <MiniIcon src="home.svg" />
+          <TextInfo>Go Home</TextInfo>
+        </Row>
+        <Row>
+          <MiniIcon src="share.svg" />
+          <TextInfo>Share</TextInfo>
+        </Row>
       </Row>
     </Success>
   );

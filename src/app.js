@@ -11,14 +11,14 @@ import Home from './components/Home';
 
 const testData = [
   [
-    { id: 1, username: 'John Johnny' },
-    { id: 3, username: 'Smitten Smithy' },
-    { id: 4, username: 'Fabulous Frank' }
+    { id: 1, username: 'John Johnny', date: '10/11/12' },
+    { id: 3, username: 'Smitten Smithy', date: '10/12/12' },
+    { id: 4, username: 'Fabulous Frank', date: '12/12/12' }
   ],
   [
-    { id: 2, username: 'Stevens Spielberg' },
-    { id: 5, username: 'Henry Henderson' },
-    { id: 6, username: 'Zach Zacharias' }
+    { id: 2, username: 'Stevens Spielberg', date: '12/13/14' },
+    { id: 5, username: 'Henry Henderson', date: '13/14/15' },
+    { id: 6, username: 'Zach Zacharias', date: '14/15/15' }
   ]
 ];
 

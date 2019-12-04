@@ -60,9 +60,16 @@ const Centered = styled.div`
   overflow: auto;
   overflow-x: hidden;
   padding: 70px 40px 40px 40px;
+  z-index: 4;
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  & h2,
+  h3,
+  p {
+    text-align: ${(props) => (props['center-text'] ? 'center' : 'justify')};
   }
 
   & h3,
@@ -124,7 +131,13 @@ const Input = styled.div`
     transition: all 0.2s;
   }
 
-  & input {
+  & textarea {
+    resize: vertical;
+    outline: none;
+  }
+
+  & input,
+  textarea {
     width: 98%;
     height: 10px;
     font-family: 'Montserrat', sans-serif;
@@ -134,15 +147,15 @@ const Input = styled.div`
     background-color: #eee;
     border: 2px solid transparent;
     border-radius: 5px;
-    transition: all 0.2s;
+    transition: border-radius box-shadow 0.2s;
   }
 
-  & input:hover {
+  & input:focus {
     box-shadow: 0 2px 0 #222;
     border-radius: 5px 5px 0px 0px;
   }
 
-  & input:hover + label {
+  & input:focus + label {
     color: #222;
   }
 
@@ -189,16 +202,25 @@ const Form = styled.div`
   #expiration-date:hover,
   #cvv:hover,
   #postal-code:hover {
-    box-shadow: 0 2px 0 #222;
-    border-radius: 5px 5px 0px 0px;
+    // box-shadow: 0 2px 0 #222;
+    // border-radius: 5px 5px 0px 0px;
   }
 
-  #card-number:hover + label,
-  #expiration-date:hover + label,
-  #cvv:hover + label,
-  #postal-code:hover + label {
+  .braintree-hosted-fields-focused {
+    box-shadow: 0 2px 0 #222;
+    border-radius: 5px 5px 0px 0px !important;
+  }
+
+  .braintree-hosted-fields-focused +label {
     color: #222;
   }
+
+  // #card-number:hover + label,
+  // #expiration-date:hover + label,
+  // #cvv:hover + label,
+  // #postal-code:hover + label {
+  //   color: #222;
+  // }
 
   .loading svg {
     margin-top: 75px;
@@ -443,14 +465,17 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
     return (
       <div>
         <Overlay />
-        <Centered ref={node}>
+        <Centered ref={node} center-text>
           <Icon src="close.svg" onClick={onClose} />
-          <h2 style={{ textAlign: 'center' }}>Thank You.</h2>
-          <h3 style={{ textAlign: 'center' }}>
+          <h2>Thank You.</h2>
+          <h3>
             You have successfully donated ${success.donation.amount}! Your
             receipt number is "{success.donation.receipt.receiptNumber}".
           </h3>
-          <p style={{ textAlign: 'center' }}>
+          <p>
+            <em>Click the tree above to plant yours.</em>
+          </p>
+          <p>
             Your contribution will help plant more trees, build more homes,
             improve air quality, and protect our oceans. With every donation,
             another tree is planted.
@@ -466,12 +491,15 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
         <Overlay />
         <Centered ref={node}>
           <Icon src="close.svg" onClick={onClose} />
-          <h3 style={{ textAlign: 'center', marginTop: '40%' }}>
+          <h3
+            style={{
+              textAlign: 'center',
+              marginTop: '40%',
+              marginBottom: '15%'
+            }}
+          >
             Confirming Purchase
           </h3>
-          <br />
-          <br />
-          <br />
           <Row>
             <Loading />
           </Row>
@@ -549,6 +577,12 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
               type="text"
             />
             <label>Email</label>
+          </FullInput>
+        </Row>
+        <Row>
+          <FullInput>
+            <textarea />
+            <label>Message (optional)</label>
           </FullInput>
         </Row>
         <Divider>Payment Information</Divider>
