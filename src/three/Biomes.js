@@ -48,7 +48,7 @@ class EnvironmentBiome extends Biome {
     super(scene, camera)
     this.setObjects()
   }
-  
+
   setScene() {
     // Add clouds in random positions
     const clouds = []
@@ -78,7 +78,7 @@ class EnvironmentBiome extends Biome {
     this.flocks.forEach(flock => flock.render(this._scene))
   }
 
-  setObjects() {}
+  setObjects() { }
 
   removeScene() {
     if (this.flocks) {
@@ -117,10 +117,11 @@ class TreeBiome extends Biome {
       .start()
   }
 
-  removeScene() {}
+  removeScene() { }
 
   setObjects(position) {
     this.group = new THREE.Object3D()
+    this.trees = []
 
     const top = loadedModels['forestbiome-top'].clone()
     top.scale.set(2, 2, 2)
@@ -150,9 +151,14 @@ class TreeBiome extends Biome {
     randomVertices.forEach(([x, y, z]) => {
       const model =
         models[
-          this.chance.weighted([0, 1, 2, 3, 4, 5, 6], [1, 1, 1, 2, 2, 2, 2])
+        this.chance.weighted([0, 1, 2, 3, 4, 5, 6], [1, 1, 1, 2, 2, 2, 2])
         ]
-      const object = loadedModels[model.name].clone()
+      // this.createClone(model.name)
+      // const object = loadedModels[model.name].clone()
+      const object = this.createClone(model.name)
+      if (model.name.search('tree*') > -1) {
+        this.trees.push(object)
+      }
       const scaleMultiplier = chance.floating({ min: 0.9, max: 1 })
       object.scale.set(...model.scale.map(v => v * scaleMultiplier))
       object.position.set(x * 2, y * 2 + 0.01, z * 2)
@@ -166,13 +172,18 @@ class TreeBiome extends Biome {
     this.group.rotateOnWorldAxis(
       new THREE.Vector3(1, 0, 0),
       new THREE.Vector3(...position).angleTo(new THREE.Vector3(0, 0, -1)) *
-        (Math.sign(position[1]) || 1)
+      (Math.sign(position[1]) || 1)
     )
 
     this.group.rotation.set(this.group.rotation.x + Math.PI / 8, 0, 0)
   }
 
-  animate() {}
+  createClone(modelName) {
+    const model = loadedModels[modelName]
+    return new THREE.Mesh(model.geometry, model.material.clone())
+  }
+
+  animate() { }
 }
 
 export default class Biomes {

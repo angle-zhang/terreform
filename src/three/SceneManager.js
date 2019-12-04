@@ -22,21 +22,20 @@ export default async (
     width: window.innerWidth,
     height: window.innerHeight
   }
+  let mouse = new THREE.Vector2()
+  let intersecting
   const scene = buildScene()
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
   const raycaster = buildRaycaster()
   const biomes = createBiomes(scene, camera)
   const controls = buildOrbitControls(biomes.getCurrent().group)
+  const trees = biomes.biomes[0].trees
   addLight(scene, lighting)
-    
+
   // TEMPORARY way to switch biomes
-  document.addEventListener('keypress', event => {
-    if (event.keyCode === 32) {
-      biomes.next()
-      controls.group = biomes.getCurrent().group
-    }
-  })
+  document.addEventListener('mousemove', onMouseMove, false)
+  document.onclick = onClick
 
   function buildScene() {
     const scene = new THREE.Scene()
@@ -83,6 +82,32 @@ export default async (
     return raycaster
   }
 
+  function onMouseMove(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    const tree = isTree(intersecting[0])
+    if (tree) {
+      tree.material.color.set(0xff0000)
+    }
+  }
+
+  function onClick(event) {
+    // console.log('clicking')
+    // console.log(event.clientX, event.clientY)
+    // trees.forEach(tree => {
+    //   if (tree.uuid === intersecting[0].object.uuid) {
+    //     console.log(tree.uuid)
+    //     console.log(trees)
+    //     tree.material.color.set(0xff00ff)
+    //   }
+    // })
+    const tree = isTree(intersecting[0])
+    console.log(tree)
+    if (tree) {
+      tree.material.color.set(0xff00ff)
+    }
+  }
+
   function addLight(
     scene,
     {
@@ -104,6 +129,23 @@ export default async (
     // only update active scene
     TWEEN.update()
     biomes.animate()
+    raycaster.setFromCamera(mouse, camera);
+
+    // Check for intersecting trees
+    scene.children.forEach((child) => {
+      let intersects = raycaster.intersectObject(child, true)
+      if (intersects.length > 0) {
+        intersecting = intersects
+      }
+    })
+
+    // Reset tree colors
+    trees.forEach(tree => {
+      if (!isTree(intersecting[0])) {
+        tree.material.color.set(0xffffff)
+      }
+
+    })
     renderer.render(scene, camera)
   }
 
@@ -111,6 +153,11 @@ export default async (
     camera.aspect = width / height
     camera.updateProjectionMatrix()
     renderer.setSize(width, height)
+  }
+
+  function isTree(model) {
+    const tree = trees.filter(tree => tree.uuid === model.object.uuid)
+    return tree.length > 0 ? tree[0] : null
   }
 
   return {
