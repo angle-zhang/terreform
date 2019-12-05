@@ -85,9 +85,9 @@ const Option = styled.div`
 const DonateForm = ({ id, amountArr, setStatus }) => {
   const [projectId, setId] = useField('number', id);
   const [amount, setAmount] = useField('number');
-  const [customAmount, setCustomAmount] = useState('');
   const [firstname, setFirst] = useField('text');
   const [lastname, setLast] = useField('text');
+  const [customAmount, setCustomAmount] = useState('');
   const [email, setEmail] = useState('');
   const [nonce, setNonce] = useState('');
 
@@ -126,7 +126,6 @@ const DonateForm = ({ id, amountArr, setStatus }) => {
         nonce: nonce
       });
       console.log(res.data);
-      // setSuccess({ status: true, donation: res.data.donation });
       setStatus({ status: 'success', donation: res.data.donation });
     } catch (err) {
       console.error(err);
@@ -143,6 +142,7 @@ const DonateForm = ({ id, amountArr, setStatus }) => {
     setFirst('');
     setLast('');
     setEmail('');
+    setNonce('');
   };
 
   useEffect(() => {
@@ -152,17 +152,33 @@ const DonateForm = ({ id, amountArr, setStatus }) => {
   }, [nonce]);
 
   useEffect(() => {
-    initBraintree(
-      (hostedFieldsInstance) => (event) => {
-        event.preventDefault();
-        hostedFieldsInstance.tokenize((err, payload) => {
-          if (err) console.error(err);
-          console.log('Nonce:', payload.nonce);
-          setNonce(payload.nonce);
-        });
-      },
-      () => setLoadingForm(false)
-    );
+    let cleanup;
+    const wrapped = async () => {
+      const res = await initBraintree(
+        (hostedFieldsInstance) => (event) => {
+          event.preventDefault();
+          hostedFieldsInstance.tokenize((err, payload) => {
+            if (err) console.error(err);
+            console.log('Nonce:', payload.nonce);
+            if (!nonce) {
+              setNonce(payload.nonce);
+            }
+          });
+        },
+        () => {
+          if (loadingForm) {
+            setLoadingForm(false);
+          }
+        }
+      );
+      cleanup = res;
+    };
+    wrapped();
+    // return () => {
+    //   if (cleanup) {
+    //     cleanup();
+    //   }
+    // };
   }, []);
 
   return (

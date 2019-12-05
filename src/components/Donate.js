@@ -1,12 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-import { makeDonation } from '../globalGiving';
-import { initBraintree } from '../braintree';
-
 import { Processing, Success } from './DonateScreens';
 import DonateForm from './DonateForm';
-import Loading from './presentational/Loading';
 import { TextDetail } from './presentational/Global';
 
 const TextDescription = styled(TextDetail)`
@@ -89,27 +85,25 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
     return () => document.removeEventListener('click', clickOutside);
   }, []);
 
-  if (donationStatus.status === 'success') {
-    return (
-      <div>
-        <Overlay />
-        <Centered ref={node} center-text>
-          <Close src="close.svg" onClick={onClose} />
-          <Success donation={donationStatus.donation} />
-        </Centered>
-      </div>
-    );
-  }
+  let contentComponent = '';
+  switch (donationStatus.status) {
+    case 'processing':
+      contentComponent = <Processing />;
+      break;
+    case 'success':
+      contentComponent = <Success donation={donationStatus.donation} />;
+      break;
+    default:
+      contentComponent = (
+        <>
+          <TextDescription>
+            <h3>{title}</h3>
+            <p>{description}</p>
+          </TextDescription>
 
-  if (donationStatus.status === 'processing') {
-    return (
-      <div>
-        <Overlay />
-        <Centered ref={node}>
-          <Processing />
-        </Centered>
-      </div>
-    );
+          <DonateForm id={id} amountArr={optionArr} setStatus={setStatus} />
+        </>
+      );
   }
 
   return (
@@ -117,12 +111,7 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
       <Overlay />
       <Centered ref={node}>
         <Close src="close.svg" onClick={onClose} />
-        <TextDescription>
-          <h3>{title}</h3>
-          <p>{description}</p>
-        </TextDescription>
-
-        <DonateForm id={id} amountArr={optionArr} setStatus={setStatus} />
+        {contentComponent}
       </Centered>
     </div>
   );

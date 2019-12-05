@@ -41,19 +41,26 @@ const StyledIndicator = styled.div`
     margin: 3px;
     text-align: left;
     color: #f8f7f7;
-    animation: shake-in ease-in-out 0.5s both;
+    animation: shake-in linear 0.25s forwards;
   }
 
   @keyframes shake-in {
     0% {
-      opacity: 0.2;
-      margin-left: -10px;
+      opacity: 0;
+      margin-left: 0;
+    }
+    15% {
+      margin-left: -30px;
     }
     50% {
-      margin-left: 10px;
+      margin-left: 20px;
+    }
+    85% {
+      margin-left: -10px;
     }
     100% {
       opacity: 1;
+      margin-left: 0;
     }
   }
 `;

@@ -28,9 +28,22 @@ export const Processing = () => {
   );
 };
 
+const SuccessWrapper = styled.div`
+  text-align: center;
+  margin: 40px;
+
+  h3 {
+    font-size: 19px;
+  }
+
+  p {
+    font-size: 15px;
+  }
+`;
+
 export const Success = ({ donation }) => {
   return (
-    <div>
+    <SuccessWrapper>
       <h2>Thank You.</h2>
       <h3>
         You have successfully donated ${donation.amount}! Your receipt number is
@@ -44,6 +57,6 @@ export const Success = ({ donation }) => {
         air quality, and protect our oceans. With every donation, another tree
         is planted.
       </p>
-    </div>
+    </SuccessWrapper>
   );
 };
