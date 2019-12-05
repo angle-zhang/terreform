@@ -35,6 +35,8 @@ export default async (
   // const dot = buildDot(scene, camera, dotClick)
   const controls = buildOrbitControls(biomes.getCurrent().group)
   const treeObjects = biomes.biomes[0].trees
+  const seaCreatureObjects = biomes.biomes[1].sealife
+  console.log(treeObjects)
   addLight(scene, lighting)
 
   // TEMPORARY way to switch biomes
@@ -54,6 +56,8 @@ export default async (
     // Helps make loaded models brighter
     renderer.gammaFactor = 2.2
     renderer.gammaOutput = true
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMapSoft = true;
     return renderer
   }
 
@@ -66,11 +70,13 @@ export default async (
     camera.setViewOffset(
       window.innerWidth,
       window.innerHeight,
-      -1 * window.innerWidth / 7,
+      -1 * window.innerWidth / 12,
       0,
       window.innerWidth,
       window.innerHeight
     )
+    // camera.position.set(0, 1, 1)
+    // camera.rotation.x = -45 * Math.PI / 180
     camera.position.set(0, 0, 0)
     camera.rotation.set(0, 0, 0)
     return camera
@@ -126,17 +132,18 @@ export default async (
     scene,
     {
       color = 0xffffff,
-      intensity = 0.35,
-      position: { x, y, z } = { x: -1, y: 2, z: 4 }
+      intensity = 0.4,
+      position: { x, y, z } = { x: -4, y: 2, z: 0 }
     }
   ) {
-    const light = new THREE.HemisphereLight(color, 0x3c6a6d, intensity)
-    light.position.set(x, y, z)
+    const light = new THREE.AmbientLight(color, intensity)
     scene.add(light)
 
-    const dir = new THREE.DirectionalLight(color, 0.75)
+    const dir = new THREE.PointLight(color, 0.75)
     dir.position.set(x, y, z)
+    dir.castShadow = true
     scene.add(dir)
+    return dir
   }
 
   function update() {
