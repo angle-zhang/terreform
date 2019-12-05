@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import Home from './Home';
 import { StyledLink } from './presentational/Button';
 
 const Centered = styled.div`
@@ -11,12 +10,12 @@ const Centered = styled.div`
   align-items: center;
   text-align: center;
 
-  & p {
+  p {
+    margin-top: 40vh;
+    color: #636363;
     font-size: 42px;
     font-weight: bold;
-    margin-top: 40vh;
     transition: opacity 0.5s;
-    color: #636363;
   }
 `;
 

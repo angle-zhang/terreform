@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import shortid from 'shortid';
 
-import { EmptyLink, StyledLink } from './presentational/Button';
+import { StyledLink } from './presentational/Button';
+import { NoSelect } from './presentational/Global';
 
 const Nav = styled.nav`
   display: flex;
@@ -13,6 +14,8 @@ const Nav = styled.nav`
 `;
 
 const Header = styled.h1`
+  ${NoSelect}
+
   font-size: 25px;
   margin-left: 30px;
   margin-right: auto;
@@ -20,12 +23,6 @@ const Header = styled.h1`
   border: 2px 2px 0 2px solid transparent;
   border-radius: 0px;
   color: #fff;
-
-  user-select: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
 `;
 
 const Hamburger = styled.div`
@@ -36,23 +33,21 @@ const Hamburger = styled.div`
   width: 70vw;
   height: 10vh;
 
-  & .content {
+  .content {
     position: ${(props) => (props.closed ? 'absolute' : 'block')};
-    font-size: 25px;
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
-    opacity: ${(props) => (props.closed ? 0 : 1)};
-    transition: all 0.5s;
+    font-size: 25px;
   }
 
-  & .content a:nth-of-type(1) {
+  .content a:nth-of-type(1) {
     animation: fade-3 1.8s forwards;
   }
 
-  & .content a:nth-of-type(2) {
+  .content a:nth-of-type(2) {
     animation: fade-2 1.8s forwards;
   }
 
-  & .content a:nth-of-type(3) {
+  .content a:nth-of-type(3) {
     animation: fade-1 1.8s forwards;
   }
 
@@ -100,37 +95,33 @@ const Hamburger = styled.div`
 `;
 
 const AnimatedHam = styled.div`
-  // margin: auto 33px;
-  // position: absolute;
-  // right: 5vw;
   margin-right: calc(2vw + 25px);
   margin-left: 15px;
   width: 35px;
   cursor: pointer;
-  // transform: translateY(50%);
 
   &:after,
   &:before,
-  & div {
-    background-color: #fff;
-    border-radius: 3px;
-    content: '';
+  div {
     display: block;
+    content: '';
     height: 3px;
     margin: 5px 0;
+    background-color: #fff;
+    border-radius: 3px;
     transition: all 0.3s ease-in-out;
   }
 
   &:before {
     animation: ${(props) =>
       props.animateIn
-        ? 'collapse-spin .7s forwards'
+        ? 'collapse-spin-top .7s forwards'
         : props.animateOut
-        ? 'open-spin .7s forwards'
+        ? 'open-spin-top .7s forwards'
         : ''};
   }
 
-  & div {
+  div {
     animation: ${(props) =>
       props.animateIn
         ? 'collapse-fade .7s forwards'
@@ -142,9 +133,9 @@ const AnimatedHam = styled.div`
   &:after {
     animation: ${(props) =>
       props.animateIn
-        ? 'collapse-spin-1 .7s forwards'
+        ? 'collapse-spin-bottom .7s forwards'
         : props.animateOut
-        ? 'open-spin-1 .7s forwards'
+        ? 'open-spin-bottom .7s forwards'
         : ''};
   }
 
@@ -160,7 +151,7 @@ const AnimatedHam = styled.div`
     }
   }
 
-  @keyframes collapse-spin {
+  @keyframes collapse-spin-top {
     30% {
       transform: translateY(8px);
     }
@@ -172,7 +163,7 @@ const AnimatedHam = styled.div`
     }
   }
 
-  @keyframes collapse-spin-1 {
+  @keyframes collapse-spin-bottom {
     30% {
       transform: translateY(0px);
     }
@@ -196,7 +187,7 @@ const AnimatedHam = styled.div`
     }
   }
 
-  @keyframes open-spin {
+  @keyframes open-spin-top {
     0% {
       transform: translateY(8px) rotate(135deg);
     }
@@ -205,7 +196,7 @@ const AnimatedHam = styled.div`
     }
   }
 
-  @keyframes open-spin-1 {
+  @keyframes open-spin-bottom {
     0% {
       transform: translateY(-8px) rotate(-135deg);
     }
