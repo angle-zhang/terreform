@@ -14,11 +14,7 @@ export default async (containerElement, options, renderPopup, donationIds) => {
   function bindEventListeners() {
     window.onresize = resizeCanvas
     resizeCanvas()
-    // document.onclick = onClick
   }
-  // function onClick() {
-  //   console.log('clicking from entrypoint!')
-  // }
 
   function resizeCanvas() {
     canvas.style.width = '100%';

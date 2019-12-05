@@ -1,8 +1,10 @@
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 import Biomes from './Biomes.js'
+import Dot from './Dot'
 import OrbitControls from './OrbitControls.js'
 import { loadModels } from './ModelLoader.js'
+
 
 /**
  * Options
@@ -30,6 +32,7 @@ export default async (
   const camera = buildCamera(screenDimensions)
   const raycaster = buildRaycaster()
   const biomes = createBiomes(scene, camera, donationIds)
+  // const dot = buildDot(scene, camera, dotClick)
   const controls = buildOrbitControls(biomes.getCurrent().group)
   const treeObjects = biomes.biomes[0].trees
   addLight(scene, lighting)
@@ -83,6 +86,19 @@ export default async (
     return raycaster
   }
 
+  function buildDot(scene, camera, handleClick) {
+    const options = {
+      radius: .1,
+      position: [0, 1, 0],
+      raycaster: buildRaycaster(),
+      camera,
+      handleClick
+    }
+    const dot = new Dot(options)
+    dot.render(scene)
+    return dot
+  }
+
   function onMouseMove(event) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
@@ -100,6 +116,10 @@ export default async (
         cleanup()
       }, 1000)
     }
+  }
+
+  function dotClick() {
+    console.log('clicking dot')
   }
 
   function addLight(
@@ -124,7 +144,7 @@ export default async (
     TWEEN.update()
     biomes.animate()
     raycaster.setFromCamera(mouse, camera);
-
+    // dot.update(20)
     // Check for intersecting trees
     scene.children.forEach((child) => {
       let intersects = raycaster.intersectObject(child, true)
