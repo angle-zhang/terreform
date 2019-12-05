@@ -144,6 +144,16 @@ const StyledIndicator = styled.div`
     margin: 3px;
     text-align: left;
     color: #f8f7f7;
+    animation: fadein ease-in-out 0.5s forwards;
+  }
+
+  @keyframes fadein {
+    0% {
+      opacity: 0.2;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 `;
 
@@ -151,7 +161,7 @@ export const ArrowIndicator = ({ onUp, onDown, current, max }) => {
   return (
     <StyledIndicator>
       <img src="arrow-up.svg" alt="Arrow up" onClick={onUp} />
-      <p>
+      <p key={+new Date()}>
         {current + 1 < max ? '0' + (current + 1) : current + 1} - {max}
       </p>
       <img src="arrow-down.svg" alt="Arrow down" onClick={onDown} />

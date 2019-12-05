@@ -147,7 +147,7 @@ const Input = styled.div`
     background-color: #eee;
     border: 2px solid transparent;
     border-radius: 5px;
-    transition: border-radius box-shadow 0.2s;
+    transition: border-radius, box-shadow 0.2s;
   }
 
   & input:focus {
@@ -328,14 +328,14 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
     );
     if (validInputs.length !== 4) {
       return 'Invalid payment information.';
-    } else if (!email) {
-      return 'Missing email.';
-    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-      return 'Invalid email.';
     } else if (!firstname.value || !lastname.value) {
       return 'Missing name.';
     } else if (!amount.value) {
       return 'Select an amount.';
+    } else if (!email) {
+      return 'Missing email.';
+    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      return 'Invalid email.';
     }
     return '';
   };
