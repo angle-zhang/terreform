@@ -152,11 +152,11 @@ class MarineBiome extends StandardBiome {
     const top = loadedModels['marine-biome-top'].clone()
     top.scale.set(0.25, 0.25, 0.25)
     top.position.set(0, -0.5, 0)
-    top.receiveShadow = true
     this.group.add(top)
     const bottom = loadedModels['marine-biome-bottom'].clone()
     bottom.scale.set(0.25, 0.25, 0.25)
     bottom.position.set(0, -0.5, 0)
+    bottom.receiveShadow = true
     this.group.add(bottom)
     const water = loadedModels['marine-biome-water'].clone()
     water.scale.set(0.25, 0.25, 0.25)
@@ -169,8 +169,8 @@ class MarineBiome extends StandardBiome {
       50,
       [18, 18],
       [
-        [-7, 7],
-        [-7, 7]
+        [-6.8, 6.8],
+        [-6.8, 6.8]
       ]
     )
     const models = [
@@ -204,11 +204,11 @@ class ForestBiome extends StandardBiome {
     this.group = new THREE.Object3D()
 
     const top = loadedModels['forest-biome-top'].clone()
-    top.scale.set(2, 2, 2)
+    top.scale.set(3, 3, 3)
     top.receiveShadow = true
     this.group.add(top)
     const bottom = loadedModels['forest-biome-bottom'].clone()
-    bottom.scale.set(2, 2, 2)
+    bottom.scale.set(3, 3, 3)
     this.group.add(bottom)
     const vertices = groupVertices(top)
     const randomVertices = sample(
@@ -239,7 +239,7 @@ class ForestBiome extends StandardBiome {
       object.castShadow = true
       const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
       object.scale.set(...model.scale.map(v => v * scaleMultiplier))
-      object.position.set(x * 2, y * 2 + 0.01, z * 2)
+      object.position.set(x * 3, y * 3 + 0.01, z * 3)
       this.group.add(object)
     })
 

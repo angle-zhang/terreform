@@ -65,7 +65,7 @@ export default async (
     camera.setViewOffset(
       window.innerWidth,
       window.innerHeight,
-      -1 * window.innerWidth / 7,
+      -1 * window.innerWidth / 12,
       0,
       window.innerWidth,
       window.innerHeight
