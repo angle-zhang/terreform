@@ -6,7 +6,8 @@ export default class ThreeContainer extends Component {
     threeEntryPoint(this.threeRootElement, {
       backgroundColor: 0xffffff, // changes background color?
       lighting: { color: 0xffffff }
-    });
+    },
+      this.props.renderPopup, this.props.donationIds);
   }
   render() {
     // ref saves reference to the div which is passed to threeEntryPoint

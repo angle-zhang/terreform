@@ -100,10 +100,20 @@ class EnvironmentBiome extends Biome {
 }
 
 class TreeBiome extends Biome {
-  constructor(scene, camera, position) {
+  constructor(scene, camera, position, treeDonationIds) {
     super(scene, camera)
     this.chance = new Chance(10)
     this.setObjects(position)
+    console.log(treeDonationIds, 'treebiome')
+    this.trees = this.trees.map((tree, i) => {
+      return treeDonationIds[i] ? {
+        tree,
+        userId: treeDonationIds[i]
+      } : {
+          tree,
+          userId: null
+        }
+    })
   }
 
   setScene() {
@@ -187,13 +197,14 @@ class TreeBiome extends Biome {
 }
 
 export default class Biomes {
-  constructor(scene, camera) {
+  constructor(scene, camera, donationIds) {
     this.scene = scene
+    console.log(donationIds, 'biomes')
     this.biomes = [
-      new TreeBiome(scene, camera, [0, 0, -6]),
-      new TreeBiome(scene, camera, [0, 0, -6]),
-      new TreeBiome(scene, camera, [0, 0, -6]),
-      new TreeBiome(scene, camera, [0, 0, -6])
+      new TreeBiome(scene, camera, [0, 0, -6], donationIds),
+      // new TreeBiome(scene, camera, [0, 0, -6]),
+      // new TreeBiome(scene, camera, [0, 0, -6]),
+      // new TreeBiome(scene, camera, [0, 0, -6])
     ]
     this.currentIndex = 0
     this.biomes[this.currentIndex].setScene()

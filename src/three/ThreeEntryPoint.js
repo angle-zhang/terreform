@@ -1,8 +1,8 @@
 import SceneManager from './SceneManager';
 
-export default async (containerElement, options) => {
+export default async (containerElement, options, renderPopup, donationIds) => {
   const canvas = createCanvas(document, containerElement);
-  const sceneManager = await SceneManager(canvas, options);
+  const sceneManager = await SceneManager(canvas, options, renderPopup, donationIds);
   bindEventListeners();
   render();
 
@@ -14,7 +14,12 @@ export default async (containerElement, options) => {
   function bindEventListeners() {
     window.onresize = resizeCanvas
     resizeCanvas()
+    // document.onclick = onClick
   }
+  // function onClick() {
+  //   console.log('clicking from entrypoint!')
+  // }
+
   function resizeCanvas() {
     canvas.style.width = '100%';
     canvas.style.height = '100%';

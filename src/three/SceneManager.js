@@ -14,7 +14,8 @@ import { loadModels } from './ModelLoader.js'
  */
 export default async (
   canvas,
-  { backgroundColor = 0x000000, lighting } = {}
+  { backgroundColor = 0x000000, lighting } = {},
+  renderPopup, donationIds
 ) => {
   await loadModels()
 
@@ -28,9 +29,9 @@ export default async (
   const renderer = buildRender(screenDimensions)
   const camera = buildCamera(screenDimensions)
   const raycaster = buildRaycaster()
-  const biomes = createBiomes(scene, camera)
+  const biomes = createBiomes(scene, camera, donationIds)
   const controls = buildOrbitControls(biomes.getCurrent().group)
-  const trees = biomes.biomes[0].trees
+  const treeObjects = biomes.biomes[0].trees
   addLight(scene, lighting)
 
   // TEMPORARY way to switch biomes
@@ -72,8 +73,8 @@ export default async (
     return camera
   }
 
-  function createBiomes(scene, camera) {
-    return new Biomes(scene, camera)
+  function createBiomes(scene, camera, donationIds) {
+    return new Biomes(scene, camera, donationIds)
   }
 
   function buildRaycaster() {
@@ -85,26 +86,19 @@ export default async (
   function onMouseMove(event) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-    const tree = isTree(intersecting[0])
-    if (tree) {
-      tree.material.color.set(0xff0000)
+    const treeObject = isDonationTree(intersecting[0])
+    if (treeObject) {
+      treeObject['tree'].material.color.set(0xff0000)
     }
   }
 
   function onClick(event) {
-    // console.log('clicking')
-    // console.log(event.clientX, event.clientY)
-    // trees.forEach(tree => {
-    //   if (tree.uuid === intersecting[0].object.uuid) {
-    //     console.log(tree.uuid)
-    //     console.log(trees)
-    //     tree.material.color.set(0xff00ff)
-    //   }
-    // })
-    const tree = isTree(intersecting[0])
-    console.log(tree)
-    if (tree) {
-      tree.material.color.set(0xff00ff)
+    const treeObject = isDonationTree(intersecting[0])
+    if (treeObject) {
+      const cleanup = renderPopup(treeObject['userId'], event.clientX, event.clientY)
+      setTimeout(() => {
+        cleanup()
+      }, 1000)
     }
   }
 
@@ -136,13 +130,14 @@ export default async (
       let intersects = raycaster.intersectObject(child, true)
       if (intersects.length > 0) {
         intersecting = intersects
+        // console.log(intersecting)
       }
     })
 
-    // Reset tree colors
-    trees.forEach(tree => {
-      if (!isTree(intersecting[0])) {
-        tree.material.color.set(0xffffff)
+    // Reset tree colors if not intersecting
+    treeObjects.forEach(treeObject => {
+      if (!isDonationTree(intersecting[0])) {
+        treeObject['tree'].material.color.set(0xffffff)
       }
 
     })
@@ -155,9 +150,9 @@ export default async (
     renderer.setSize(width, height)
   }
 
-  function isTree(model) {
-    const tree = trees.filter(tree => tree.uuid === model.object.uuid)
-    return tree.length > 0 ? tree[0] : null
+  function isDonationTree(model) {
+    const treeObjectResult = treeObjects.filter(treeObject => treeObject['tree'].uuid === model.object.uuid)
+    return treeObjectResult.length > 0 && treeObjectResult[0]['userId'] ? treeObjectResult[0] : null
   }
 
   return {

@@ -34,7 +34,8 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
 
   const renderPopup = (id, x, y) => {
     setPopupProps({
-      donation: getDonationDetails(id),
+      // donation: getDonationDetails(id),
+      donation: id,
       x,
       y,
       hide: false
@@ -55,11 +56,11 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
       setSuccessProps({ ...popupProps, hide: true });
     };
   };
-
+  //testing with sample donation values
   return (
     <div>
       <Navbar />
-      <ThreeContainer renderPopup={renderPopup} donationIds={donationIds} />
+      <ThreeContainer renderPopup={renderPopup} donationIds={['a', 'b', 'c', 'd', 'e', 'f']} />
       <DonationPopup {...popupProps} />
       <SuccessPopup {...successProps} />
       <Description
@@ -93,8 +94,8 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
           }
         />
       ) : (
-        ''
-      )}
+          ''
+        )}
     </div>
   );
 };
