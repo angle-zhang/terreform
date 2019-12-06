@@ -84,12 +84,7 @@ const Option = styled.div`
   }
 `;
 
-<<<<<<< HEAD
-const DonateForm = ({ id, amountArr, setStatus, staticPage }) => {
-  const [projectId, setId] = useField('number', id);
-=======
 const DonateForm = ({ projectId, biomeId, amountArr, setStatus }) => {
->>>>>>> 651cfe6720f5e9c4d92a13fea21b1a51d7647d4f
   const [amount, setAmount] = useField('number');
   const [firstname, setFirst] = useField('text');
   const [lastname, setLast] = useField('text');
