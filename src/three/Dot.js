@@ -16,7 +16,6 @@ export default class Dot {
         (event.clientX / window.innerWidth) * 2 - 1,
         -(event.clientY / window.innerHeight) * 2 + 1
       )
-
       raycaster.setFromCamera(mouse, camera)
 
       const intersects = raycaster.intersectObject(this.area)
