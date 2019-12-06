@@ -5,12 +5,12 @@ import shortid from 'shortid';
 import { StyledLink } from './presentational/Button';
 import { NoSelect } from './presentational/Global';
 
-import StaticAbout from "./static/StaticAbout";
-import StaticContact from "./static/StaticContact";
+import StaticAbout from './static/StaticAbout';
+import StaticContact from './static/StaticContact';
 // import StaticDonate from "./static/StaticDonate";
 
 const Nav = styled.nav`
-  position: fixed; 
+  position: fixed;
   top: 0;
   z-index: 100;
   display: flex;
@@ -104,7 +104,7 @@ const Hamburger = styled.div`
 `;
 
 const AnimatedHam = styled.div`
-  margin-right: calc(2vw + 25px);
+  margin-right: calc(3vw + 25px);
   margin-left: 15px;
   width: 35px;
   cursor: pointer;
@@ -219,7 +219,7 @@ const Navbar = (props) => {
   const [closed, setClosed] = useState(true);
   const [animateIn, setAnimateIn] = useState(false);
   const [animateOut, setAnimateOut] = useState(false);
-  const [page, setPage] = useState(""); 
+  const [page, setPage] = useState('');
 
   const closeMenu = () => {
     setClosed(true);
@@ -241,43 +241,53 @@ const Navbar = (props) => {
     }
   };
 
-  const openPage = (page) => { 
+  const openPage = (page) => {
     setPage(page);
-  }
+  };
 
-  const closePage = () => { 
-    setPage("");
-  }
+  const closePage = () => {
+    setPage('');
+  };
 
   return (
     <>
-    <Nav>
-      <Header>TerreForm</Header>
-      <Hamburger closed={closed}>
-        <div className="content">
-          {/* <StyledLink onClick={() => {openPage("donate")}} key={shortid.generate()}>
+      <Nav>
+        <Header>TerreForm</Header>
+        <Hamburger closed={closed}>
+          <div className="content">
+            {/* <StyledLink onClick={() => {openPage("donate")}} key={shortid.generate()}>
             Donate
           </StyledLink> */}
-          <StyledLink onClick={() => {openPage("about")}} key={shortid.generate()}>
-            About
-          </StyledLink>
-          <StyledLink onClick={() => {openPage("contact")}} key={shortid.generate()}>
-            Contact Us
-          </StyledLink>
-        </div>
-        <AnimatedHam
-          animateIn={animateIn}
-          animateOut={animateOut}
-          closed={closed}
-          onClick={toggleMenu}
-        >
-          <div className="middle" />
-        </AnimatedHam>
-      </Hamburger>
-    </Nav>
-    <StaticAbout close={closePage} display={page == "about"}/>
-    {/* <StaticDonate projects={props.projects} close={closePage} display={page == "donate"}/> */}
-    <StaticContact close={closePage} display={page == "contact"}/>
+            <StyledLink
+              onClick={() => {
+                openPage('about');
+              }}
+              key={shortid.generate()}
+            >
+              About
+            </StyledLink>
+            <StyledLink
+              onClick={() => {
+                openPage('contact');
+              }}
+              key={shortid.generate()}
+            >
+              Contact Us
+            </StyledLink>
+          </div>
+          <AnimatedHam
+            animateIn={animateIn}
+            animateOut={animateOut}
+            closed={closed}
+            onClick={toggleMenu}
+          >
+            <div className="middle" />
+          </AnimatedHam>
+        </Hamburger>
+      </Nav>
+      <StaticAbout close={closePage} display={page == 'about'} />
+      {/* <StaticDonate projects={props.projects} close={closePage} display={page == "donate"}/> */}
+      <StaticContact close={closePage} display={page == 'contact'} />
     </>
   );
 };

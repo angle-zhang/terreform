@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import threeEntryPoint from '../three/ThreeEntryPoint';
 
 import Navbar from './Nav';
 import CardDonate from './Donate';
@@ -38,14 +39,15 @@ const Home = ({
   const [page, setPage] = useState(0);
   const [showDonate, toggleDonate] = useState(false);
   const [showDescription, toggleDescription] = useState(true);
+  const [callbacks, setCallbacks] = useState({});
 
   const [donationProps, setDonationProps] = useState({ hide: true });
   const [successProps, setSuccessProps] = useState({ hide: true });
 
   const renderPopup = (popupProps, setPopupProps, id, x, y) => {
     setPopupProps({
-      // donation: getDonationDetails(id),
-      donation: id,
+      donation: getDonationDetails(id),
+      // donation: id,
       x,
       y,
       hide: false
@@ -54,6 +56,24 @@ const Home = ({
       setPopupProps({ ...popupProps, hide: true });
     };
   };
+
+  const ref = useRef();
+
+  useEffect(() => {
+    const initThree = async () => {
+      const callbacks = await threeEntryPoint(
+        ref.current,
+        {
+          backgroundColor: 0xffffff, // changes background color?
+          lighting: { color: 0xffffff }
+        },
+        renderDonation,
+        donationIds
+      );
+      setCallbacks(callbacks);
+    };
+    initThree();
+  }, []);
 
   const renderDonation = (id, x, y) => {
     const cleanup = renderPopup(donationProps, setDonationProps, id, x, y);
@@ -67,10 +87,12 @@ const Home = ({
   //testing with sample donation values
   return (
     <div>
-      <Navbar
-        projects={projects}
+      <Navbar projects={projects} />
+      <ThreeContainer
+        renderPopup={renderDonation}
+        donationIds={donationIds}
+        threeRef={ref}
       />
-      <ThreeContainer renderPopup={renderDonation} donationIds={donationIds} />
       <DonationPopup {...donationProps} />
       <SuccessPopup
         {...successProps}
@@ -98,8 +120,16 @@ const Home = ({
       <PageArrows
         current={page}
         max={maxPage}
-        onUp={() => setPage(page == maxPage - 1 ? 0 : page + 1)}
-        onDown={() => setPage(page == 0 ? maxPage - 1 : page - 1)}
+        onUp={() => {
+          if (callbacks.nextBiome()) {
+            setPage(page == maxPage - 1 ? 0 : page + 1);
+          }
+        }}
+        onDown={() => {
+          if (callbacks.prevBiome()) {
+            setPage(page == 0 ? maxPage - 1 : page - 1);
+          }
+        }}
       />
       {showDonate ? (
         <CardDonate
@@ -121,10 +151,11 @@ const Home = ({
             // setReload(true);
             renderSuccess(getSuccessId(), 200, 200);
           }}
+          callbacks={callbacks}
         />
       ) : (
-          ''
-        )}
+        ''
+      )}
     </div>
   );
 };

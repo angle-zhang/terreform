@@ -9,7 +9,7 @@ const Container = styled.div`
   top: 25%;
   width: 330px;
   height: 500px;
-  margin-left: 15vw;
+  margin-left: 10vw;
   padding: 20px 60px;
   background-color: rgba(255, 255, 255, 0.8);
   // transform: translateY(-50%);

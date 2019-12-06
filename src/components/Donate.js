@@ -39,6 +39,7 @@ const Centered = styled.div`
   width: 490px;
   padding: 70px 40px 40px 40px;
   margin-left: calc(50% - 265px);
+  margin-top: 100px;
   background-color: #fff;
   border-radius: 25px;
   overflow: auto;
@@ -58,7 +59,8 @@ const CardDonate = ({
   title,
   onClose,
   onSuccess,
-  addDonation
+  addDonation,
+  callbacks
 }) => {
   const [donationStatus, setStatus] = useState({
     status: 'default',
@@ -105,6 +107,7 @@ const CardDonate = ({
             amountArr={optionArr}
             setStatus={setStatus}
             addDonation={addDonation}
+            callbacks={callbacks}
           />
         </>
       );

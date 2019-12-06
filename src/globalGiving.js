@@ -39,7 +39,7 @@ export const getAllProjects = () => {
   return Promise.all(projects);
 };
 
-export const initKeys = async (test = true) => {
+export const initKeys = async (test = false) => {
   const res = await axios.get('/api/get_token/');
   API_TOKEN = res.data.token;
   GATEWAY_KEY = test ? res.data.test_gatekey : res.data.prod_gatekey;
@@ -65,7 +65,7 @@ export const makeDonation = async ({
   amount,
   projectId,
   nonce,
-  test = true
+  test = false
 }) => {
   let donationUrl = `https://api.globalgiving.org/api/secure/givingservice/donationsclient?api_key=${API_KEY}&api_token=${API_TOKEN}`;
   donationUrl = test ? donationUrl + '&is_test=true' : donationUrl;

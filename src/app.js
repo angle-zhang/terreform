@@ -55,6 +55,7 @@ class App extends React.Component {
           ...project
         }))
       });
+      console.log(api_projects);
       const keys = await initKeys();
       console.log('Key data:', keys);
       let data = await initBiomeData();
@@ -81,7 +82,7 @@ class App extends React.Component {
         loading: false
       });
 
-      console.log(donations, donationIds);
+      console.log(biomeIds, donations, donationIds);
     };
 
     runInitialization();
@@ -162,19 +163,19 @@ const OldApp = () => {
   const [loading, setLoading] = useState(true);
   const [successId, setSuccessId] = useState(0);
 
-  const initAudio = (url) => { 
+  const initAudio = (url) => {
     let audio = new Audio(url);
     return audio;
-  }
+  };
 
-  const song = initAudio("/audio.mp3");
+  const song = initAudio('/audio.mp3');
   song.loop = true;
   var playSong = function(event) {
     song.play();
     event.target.removeEventListener(event.type, arguments.callee, false);
   };
 
-  document.addEventListener('click', playSong, false);  
+  document.addEventListener('click', playSong, false);
 
   useEffect(() => {
     const runInitialization = async () => {

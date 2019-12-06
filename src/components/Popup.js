@@ -7,12 +7,17 @@ const StyledPopup = styled.div`
   left: ${(props) => props.x + 'px'}
   top: ${(props) => props.y + 'px'}
   z-index: 3;
-  transform: translateX(-50%);
+  transform:  translateX(20%) translateY(-50%);
+  background-color: rgba(255,255,255,0.8);
+  border-radius: 5px;
+  padding: 5px 0;
   pointer-events: none;
 
    h3,p {
     margin: 5px;
-    font-size: 16px;
+    line-height: 15px;
+    font-size: 17px;
+    color: #000;
     text-align: center;
   }
 `;

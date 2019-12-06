@@ -18,8 +18,10 @@ const useField = (type, init = '') => {
 };
 
 const Row = styled.div`
-  width: ${props => props.static ? "100%" : "74%"};
-  margin-left: ${props => props.static ? "0%" : "13%"};
+  // width: ${(props) => (props.static ? '100%' : '74%')};
+  // margin-left: ${(props) => (props.static ? '0%' : '13%')};
+  width: 74%;
+  margin-left: 13%;
   display: flex;
   justify-content: ${(props) => (props['flex-end'] ? 'flex-end' : 'center')};
   align-items: center;
@@ -49,7 +51,8 @@ const Option = styled.div`
   margin-left: 10px;
   text-align: center;
   line-height: 100px;
-  border-radius: ${props => props.static ? "0px" : "10px"};
+  // border-radius: ${(props) => (props.static ? '0px' : '10px')};
+  border-radius: 10px;
   background-color: ${(props) => (props.selected ? '#222' : '#eee')};
   color: ${(props) => (props.selected ? '#fff' : '#222')};
   font-size: 35px;
@@ -89,7 +92,8 @@ const DonateForm = ({
   biomeId,
   amountArr,
   setStatus,
-  addDonation
+  addDonation,
+  callbacks
 }) => {
   const [amount, setAmount] = useField('number');
   const [firstname, setFirst] = useField('text');
@@ -140,6 +144,7 @@ const DonateForm = ({
         message: message.value
       });
       addDonation(projectId, donation);
+      callbacks.addObject(donation.id);
     } catch (err) {
       console.error(err);
       // onClose();
@@ -197,9 +202,9 @@ const DonateForm = ({
   return (
     <div>
       {amountArr.map((options, i) => (
-        <Row static={staticPage} key={options[0].amount}>
+        <Row key={options[0].amount}>
           {options.map((option) => (
-            <Option static={staticPage}
+            <Option
               key={option.amount}
               onClick={() => {
                 setAmount(option.amount);
@@ -210,7 +215,7 @@ const DonateForm = ({
             </Option>
           ))}
           {i === amountArr.length - 1 ? (
-            <Option static={staticPage}
+            <Option
               onClick={() => {
                 setAmount(customAmount);
               }}
@@ -235,18 +240,18 @@ const DonateForm = ({
         </Row>
       ))}
       <Divider>Your Information</Divider>
-      <Row static={staticPage}>
-        <Input static={staticPage}>
+      <Row>
+        <Input>
           <input {...firstname} />
           <label>First Name</label>
         </Input>
-        <Input static={staticPage}>
+        <Input>
           <input {...lastname} />
           <label>Last Name</label>
         </Input>
       </Row>
-      <Row static={staticPage}>
-        <FullInput static={staticPage}>
+      <Row>
+        <FullInput>
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -263,7 +268,7 @@ const DonateForm = ({
       </Row>
       <Divider>Payment Information</Divider>
       <BraintreeForm className="demo-frame" loading={loadingForm ? 1 : 0}>
-        <Row static={staticPage} className="loading">
+        <Row className="loading">
           <Loading />
         </Row>
         <form action="/" method="post" id="cardForm">
@@ -287,7 +292,7 @@ const DonateForm = ({
             Postal Code
           </label>
 
-          <Row static={staticPage}>
+          <Row>
             <Error show={error}>{error}</Error>
             <div className="button-container">
               <input
