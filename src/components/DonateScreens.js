@@ -41,7 +41,16 @@ const SuccessWrapper = styled.div`
   }
 `;
 
-export const Success = ({ donation }) => {
+const Img = styled.img`
+  height: 300px;
+
+  &:hover {
+    cursor: pointer;
+    outline: none;
+  }
+`;
+
+export const Success = ({ donation, onContinue }) => {
   return (
     <SuccessWrapper>
       <h2>Thank You.</h2>
@@ -49,6 +58,7 @@ export const Success = ({ donation }) => {
         You have successfully donated ${donation.amount}! Your receipt number is
         "{donation.receipt.receiptNumber}".
       </h3>
+      <Img src="images/pine.png" onClick={onContinue} />
       <p>
         <em>Click the tree above to plant yours.</em>
       </p>

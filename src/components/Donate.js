@@ -9,14 +9,15 @@ const TextDescription = styled(TextDetail)`
   color: #000;
 
   h3 {
-    text-align: center;
-    font-size: 17px;
+    margin-left: 30px;
+    text-align: left;
+    font-size: 24px;
   }
 
   p {
     max-height: none;
     margin: 30px;
-    text-align: justify;
+    text-align: left;
     line-height: 28px;
     font-size: 15px;
   }
@@ -63,7 +64,14 @@ const Close = styled.img`
   }
 `;
 
-const Donate = ({ id, optionArr, onClose, description, title }) => {
+const CardDonate = ({
+  id,
+  optionArr,
+  onClose,
+  onSuccess,
+  description,
+  title
+}) => {
   const [donationStatus, setStatus] = useState({
     status: 'default',
     donation: {}
@@ -91,7 +99,9 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
       contentComponent = <Processing />;
       break;
     case 'success':
-      contentComponent = <Success donation={donationStatus.donation} />;
+      contentComponent = (
+        <Success donation={donationStatus.donation} onContinue={onSuccess} />
+      );
       break;
     default:
       contentComponent = (
@@ -117,6 +127,4 @@ const Donate = ({ id, optionArr, onClose, description, title }) => {
   );
 };
 
-export const CardDonate = styled(Donate)``;
-
-export default Donate;
+export default CardDonate;

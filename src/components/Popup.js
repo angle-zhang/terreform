@@ -66,9 +66,14 @@ const MiniIcon = styled.img`
 const TextInfo = styled.p`
   font-size: 15px;
   color: #7c7c7c;
+
+  &:hover {
+    color: #ddd;
+    cursor: pointer;
+  }
 `;
 
-export const SuccessPopup = ({ donation, x, y, hide }) => {
+export const SuccessPopup = ({ donation, x, y, hide, onHome }) => {
   if (hide) {
     return '';
   }
@@ -88,7 +93,7 @@ export const SuccessPopup = ({ donation, x, y, hide }) => {
         home.
       </Row>
       <Row>
-        <Row>
+        <Row onClick={onHome}>
           <MiniIcon src="home.svg" />
           <TextInfo>Go Home</TextInfo>
         </Row>

@@ -174,11 +174,11 @@ const DonateForm = ({ id, amountArr, setStatus }) => {
       cleanup = res;
     };
     wrapped();
-    // return () => {
-    //   if (cleanup) {
-    //     cleanup();
-    //   }
-    // };
+    return () => {
+      if (cleanup) {
+        cleanup();
+      }
+    };
   }, []);
 
   return (

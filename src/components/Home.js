@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import Navbar from './Nav';
-import { CardDonate } from './Donate';
+import CardDonate from './Donate';
 import ThreeContainer from './ThreeContainer.js';
 import Description from './Description';
 import { DonationPopup, SuccessPopup } from './Popup';
@@ -26,7 +26,8 @@ const splitAndLimit = (arr) => {
 const Home = ({ projects, donationIds, getDonationDetails }) => {
   const maxPage = projects.length;
   const [page, setPage] = useState(0);
-  const [donating, toggleDonating] = useState(false);
+  const [showDonate, toggleDonate] = useState(false);
+  const [showDescription, toggleDescription] = useState(true);
 
   const [donationProps, setDonationProps] = useState({ hide: true });
   const [successProps, setSuccessProps] = useState({ hide: true });
@@ -58,12 +59,22 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
       <Navbar />
       <ThreeContainer renderPopup={renderDonation} donationIds={donationIds} />
       <DonationPopup {...donationProps} />
-      <SuccessPopup {...successProps} />
-      <Description
-        title={projects[page].title}
-        body={projects[page].summary}
-        onDonate={() => toggleDonating((val) => !val)}
+      <SuccessPopup
+        {...successProps}
+        onHome={() => {
+          toggleDescription(true);
+          setSuccessProps({ hide: true });
+        }}
       />
+      {showDescription ? (
+        <Description
+          title={projects[page].title}
+          body={projects[page].summary}
+          onDonate={() => toggleDonate((val) => !val)}
+        />
+      ) : (
+        ''
+      )}
       <ProgressBar
         percent={
           parseInt(projects[page].funding) / parseInt(projects[page].goal)
@@ -77,7 +88,7 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
         onUp={() => setPage(page == maxPage - 1 ? 0 : page + 1)}
         onDown={() => setPage(page == 0 ? maxPage - 1 : page - 1)}
       />
-      {donating ? (
+      {showDonate ? (
         <CardDonate
           id={projects[page].id}
           title={projects[page].title}
@@ -87,7 +98,12 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
               ? splitAndLimit(projects[page].donationOptions.donationOption)
               : []
           }
-          onClose={() => toggleDonating(false)}
+          onClose={() => toggleDonate(false)}
+          onSuccess={() => {
+            toggleDonate(false);
+            toggleDescription(false);
+            renderSuccess(1, 200, 200);
+          }}
         />
       ) : (
         ''
