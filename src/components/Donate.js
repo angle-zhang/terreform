@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Processing, Success } from './DonateScreens';
 import DonateForm from './DonateForm';
 import { TextDetail } from './presentational/Global';
+import { Close } from './presentational/Button';
 
 const TextDescription = styled(TextDetail)`
   color: #000;
@@ -46,21 +47,6 @@ const Centered = styled.div`
 
   &::-webkit-scrollbar {
     display: none;
-  }
-`;
-
-const Close = styled.img`
-  position: absolute;
-  margin-left: 460px;
-  margin-top: -50px;
-  width: 30px;
-  height: 30px;
-  padding: 10px;
-  border-radius: 30px;
-
-  &:hover {
-    background-color: #eee;
-    cursor: pointer;
   }
 `;
 
@@ -110,8 +96,7 @@ const CardDonate = ({
             <h3>{title}</h3>
             <p>{description}</p>
           </TextDescription>
-
-          <DonateForm id={id} amountArr={optionArr} setStatus={setStatus} />
+          <DonateForm id={id} amountArr={optionArr} setStatus={setStatus} staticPage={false} />
         </>
       );
   }

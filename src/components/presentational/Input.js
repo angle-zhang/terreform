@@ -27,7 +27,7 @@ const Input = styled.div`
     padding: 27px 0 10px 10px;
     background-color: #eee;
     border: 2px solid transparent;
-    border-radius: 5px;
+    border-radius: ${props => props.static ? "0px" : "5px"};
     transition: border-radius 0.2s, box-shadow 0.2s;
   }
 
@@ -50,6 +50,9 @@ const Input = styled.div`
 export const FullInput = styled(Input)`
   & input {
     width: 99%;
+  }
+  input, textarea { 
+    border-radius: ${props => props.static ? "0px" : "5px"};
   }
 `;
 
@@ -116,6 +119,30 @@ export const BraintreeForm = styled.div`
   .button-container input:focus {
     outline: none;
   }
+`;
+
+export const Dropdown = styled.button`
+  background-color: #EBEBEB;
+  border-radius: 4px;
+  width: ${props => props.width};
+`;
+
+export const DropdownItems = styled.div`
+  display: ${props => props.display ? "block" : "none"};
+  position: absolute;
+  background-color: #f1f1f1;
+  color: black;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+`;
+
+export const DropdownItem = styled.a`
+  width: 100%;
+  padding: 2px;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
 `;
 
 export default Input;

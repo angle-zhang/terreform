@@ -5,7 +5,14 @@ import shortid from 'shortid';
 import { StyledLink } from './presentational/Button';
 import { NoSelect } from './presentational/Global';
 
+import StaticAbout from "./static/StaticAbout";
+import StaticContact from "./static/StaticContact";
+// import StaticDonate from "./static/StaticDonate";
+
 const Nav = styled.nav`
+  position: fixed; 
+  top: 0;
+  z-index: 100;
   display: flex;
   width: 100%;
   height: 100px;
@@ -206,10 +213,11 @@ const AnimatedHam = styled.div`
   }
 `;
 
-const Navbar = () => {
+const Navbar = (props) => {
   const [closed, setClosed] = useState(true);
   const [animateIn, setAnimateIn] = useState(false);
   const [animateOut, setAnimateOut] = useState(false);
+  const [page, setPage] = useState(""); 
 
   const closeMenu = () => {
     setClosed(true);
@@ -231,19 +239,27 @@ const Navbar = () => {
     }
   };
 
+  const openPage = (page) => { 
+    setPage(page);
+  }
+
+  const closePage = () => { 
+    setPage("");
+  }
+
   return (
+    <>
     <Nav>
       <Header>TerreForm</Header>
-
       <Hamburger closed={closed}>
         <div className="content">
-          <StyledLink to="/donate" key={shortid.generate()}>
+          {/* <StyledLink onClick={() => {openPage("donate")}} key={shortid.generate()}>
             Donate
-          </StyledLink>
-          <StyledLink to="/about" key={shortid.generate()}>
+          </StyledLink> */}
+          <StyledLink onClick={() => {openPage("about")}} key={shortid.generate()}>
             About
           </StyledLink>
-          <StyledLink to="/contact" key={shortid.generate()}>
+          <StyledLink onClick={() => {openPage("contact")}} key={shortid.generate()}>
             Contact Us
           </StyledLink>
         </div>
@@ -257,6 +273,10 @@ const Navbar = () => {
         </AnimatedHam>
       </Hamburger>
     </Nav>
+    <StaticAbout close={closePage} display={page == "about"}/>
+    {/* <StaticDonate projects={props.projects} close={closePage} display={page == "donate"}/> */}
+    <StaticContact close={closePage} display={page == "contact"}/>
+    </>
   );
 };
 

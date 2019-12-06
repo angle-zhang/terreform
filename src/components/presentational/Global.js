@@ -20,7 +20,9 @@ export const TextDetail = styled.div`
   h1 {
     font-size: 36px;
   }
-
+  h2 { 
+    font-size: 18px;
+  }
   p {
     max-height: 200px;
     margin-bottom: 30px;
