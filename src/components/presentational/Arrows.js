@@ -79,7 +79,7 @@ const PageArrows = ({ onUp, onDown, current, max }) => {
         }}
       />
       <p key={animationKey}>
-        {current + 1 < max ? '0' + (current + 1) : current + 1} - {max}
+        {'0' + (current + 1)} - {'0' + max}
       </p>
       <img
         src="arrow-down.svg"

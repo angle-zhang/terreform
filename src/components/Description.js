@@ -6,13 +6,13 @@ import { TextDetail } from './presentational/Global';
 
 const Container = styled.div`
   position: absolute;
-  top: 50%;
+  top: 25%;
   width: 330px;
   height: 500px;
   margin-left: 15vw;
   padding: 20px 60px;
   background-color: rgba(255, 255, 255, 0.8);
-  transform: translateY(-50%);
+  // transform: translateY(-50%);
   z-index: 0;
 `;
 

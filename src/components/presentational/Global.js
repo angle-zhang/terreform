@@ -18,6 +18,7 @@ export const TextDetail = styled.div`
   }
 
   h1 {
+    width: 300px;
     max-height: 100px;
     overflow: hidden;
     font-family: 'SF Pro Bold', sans-serif;

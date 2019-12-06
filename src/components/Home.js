@@ -5,6 +5,7 @@ import CardDonate from './Donate';
 import ThreeContainer from './ThreeContainer.js';
 import Description from './Description';
 import { DonationPopup, SuccessPopup } from './Popup';
+import { titles } from '../globalGiving';
 
 import ProgressBar from './presentational/Progress';
 import PageArrows from './presentational/Arrows';
@@ -23,7 +24,16 @@ const splitAndLimit = (arr) => {
   return newArr;
 };
 
-const Home = ({ projects, biomeIds, donationIds, getDonationDetails }) => {
+const Home = ({
+  projects,
+  biomeIds,
+  donationIds,
+  getDonationDetails,
+  addDonation,
+  successId,
+  setReload,
+  getSuccessId
+}) => {
   const maxPage = projects.length;
   const [page, setPage] = useState(0);
   const [showDonate, toggleDonate] = useState(false);
@@ -70,7 +80,7 @@ const Home = ({ projects, biomeIds, donationIds, getDonationDetails }) => {
       />
       {showDescription ? (
         <Description
-          title={projects[page].title}
+          title={titles[page]}
           body={projects[page].summary}
           onDonate={() => toggleDonate((val) => !val)}
         />
@@ -94,7 +104,7 @@ const Home = ({ projects, biomeIds, donationIds, getDonationDetails }) => {
         <CardDonate
           projectId={projects[page].id}
           biomeId={biomeIds[projects[page].id]}
-          title={projects[page].title}
+          title={titles[page]}
           description={projects[page].need}
           optionArr={
             projects[page].donationOptions
@@ -102,10 +112,13 @@ const Home = ({ projects, biomeIds, donationIds, getDonationDetails }) => {
               : []
           }
           onClose={() => toggleDonate(false)}
+          addDonation={addDonation}
           onSuccess={() => {
+            // console.log(successId, getDonationDetails(successId));
             toggleDonate(false);
             toggleDescription(false);
-            renderSuccess(1, 200, 200);
+            // setReload(true);
+            renderSuccess(getSuccessId(), 200, 200);
           }}
         />
       ) : (
