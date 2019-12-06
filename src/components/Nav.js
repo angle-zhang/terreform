@@ -2,77 +2,52 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import shortid from 'shortid';
 
-import { EmptyLink, StyledLink } from './presentational/Button';
+import { StyledLink } from './presentational/Button';
+import { NoSelect } from './presentational/Global';
 
 const Nav = styled.nav`
   display: flex;
   width: 100%;
-  height: 10vh;
-  margin: auto;
+  height: 100px;
   justify-content: flex-end;
   align-items: center;
 `;
 
 const Header = styled.h1`
+  ${NoSelect}
+
+  font-size: 25px;
   margin-left: 30px;
   margin-right: auto;
+  margin: 0 auto 0 30px;
   border: 2px 2px 0 2px solid transparent;
   border-radius: 0px;
-  transition: all 0.2s ease;
-
-  user-select: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-
-  & img {
-    width: 30px;
-  }
-
-  &:hover {
-    box-shadow: 0 3px 0 #00c853;
-    cursor: pointer;
-  }
-
-  & .animate {
-    stroke-dasharray: 450;
-    stroke-dashoffset: 450;
-    animation: draw 2s linear infinite alternate;
-  }
-
-  @keyframes draw {
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
+  color: #fff;
 `;
 
 const Hamburger = styled.div`
-  & .content {
-    position: absolute;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    top: calc(1vh + 20px);
-    right: 10vw;
-    width: 100vw;
-    height: 10vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  width: 70vw;
+  height: 10vh;
+
+  .content {
+    position: ${(props) => (props.closed ? 'absolute' : 'block')};
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
-    opacity: ${(props) => (props.closed ? 0 : 1)};
-    z-index: 1;
-    transition: all 0.5s;
+    font-size: 25px;
   }
 
-  & .content a:nth-of-type(1) {
+  .content a:nth-of-type(1) {
     animation: fade-3 1.8s forwards;
   }
 
-  & .content a:nth-of-type(2) {
+  .content a:nth-of-type(2) {
     animation: fade-2 1.8s forwards;
   }
 
-  & .content a:nth-of-type(3) {
+  .content a:nth-of-type(3) {
     animation: fade-1 1.8s forwards;
   }
 
@@ -120,37 +95,33 @@ const Hamburger = styled.div`
 `;
 
 const AnimatedHam = styled.div`
-  margin: 1em;
-  position: absolute;
-  right: 5vw;
-  top: 2.5vh;
-  width: 50px;
-  height: 10vh;
-  z-index: 2;
+  margin-right: calc(2vw + 25px);
+  margin-left: 15px;
+  width: 35px;
   cursor: pointer;
 
   &:after,
   &:before,
-  & div {
+  div {
+    display: block;
+    content: '';
+    height: 3px;
+    margin: 5px 0;
     background-color: #fff;
     border-radius: 3px;
-    content: '';
-    display: block;
-    height: 4px;
-    margin: 7px 0;
     transition: all 0.3s ease-in-out;
   }
 
   &:before {
     animation: ${(props) =>
       props.animateIn
-        ? 'collapse-spin .7s forwards'
+        ? 'collapse-spin-top .7s forwards'
         : props.animateOut
-        ? 'open-spin .7s forwards'
+        ? 'open-spin-top .7s forwards'
         : ''};
   }
 
-  & div {
+  div {
     animation: ${(props) =>
       props.animateIn
         ? 'collapse-fade .7s forwards'
@@ -162,9 +133,9 @@ const AnimatedHam = styled.div`
   &:after {
     animation: ${(props) =>
       props.animateIn
-        ? 'collapse-spin-1 .7s forwards'
+        ? 'collapse-spin-bottom .7s forwards'
         : props.animateOut
-        ? 'open-spin-1 .7s forwards'
+        ? 'open-spin-bottom .7s forwards'
         : ''};
   }
 
@@ -180,27 +151,27 @@ const AnimatedHam = styled.div`
     }
   }
 
-  @keyframes collapse-spin {
+  @keyframes collapse-spin-top {
     30% {
-      transform: translateY(11px);
+      transform: translateY(8px);
     }
     60% {
-      transform: translateY(11px);
+      transform: translateY(8px);
     }
     100% {
-      transform: translateY(11px) rotate(-135deg);
+      transform: translateY(8px) rotate(-135deg);
     }
   }
 
-  @keyframes collapse-spin-1 {
+  @keyframes collapse-spin-bottom {
     30% {
       transform: translateY(0px);
     }
     60% {
-      transform: translateY(-11px);
+      transform: translateY(-8px);
     }
     100% {
-      transform: translateY(-11px) rotate(135deg);
+      transform: translateY(-8px) rotate(135deg);
     }
   }
 
@@ -216,21 +187,21 @@ const AnimatedHam = styled.div`
     }
   }
 
-  @keyframes open-spin {
+  @keyframes open-spin-top {
     0% {
-      transform: translateY(11px) rotate(135deg);
+      transform: translateY(8px) rotate(135deg);
     }
     60% {
-      transform: translateY(11px);
+      transform: translateY(8px);
     }
   }
 
-  @keyframes open-spin-1 {
+  @keyframes open-spin-bottom {
     0% {
-      transform: translateY(-11px) rotate(-135deg);
+      transform: translateY(-8px) rotate(-135deg);
     }
     60% {
-      transform: translateY(-11px);
+      transform: translateY(-8px);
     }
   }
 `;
@@ -240,31 +211,31 @@ const Navbar = () => {
   const [animateIn, setAnimateIn] = useState(false);
   const [animateOut, setAnimateOut] = useState(false);
 
+  const closeMenu = () => {
+    setClosed(true);
+    setAnimateIn(false);
+    setAnimateOut(true);
+  };
+
+  const openMenu = () => {
+    setClosed(false);
+    setAnimateIn(true);
+    setAnimateOut(false);
+  };
+
+  const toggleMenu = () => {
+    if (closed) {
+      openMenu();
+    } else {
+      closeMenu();
+    }
+  };
+
   return (
     <Nav>
-      <Header>
-        <img src="leaf.svg" alt="Leaf" />
-        <EmptyLink to="/home">TerreForm</EmptyLink>
-      </Header>
+      <Header>TerreForm</Header>
 
       <Hamburger closed={closed}>
-        <AnimatedHam
-          animateIn={animateIn}
-          animateOut={animateOut}
-          closed={closed}
-          onClick={() => {
-            setClosed(!closed);
-            if (!animateIn) {
-              setAnimateIn(true);
-              setAnimateOut(false);
-            } else if (animateIn && !animateOut) {
-              setAnimateIn(false);
-              setAnimateOut(true);
-            }
-          }}
-        >
-          <div className="middle" />
-        </AnimatedHam>
         <div className="content">
           <StyledLink to="/donate" key={shortid.generate()}>
             Donate
@@ -276,6 +247,14 @@ const Navbar = () => {
             Contact Us
           </StyledLink>
         </div>
+        <AnimatedHam
+          animateIn={animateIn}
+          animateOut={animateOut}
+          closed={closed}
+          onClick={toggleMenu}
+        >
+          <div className="middle" />
+        </AnimatedHam>
       </Hamburger>
     </Nav>
   );
