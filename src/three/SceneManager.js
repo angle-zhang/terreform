@@ -32,14 +32,28 @@ export default async (
   const camera = buildCamera(screenDimensions)
   const raycaster = buildRaycaster()
   const biomes = createBiomes(scene, camera, donationIds)
-  // const dot = buildDot(scene, camera, dotClick)
+  // const dot = buildDot(scene, camera, [0, 1, -3], dotClick)
   const controls = buildOrbitControls(biomes.getCurrent().group)
   const treeObjects = biomes.biomes[0].trees
-  const seaCreatureObjects = biomes.biomes[1].sealife
-  console.log(treeObjects)
+  const cropObjects = biomes.biomes[1].crops
+  const seaCreatureObjects = biomes.biomes[2].sealife
+  const donationObjects = [...treeObjects, ...cropObjects, ...seaCreatureObjects]
+  // const dots = createDots(donationObjects, scene, camera, dotClick)
+  // console.log(dots)
+  console.log('tree objects', treeObjects)
+  console.log('crop objects', cropObjects)
+  console.log('sea life objects', seaCreatureObjects)
+
   addLight(scene, lighting)
 
   // TEMPORARY way to switch biomes
+  document.addEventListener('keypress', event => {
+    if (event.keyCode === 32) {
+      biomes.next()
+      controls.group = biomes.getCurrent().group
+    }
+  })
+
   document.addEventListener('mousemove', onMouseMove, false)
   document.onclick = onClick
 
@@ -75,8 +89,6 @@ export default async (
       window.innerWidth,
       window.innerHeight
     )
-    // camera.position.set(0, 1, 1)
-    // camera.rotation.x = -45 * Math.PI / 180
     camera.position.set(0, 0, 0)
     camera.rotation.set(0, 0, 0)
     return camera
@@ -92,10 +104,10 @@ export default async (
     return raycaster
   }
 
-  function buildDot(scene, camera, handleClick) {
+  function buildDot(scene, camera, position, handleClick) {
     const options = {
-      radius: .1,
-      position: [0, 1, 0],
+      radius: .05,
+      position,
       raycaster: buildRaycaster(),
       camera,
       handleClick
@@ -105,12 +117,20 @@ export default async (
     return dot
   }
 
+  function createDots(donationObjects, scene, camera, handleClick) {
+    const dots = donationObjects.forEach(donationObject => {
+      const pos = donationObject['model'].position
+      buildDot(scene, camera, [pos.x, pos.y, pos.z], handleClick)
+    })
+    return dots
+  }
+
   function onMouseMove(event) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
     const treeObject = isDonationTree(intersecting[0])
     if (treeObject) {
-      treeObject['tree'].material.color.set(0xff0000)
+      treeObject['model'].material.color.set(0x404040)
     }
   }
 
@@ -122,10 +142,6 @@ export default async (
         cleanup()
       }, 1000)
     }
-  }
-
-  function dotClick() {
-    console.log('clicking dot')
   }
 
   function addLight(
@@ -151,22 +167,19 @@ export default async (
     TWEEN.update()
     biomes.animate()
     raycaster.setFromCamera(mouse, camera);
-    // dot.update(20)
     // Check for intersecting trees
     scene.children.forEach((child) => {
       let intersects = raycaster.intersectObject(child, true)
       if (intersects.length > 0) {
         intersecting = intersects
-        // console.log(intersecting)
       }
     })
 
     // Reset tree colors if not intersecting
     treeObjects.forEach(treeObject => {
       if (!isDonationTree(intersecting[0])) {
-        treeObject['tree'].material.color.set(0xffffff)
+        treeObject['model'].material.color.set(0xffffff)
       }
-
     })
     renderer.render(scene, camera)
   }
@@ -178,8 +191,13 @@ export default async (
   }
 
   function isDonationTree(model) {
-    const treeObjectResult = treeObjects.filter(treeObject => treeObject['tree'].uuid === model.object.uuid)
-    return treeObjectResult.length > 0 && treeObjectResult[0]['userId'] ? treeObjectResult[0] : null
+    const treeObjectResult = treeObjects.find(treeObject => treeObject['model'].uuid === model.object.uuid) //tree
+    return treeObjectResult && treeObjectResult['userId'] ? treeObjectResult : null
+  }
+
+  function isDonation(model) {
+    const objectResult = donationObjects.find(donationObject => donationObject['model'].uuid === model.object.uuid)
+    return objectResult && objectResult['userId'] ? objectResult : null
   }
 
   return {

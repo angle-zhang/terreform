@@ -7,6 +7,20 @@ import { groupVertices, sampleVertices, sample } from './Vertices'
 
 import { Flock } from './Boids.js'
 import { createCloud } from './Clouds.js'
+import { Dot } from './Dot'
+
+function buildDot(scene, camera, position, handleClick) {
+  const options = {
+    radius: .05,
+    position,
+    raycaster: buildRaycaster(),
+    camera,
+    handleClick
+  }
+  const dot = new Dot(options)
+  dot.render(scene)
+  return dot
+}
 
 // define scene classes here
 // pseudo abstract class
@@ -141,15 +155,16 @@ class StandardBiome extends Biome {
 
 class MarineBiome extends StandardBiome {
   constructor(scene, camera, position, marineDonationIds) {
-    super(scene, camera, { position, color: 0x8dd7d4 })
+    super(scene, camera, { position, color: 0x8dd7d4 }) // 0x8dd7d4
+    this.donations = marineDonationIds
     this.chance = new Chance(10)
     this.setObjects(position)
     this.sealife = this.sealife.map((seaCreature, i) => {
       return marineDonationIds[i] ? {
-        seaCreature,
+        model: seaCreature,
         userId: marineDonationIds[i]
       } : {
-          seaCreature,
+          model: seaCreature,
           userId: null
         }
     })
@@ -193,13 +208,14 @@ class MarineBiome extends StandardBiome {
     ]
     randomVertices.forEach(([x, y, z]) => {
       const model = models[this.chance.weighted([0, 1, 2, 3], [2, 2, 1, 1])]
+      // let object = new THREE.Object3D()
       const object = this.createClone(model.name)
       object.castShadow = true
       const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
       object.scale.set(...model.scale.map(v => v * scaleMultiplier))
       object.position.set(x * 0.25, y * 0.25 + -0.49, z * 0.25)
-      this.group.add(object)
       this.sealife.push(object)
+      this.group.add(object)
     })
 
     this.positionGroup(position)
@@ -218,19 +234,54 @@ class MarineBiome extends StandardBiome {
 class ForestBiome extends StandardBiome {
   constructor(scene, camera, position, treeDonationIds) {
     super(scene, camera, { position, color: 0x8dd7d4 })
+    this.donations = treeDonationIds
     this.trees = this.trees.map((tree, i) => {
       return treeDonationIds[i] ? {
-        tree,
+        model: tree,
         userId: treeDonationIds[i]
       } : {
-          tree,
+          model: tree,
           userId: null
         }
     })
+    // this.treeDots = []
+    // this.trees.forEach(treeObject => {
+    //   const pos = treeObject['model'].position
+    //   this.donationTrees = new THREE.Object3D()
+    // })
+
+    this.trees.forEach((treeObject) => {
+      if (treeObject.userId) {
+        const bounce = () => {
+          const coords = { y: treeObject['model'].position.y }
+          new TWEEN.Tween(coords)
+            .to({ y: treeObject['model'].position.y + 0.15 }, 500)
+            .easing(TWEEN.Easing.Bounce.In)
+            .onUpdate(() => {
+              treeObject['model'].position.y = coords.y
+            })
+            .start()
+          setTimeout(() => {
+            new TWEEN.Tween(coords)
+              .to({ y: treeObject['model'].position.y - 0.15 }, 500)
+              .easing(TWEEN.Easing.Bounce.Out)
+              .onUpdate(() => {
+                treeObject['model'].position.y = coords.y
+              })
+              .start()
+          }, 500)
+          setTimeout(() => bounce(), 2000)
+        }
+        bounce()
+      }
+    })
   }
+
+
 
   setObjects(position) {
     this.group = new THREE.Object3D()
+    // let numDonations = 0
     this.trees = []
     const top = loadedModels['forest-biome-top'].clone()
     top.scale.set(3, 3, 3)
@@ -265,14 +316,19 @@ class ForestBiome extends StandardBiome {
         this.chance.weighted([0, 1, 2, 3, 4, 5, 6], [1, 1, 1, 2, 2, 2, 2])
         ]
       // const object = loadedModels[model.name].clone()
+      // let object = new THREE.Object3D()
       const object = this.createClone(model.name)
-      if (model.name.search('tree*') > -1) {
-        this.trees.push(object)
-      }
+      // if(numDonations < this.donations.length){
+      //   const dot = buildDot()
+      // }
+      // object.add(tree)
       object.castShadow = true
       const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
       object.scale.set(...model.scale.map(v => v * scaleMultiplier))
       object.position.set(x * 3, y * 3 + 0.01, z * 3)
+      if (model.name.search('tree*') > -1) {
+        this.trees.push(object)
+      }
       this.group.add(object)
     })
 
@@ -285,22 +341,31 @@ class ForestBiome extends StandardBiome {
   }
 
   animate() {
-    this.group.rotateY(.005)
+    // this.group.rotateY()
   }
 }
 
 class AgricultureBiome extends StandardBiome {
-  constructor(scene, camera, position) {
+  constructor(scene, camera, position, agricultureDonationIds) {
     super(scene, camera, { position, color: 0xfce9cf })
     this.chance = new Chance(10)
     this.setObjects(position)
+    this.crops = this.crops.map((crop, i) => {
+      return agricultureDonationIds[i] ? {
+        model: crop,
+        userId: agricultureDonationIds[i]
+      } : {
+          model: crop,
+          userId: null
+        }
+    })
   }
 
   removeScene() { }
 
   setObjects(position) {
     this.group = new THREE.Object3D()
-
+    this.crops = []
     const top = loadedModels['agri-biome-top'].clone()
     top.scale.set(2, 2, 2)
     top.children[0].receiveShadow = true
@@ -331,10 +396,12 @@ class AgricultureBiome extends StandardBiome {
     randomVertices.forEach(([x, y, z]) => {
       const object = loadedModels['crops'].clone()
       // const object = this.createClone('crops')
+
       object.castShadow = true;
       const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
       object.scale.set(scaleMultiplier * 3, scaleMultiplier * 3, scaleMultiplier * 3)
       object.position.set(x * 2, y * 2 + 0.075, z * 2)
+      this.crops.push(object)
       this.group.add(object)
     })
 
@@ -356,7 +423,7 @@ export default class Biomes {
   constructor(scene, camera, donationIds) {
     const [forestDonationIds, agricultureDonationIds, marineDonationIds] = donationIds
     this.scene = scene
-    console.log(donationIds, 'biomes')
+    console.log(donationIds, 'donationIds being printed')
     this.biomes = [
       // new Biome(scene, camera, [0, 0, -6], donationIds),
       new ForestBiome(scene, camera, [0, 0, -6], forestDonationIds),
