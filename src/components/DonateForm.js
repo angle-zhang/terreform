@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { makeDonation } from '../globalGiving';
 import { initBraintree } from '../braintree';
+import { postDonation } from '../biome';
 
 import Input, { FullInput, BraintreeForm } from './presentational/Input';
 import Loading from './presentational/Loading';
@@ -53,6 +54,7 @@ const Option = styled.div`
   color: ${(props) => (props.selected ? '#fff' : '#222')};
   font-size: 35px;
   font-weight: bold;
+  transition: background-color 0.2s;
 
   input {
     font-family: 'SF Pro', sans-serif;
@@ -77,16 +79,16 @@ const Option = styled.div`
   }
 
   &:hover {
-    background-color: ${(props) => (props.selected ? '#222' : '#ddd')};
+    background-color: ${(props) => (props.selected ? '#222' : '#c4c4c4')};
     cursor: pointer;
   }
 `;
 
-const DonateForm = ({ id, amountArr, setStatus }) => {
-  const [projectId, setId] = useField('number', id);
+const DonateForm = ({ projectId, biomeId, amountArr, setStatus }) => {
   const [amount, setAmount] = useField('number');
   const [firstname, setFirst] = useField('text');
   const [lastname, setLast] = useField('text');
+  const [message, setMessage] = useField('text');
   const [customAmount, setCustomAmount] = useState('');
   const [email, setEmail] = useState('');
   const [nonce, setNonce] = useState('');
@@ -122,11 +124,15 @@ const DonateForm = ({ id, amountArr, setStatus }) => {
         lastname: lastname.value,
         email,
         amount: parseInt(amount.value),
-        projectId: parseInt(projectId.value),
+        projectId: parseInt(projectId),
         nonce: nonce
       });
       console.log(res.data);
       setStatus({ status: 'success', donation: res.data.donation });
+      postDonation(biomeId, {
+        username: `${firstname.value} ${lastname.value}`,
+        message: message.value
+      });
     } catch (err) {
       console.error(err);
       // onClose();
@@ -244,7 +250,7 @@ const DonateForm = ({ id, amountArr, setStatus }) => {
       </Row>
       <Row>
         <FullInput>
-          <textarea />
+          <textarea {...message} />
           <label>Message (optional)</label>
         </FullInput>
       </Row>
@@ -280,7 +286,7 @@ const DonateForm = ({ id, amountArr, setStatus }) => {
               <input
                 type="submit"
                 className="button button--small button--green"
-                value="Contribute"
+                value="Continue"
                 id="submit"
                 onClick={(e) => {
                   const err = checkInvalid();

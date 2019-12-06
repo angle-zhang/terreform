@@ -4,6 +4,7 @@ import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 
 import { getAllProjects, initKeys, initBiomeData } from './globalGiving';
+import { postDonation } from './biome';
 
 import Intro from './components/Intro';
 import Home from './components/Home';
@@ -24,36 +25,44 @@ const testData = [
 
 const App = () => {
   const [projects, setProjects] = useState([]);
+  const [biomeIds, setBiomeIds] = useState({});
   const [donationIds, setDonationIds] = useState([]);
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const runInitialization = async () => {
-      const projects = await getAllProjects();
-      setProjects(projects);
+      const api_projects = await getAllProjects();
+      setProjects(
+        api_projects.map((project) => ({
+          ...project
+        }))
+      );
       const keys = await initKeys();
       console.log('Key data:', keys);
       let data = await initBiomeData();
-      data = testData;
+      // data = testData;
       const donations = [];
-      const donationIds = data.map((biome) =>
-        // biome.map((donation) => donation.id)
-        {
-          const ids = [];
-          biome.forEach((donation) => {
+      const biomeIds = {};
+      const donationIds = data.map((biome) => {
+        biomeIds[biome.project] = biome._id;
+        const ids = [];
+        biome.donation_list.forEach((donation) => {
+          if (donation) {
             ids.push(donation.id);
             donations.push(donation);
-          });
-          return ids;
-        }
-      );
+          }
+        });
+        return ids;
+      });
+      setBiomeIds(biomeIds);
       setDonations(donations);
       setDonationIds(donationIds);
       setLoading(false);
     };
 
     runInitialization();
+    console.log(donations, donationIds);
   }, []);
 
   const getDonation = (id) => donations.find((elem) => elem.id === id);
@@ -70,6 +79,7 @@ const App = () => {
               ) : (
                 <Home
                   projects={projects}
+                  biomeIds={biomeIds}
                   donationIds={donationIds}
                   getDonationDetails={getDonation}
                 />

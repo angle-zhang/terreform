@@ -6,15 +6,10 @@ const Input = styled.div`
 
   label {
     position: absolute;
-    margin: -55px 0 0 15px;
+    margin: -55px 0 0 10px;
     font-size: 14px;
     color: #777;
     transition: all 0.2s;
-  }
-
-  textarea {
-    resize: vertical;
-    outline: none;
   }
 
   input,
@@ -29,6 +24,17 @@ const Input = styled.div`
     border: 2px solid transparent;
     border-radius: 5px;
     transition: border-radius 0.2s, box-shadow 0.2s;
+  }
+
+  textarea {
+    height: 50px;
+    width: 99%;
+    resize: none;
+    outline: none;
+  }
+
+  textarea + label {
+    margin: -95px 0 0 10px;
   }
 
   input:focus,
@@ -59,7 +65,7 @@ export const BraintreeForm = styled.div`
   label {
     position: absolute;
     margin-top: -60px;
-    margin-left: 15%;
+    margin-left: 14%;
     font-size: 14px;
     color: #777;
     transition: all 0.2s;

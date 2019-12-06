@@ -16,7 +16,9 @@ const Nav = styled.nav`
 const Header = styled.h1`
   ${NoSelect}
 
-  font-size: 25px;
+  font-family: SF Pro Light;
+  font-size: 28px;
+  letter-spacing: 0.05em;
   margin-left: 30px;
   margin-right: auto;
   margin: 0 auto 0 30px;

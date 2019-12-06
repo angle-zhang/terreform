@@ -7,10 +7,11 @@ import { TextDetail } from './presentational/Global';
 const Container = styled.div`
   position: absolute;
   top: 50%;
-  width: 20vw;
+  width: 330px;
+  height: 500px;
   margin-left: 15vw;
-  padding: 20px 40px;
-  background-color: rgba(255, 255, 255, 0.3);
+  padding: 20px 60px;
+  background-color: rgba(255, 255, 255, 0.8);
   transform: translateY(-50%);
   z-index: 0;
 `;
@@ -22,7 +23,7 @@ const Description = ({ title, body, onDonate }) => {
         <h1>{title}</h1>
         <p>{body}</p>
       </TextDetail>
-      <Button onClick={onDonate}>Donate</Button>
+      <Button onClick={onDonate}>Donate Now</Button>
     </Container>
   );
 };

@@ -9,8 +9,8 @@ export const NoSelect = css`
 `;
 
 export const TextDetail = styled.div`
-  text-align: left;
-  color: #fff;
+  // text-align: left;
+  color: #1c1c1c;
 
   h1,
   p {
@@ -18,15 +18,18 @@ export const TextDetail = styled.div`
   }
 
   h1 {
-    font-size: 36px;
+    max-height: 100px;
+    overflow: hidden;
+    font-family: 'SF Pro Bold', sans-serif;
+    font-size: 42px;
   }
 
   p {
     max-height: 200px;
     margin-bottom: 30px;
     font-family: 'Nunito Pro', sans-serif;
-    font-size: 15px;
-    line-height: 28px;
+    font-size: 20px;
+    line-height: 32px;
     overflow: auto;
   }
 `;
