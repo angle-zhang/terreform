@@ -5,7 +5,6 @@ import Dot from './Dot'
 import OrbitControls from './OrbitControls.js'
 import { loadModels } from './ModelLoader.js'
 
-
 /**
  * Options
  *   backgroundColor: hex #
@@ -17,7 +16,8 @@ import { loadModels } from './ModelLoader.js'
 export default async (
   canvas,
   { backgroundColor = 0x000000, lighting } = {},
-  renderPopup, donationIds
+  renderPopup,
+  donationIds
 ) => {
   await loadModels()
 
@@ -37,23 +37,31 @@ export default async (
   const treeObjects = biomes.biomes[0].trees
   const cropObjects = biomes.biomes[1].crops
   const seaCreatureObjects = biomes.biomes[2].sealife
-  const donationObjects = [...treeObjects, ...seaCreatureObjects]
-  // const dots = createDots(donationObjects, scene, camera, dotClick)
-  // console.log(dots)
-  console.log('tree objects', treeObjects)
-  console.log('crop objects', cropObjects)
-  console.log('sea life objects', seaCreatureObjects)
+  const donationObjects = [
+    ...treeObjects,
+    ...cropObjects,
+    ...seaCreatureObjects
+  ]
+  // // const dots = createDots(donationObjects, scene, camera, dotClick)
+  // // console.log(dots)
+  // console.log('tree objects', treeObjects)
+  // console.log('crop objects', cropObjects)
+  // console.log('sea life objects', seaCreatureObjects)
 
   addLight(scene, lighting)
+
+  let cleanup = { f: () => {} }
 
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {
     if (event.keyCode === 32) {
       biomes.next()
       controls.group = biomes.getCurrent().group
+      cleanup.f()
     } else if (event.keyCode === 13) {
       biomes.prev()
       controls.group = biomes.getCurrent().group
+      cleanup.f()
     }
   })
 
@@ -107,44 +115,50 @@ export default async (
     return raycaster
   }
 
-  function buildDot(scene, camera, position, handleClick) {
-    const options = {
-      radius: .05,
-      position,
-      raycaster: buildRaycaster(),
-      camera,
-      handleClick
-    }
-    const dot = new Dot(options)
-    dot.render(scene)
-    return dot
-  }
+  // function buildDot(scene, camera, position, handleClick) {
+  //   const options = {
+  //     radius: 0.05,
+  //     position,
+  //     raycaster: buildRaycaster(),
+  //     camera,
+  //     handleClick
+  //   }
+  //   const dot = new Dot(options)
+  //   dot.render(scene)
+  //   return dot
+  // }
 
-  function createDots(donationObjects, scene, camera, handleClick) {
-    const dots = donationObjects.forEach(donationObject => {
-      const pos = donationObject['model'].position
-      buildDot(scene, camera, [pos.x, pos.y, pos.z], handleClick)
-    })
-    return dots
-  }
+  // function createDots(donationObjects, scene, camera, handleClick) {
+  //   const dots = donationObjects.forEach(donationObject => {
+  //     const pos = donationObject['model'].position
+  //     buildDot(scene, camera, [pos.x, pos.y, pos.z], handleClick)
+  //   })
+  //   return dots
+  // }
 
   function onMouseMove(event) {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-    const treeObject = isDonation(intersecting[0])
-    if (treeObject) {
-      treeObject['model'].material.color.set(0x404040)
-    }
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
   }
 
   function onClick(event) {
-    const treeObject = isDonation(intersecting[0])
-    if (treeObject) {
-      const cleanup = renderPopup(treeObject['userId'], event.clientX, event.clientY)
-      setTimeout(() => {
-        cleanup()
-      }, 1000)
-    }
+    cleanup.f()
+    cleanup.f = () => {}
+    raycaster.setFromCamera(mouse, camera)
+    biomes.getCurrent().donationObjects.forEach(child => {
+      const intersects = raycaster.intersectObject(child.model, true)
+      if (intersects.length > 0) {
+        // console.log(intersects[0])
+        const treeObject = isDonation(intersects[0])
+        if (treeObject) {
+          cleanup.f = renderPopup(
+            treeObject['userId'],
+            event.clientX,
+            event.clientY
+          )
+        }
+      }
+    })
   }
 
   function addLight(
@@ -169,24 +183,17 @@ export default async (
     // only update active scene
     TWEEN.update()
     biomes.animate()
-    raycaster.setFromCamera(mouse, camera);
+    raycaster.setFromCamera(mouse, camera)
     // Check for intersecting trees
-    donationObjects.forEach((child) => {
-      let intersects = raycaster.intersectObject(child.model, true)
-      if (intersects.length > 0) {
-        intersecting = intersects
-        // console.log(intersecting)
-      }
-    })
 
     // Reset tree colors if not intersecting
-    if (!isDonation(intersecting[0])) {
-      donationObjects.forEach(treeObject => {
-        // console.log(treeObject['model'].material.color)
-        // console.log(treeObject.baseColor)
-        treeObject['model'].material.color.set(treeObject.baseColor)
-      })
-    }
+    // if (!isDonation(intersecting[0])) {
+    //   donationObjects.forEach(treeObject => {
+    //     // console.log(treeObject['model'].material.color)
+    //     // console.log(treeObject.baseColor)
+    //     treeObject.model.material.color.set(treeObject.baseColor)
+    //   })
+    // }
     renderer.render(scene, camera)
   }
 
@@ -197,21 +204,43 @@ export default async (
   }
 
   function isDonationTree(model) {
-    const treeObjectResult = treeObjects.find(treeObject => treeObject['model'].uuid === model.object.uuid) //tree
-    return treeObjectResult && treeObjectResult['userId'] ? treeObjectResult : null
+    const treeObjectResult = treeObjects.find(
+      treeObject => treeObject['model'].uuid === model.object.uuid
+    ) //tree
+    return treeObjectResult && treeObjectResult['userId']
+      ? treeObjectResult
+      : null
   }
 
   function isDonation(model) {
-    const objectResult = donationObjects.find(donationObject => donationObject['model'].uuid === model.object.uuid)
-    return objectResult && objectResult['userId'] ? objectResult : null
+    // console.log(donationObjects)
+    const objectResult = donationObjects.find(donationObject => {
+      if (donationObject.model.uuid === model.object.uuid) {
+        return true
+      }
+      for (const child of donationObject.model.children) {
+        // console.log(child)
+        if (child.uuid === model.object.uuid) {
+          return true
+        }
+      }
+      return false
+    })
+    return objectResult && objectResult.userId ? objectResult : null
   }
 
   return {
     update,
     onWindowResize,
     callbacks: {
-      nextBiome: () => biomes.next(),
-      prevBiome: () => biomes.prev(),
+      nextBiome: () => {
+        biomes.next()
+        cleanup.f()
+      },
+      prevBiome: () => {
+        biomes.prev()
+        cleanup.f()
+      },
       addObject: index => biomes.addObject(index)
     },
     scene

@@ -9,11 +9,12 @@ import { Flock } from './Boids.js'
 import { createCloud } from './Clouds.js'
 
 function createClone(modelName) {
-  const model = loadedModels[modelName]
-  if (model.children.length > 0) {
-    return model.clone()
-  }
-  return new THREE.Mesh(model.geometry, model.material.clone())
+  return loadedModels[modelName].clone()
+  // const model = loadedModels[modelName]
+  // if (model.children.length > 0) {
+  //   return model.clone()
+  // }
+  // return new THREE.Mesh(model.geometry, model.material.clone())
 }
 
 const castShadow = mesh => {
@@ -143,7 +144,7 @@ class StandardBiome extends Biome {
     this.chance = new Chance(10)
     this.setObjects(position)
     this.donationObjects = this.donationObjects.map((object, i) => {
-      console.log(object.material && object.material.color)
+      // console.log(object.material && object.material.color)
       return donationIds[i]
         ? {
             model: object,
@@ -161,22 +162,22 @@ class StandardBiome extends Biome {
           const originalCoord = object['model'].position.y
           const coords = { y: originalCoord }
           new TWEEN.Tween(coords)
-            .to({ y: object['model'].position.y + 0.1 }, 500)
-            .easing(TWEEN.Easing.Bounce.In)
+            .to({ y: object['model'].position.y + 0.05 }, 300)
+            .easing(TWEEN.Easing.Circular.Out)
             .onUpdate(() => {
               object['model'].position.y = coords.y
             })
             .start()
           setTimeout(() => {
             new TWEEN.Tween(coords)
-              .to({ y: originalCoord }, 500)
-              .easing(TWEEN.Easing.Bounce.Out)
+              .to({ y: originalCoord }, 300)
+              .easing(TWEEN.Easing.Circular.In)
               .onUpdate(() => {
                 object['model'].position.y = coords.y
               })
               .start()
-          }, 500)
-          setTimeout(() => bounce(), 2000)
+          }, 300)
+          setTimeout(() => bounce(), 3000)
         }
         bounce()
       }
@@ -518,11 +519,9 @@ class AgricultureBiome extends StandardBiome {
 
 export default class Biomes {
   constructor(scene, camera, donationIds) {
-    const [
-      forestDonationIds,
-      agricultureDonationIds,
-      marineDonationIds
-    ] = donationIds
+    const forestDonationIds = donationIds['22098']
+    const marineDonationIds = donationIds['22410']
+    const agricultureDonationIds = donationIds['1563']
     this.scene = scene
     console.log(donationIds, 'donationIds being printed')
     this.biomes = [

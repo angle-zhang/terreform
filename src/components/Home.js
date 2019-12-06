@@ -60,7 +60,7 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
   return (
     <div>
       <Navbar />
-      <ThreeContainer renderPopup={renderPopup} donationIds={[['a', 'b', 'c', 'd', 'e', 'f'], ['ab', 'bc', 'cd', 'de', 'ef'], ['aw', 'we', 'wu']]} />
+      <ThreeContainer renderPopup={renderPopup} donationIds={{'22098': ['a', 'b', 'c', 'd', 'e', 'f'], '22410': ['ab', 'bc', 'cd', 'de', 'ef'], '1563': ['aw', 'we', 'wu']}} />
       <DonationPopup {...popupProps} />
       <SuccessPopup {...successProps} />
       <Description
