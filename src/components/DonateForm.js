@@ -18,8 +18,8 @@ const useField = (type, init = '') => {
 };
 
 const Row = styled.div`
-  width: 74%;
-  margin-left: 13%;
+  width: ${props => props.static ? "100%" : "74%"};
+  margin-left: ${props => props.static ? "0%" : "13%"};
   display: flex;
   justify-content: ${(props) => (props['flex-end'] ? 'flex-end' : 'center')};
   align-items: center;
@@ -49,7 +49,7 @@ const Option = styled.div`
   margin-left: 10px;
   text-align: center;
   line-height: 100px;
-  border-radius: 10px;
+  border-radius: ${props => props.static ? "0px" : "10px"};
   background-color: ${(props) => (props.selected ? '#222' : '#eee')};
   color: ${(props) => (props.selected ? '#fff' : '#222')};
   font-size: 35px;
@@ -197,9 +197,9 @@ const DonateForm = ({
   return (
     <div>
       {amountArr.map((options, i) => (
-        <Row key={options[0].amount}>
+        <Row static={staticPage} key={options[0].amount}>
           {options.map((option) => (
-            <Option
+            <Option static={staticPage}
               key={option.amount}
               onClick={() => {
                 setAmount(option.amount);
@@ -210,7 +210,7 @@ const DonateForm = ({
             </Option>
           ))}
           {i === amountArr.length - 1 ? (
-            <Option
+            <Option static={staticPage}
               onClick={() => {
                 setAmount(customAmount);
               }}
@@ -235,18 +235,18 @@ const DonateForm = ({
         </Row>
       ))}
       <Divider>Your Information</Divider>
-      <Row>
-        <Input>
+      <Row static={staticPage}>
+        <Input static={staticPage}>
           <input {...firstname} />
           <label>First Name</label>
         </Input>
-        <Input>
+        <Input static={staticPage}>
           <input {...lastname} />
           <label>Last Name</label>
         </Input>
       </Row>
-      <Row>
-        <FullInput>
+      <Row static={staticPage}>
+        <FullInput static={staticPage}>
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -263,7 +263,7 @@ const DonateForm = ({
       </Row>
       <Divider>Payment Information</Divider>
       <BraintreeForm className="demo-frame" loading={loadingForm ? 1 : 0}>
-        <Row className="loading">
+        <Row static={staticPage} className="loading">
           <Loading />
         </Row>
         <form action="/" method="post" id="cardForm">
@@ -287,7 +287,7 @@ const DonateForm = ({
             Postal Code
           </label>
 
-          <Row>
+          <Row static={staticPage}>
             <Error show={error}>{error}</Error>
             <div className="button-container">
               <input

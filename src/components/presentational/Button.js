@@ -48,4 +48,37 @@ const Button = styled.div`
   }
 `;
 
+export const GreenLink = styled.a`
+  text-decoration: none;
+  color: #fff;
+  background-color: rgba(130, 167, 127, 0.7);
+  border-radius: 5px;
+  border: none;
+  width: 491px;
+  height: 55px;
+  line-height: 55px;
+  text-align: center;
+
+  &:hover {
+    color: #fff
+    cursor: pointer;
+    text-decoration: none;
+  }
+`;
+
+export const Close = styled.img`
+  position: absolute;
+  margin-left: ${props => props.static ? "700px" : "460px"};
+  margin-top: ${props => props.static ? "20px" : "-50px"}};
+  width: 30px;
+  height: 30px;
+  padding: 10px;
+  border-radius: 30px;
+
+  &:hover {
+    background-color: #eee;
+    cursor: pointer;
+  }
+`;
+
 export default Button;

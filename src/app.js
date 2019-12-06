@@ -162,6 +162,20 @@ const OldApp = () => {
   const [loading, setLoading] = useState(true);
   const [successId, setSuccessId] = useState(0);
 
+  const initAudio = (url) => { 
+    let audio = new Audio(url);
+    return audio;
+  }
+
+  const song = initAudio("/audio.mp3");
+  song.loop = true;
+  var playSong = function(event) {
+    song.play();
+    document.removeEventListener('click', playSong, false);
+  };
+
+  document.addEventListener('click', playSong, false);  
+
   useEffect(() => {
     const runInitialization = async () => {
       const api_projects = await getAllProjects();
@@ -171,7 +185,6 @@ const OldApp = () => {
         }))
       );
       const keys = await initKeys();
-      console.log('Key data:', keys);
       let data = await initBiomeData();
       // data = testData;
       const donations = [];

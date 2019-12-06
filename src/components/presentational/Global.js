@@ -24,7 +24,9 @@ export const TextDetail = styled.div`
     font-family: 'SF Pro Bold', sans-serif;
     font-size: 42px;
   }
-
+  h2 { 
+    font-size: 18px;
+  }
   p {
     max-height: 200px;
     margin-bottom: 30px;

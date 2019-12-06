@@ -66,7 +66,9 @@ const Home = ({
 
   return (
     <div>
-      <Navbar />
+      <Navbar
+        projects={projects}
+      />
       <ThreeContainer renderPopup={renderDonation} donationIds={donationIds} />
       <DonationPopup {...donationProps} />
       <SuccessPopup
