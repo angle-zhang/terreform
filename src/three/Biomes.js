@@ -3,10 +3,18 @@ import TWEEN from '@tweenjs/tween.js'
 import { loadedModels } from './ModelLoader.js'
 import Chance from 'chance'
 
-import { groupVertices, sampleVertices, sample } from './Vertices'
+import { groupVertices, sample } from './Vertices'
 
 import { Flock } from './Boids.js'
 import { createCloud } from './Clouds.js'
+
+function createClone(modelName) {
+  const model = loadedModels[modelName]
+  if (model.children.length > 0) {
+    return model.clone()
+  }
+  return new THREE.Mesh(model.geometry, model.material.clone())
+}
 
 const castShadow = mesh => {
   mesh.castShadow = true
@@ -61,7 +69,6 @@ class EnvironmentBiome extends Biome {
     const clouds = []
     for (let i = 0; i < 20; i++) {
       const cloud = createCloud(Math.random() * 4 + 2)
-      // const cloud = loadedModels['cloud-2'].clone()
       const x = Math.random() * 60 - 30
       const z = Math.sign(Math.random() - 0.5) * Math.sqrt(30 ** 2 - x ** 2)
       cloud.position.set(x, Math.random() * 25 - 10, z)
@@ -107,8 +114,10 @@ class EnvironmentBiome extends Biome {
   }
 }
 
+// class TreeBiome extends Biome {
+//   constructor(scene, camera, position, treeDonationIds) {
 class StandardBiome extends Biome {
-  constructor(scene, camera, options) {
+  constructor(scene, camera, options, donationIds) {
     super(scene, camera)
     const {
       color,
@@ -133,6 +142,45 @@ class StandardBiome extends Biome {
     this.scale = scale
     this.chance = new Chance(10)
     this.setObjects(position)
+    this.donationObjects = this.donationObjects.map((object, i) => {
+      console.log(object.material && object.material.color)
+      return donationIds[i]
+        ? {
+            model: object,
+            userId: donationIds[i],
+            baseColor: object.material && object.material.color
+          }
+        : {
+            model: object,
+            userId: null
+          }
+    })
+    this.donationObjects.forEach(object => {
+      if (object.userId) {
+        const bounce = () => {
+          const originalCoord = object['model'].position.y
+          const coords = { y: originalCoord }
+          new TWEEN.Tween(coords)
+            .to({ y: object['model'].position.y + 0.1 }, 500)
+            .easing(TWEEN.Easing.Bounce.In)
+            .onUpdate(() => {
+              object['model'].position.y = coords.y
+            })
+            .start()
+          setTimeout(() => {
+            new TWEEN.Tween(coords)
+              .to({ y: originalCoord }, 500)
+              .easing(TWEEN.Easing.Bounce.Out)
+              .onUpdate(() => {
+                object['model'].position.y = coords.y
+              })
+              .start()
+          }, 500)
+          setTimeout(() => bounce(), 2000)
+        }
+        bounce()
+      }
+    })
   }
 
   setScene() {
@@ -171,7 +219,8 @@ class StandardBiome extends Biome {
         this.models.map(({ frequency }) => frequency)
       )
     ]
-    const object = loadedModels[model.name].clone()
+    // const object = loadedModels[model.name].clone()
+    const object = createClone(model.name)
     castShadow(object)
     const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
     object.scale.set(...model.scale.map(v => v * scaleMultiplier))
@@ -192,6 +241,7 @@ class StandardBiome extends Biome {
       this.gridSize,
       this.bounds
     )
+    this.donationObjects = []
     randomVertices.slice(this.otherCount).forEach(([x, y, z]) => {
       const model = this.objectModels[
         this.chance.weighted(
@@ -201,7 +251,8 @@ class StandardBiome extends Biome {
           this.objectModels.map(({ frequency }) => frequency)
         )
       ]
-      const object = loadedModels[model.name].clone()
+      // const object = loadedModels[model.name].clone()
+      const object = createClone(model.name)
       castShadow(object)
       // object.castShadow = true
       const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
@@ -213,6 +264,7 @@ class StandardBiome extends Biome {
         object.position.z += model.position[2]
       }
       this.group.add(object)
+      this.donationObjects.push(object)
     })
 
     randomVertices.slice(0, this.otherCount).forEach(([x, y, z]) => {
@@ -249,45 +301,56 @@ class StandardBiome extends Biome {
 }
 
 class ForestBiome extends StandardBiome {
-  constructor(scene, camera, position) {
-    super(scene, camera, {
-      position,
-      color: 0x8dd7d4,
-      objectModels: [
-        { name: 'tree-1', scale: [0.01, 0.01, 0.01], frequency: 2 },
-        { name: 'tree-2', scale: [0.01, 0.01, 0.01], frequency: 2 },
-        { name: 'tree-3', scale: [0.01, 0.01, 0.01], frequency: 2 },
-        { name: 'tree-4', scale: [0.01, 0.01, 0.01], frequency: 2, position: [0, -0.01, 0] }
-      ],
-      otherModels: [
-        {
-          name: 'rock-1',
-          scale: [0.015, 0.015, 0.015],
-          frequency: 1,
-          position: [0, 0.03, 0]
-        },
-        {
-          name: 'rock-2',
-          scale: [0.033, 0.033, 0.033],
-          frequency: 1,
-          position: [0, 0, 0]
-        },
-        {
-          name: 'rock-3',
-          scale: [0.01, 0.01, 0.01],
-          frequency: 1,
-          position: [0, 0.03, 0]
-        }
-      ],
-      objectCount: 50,
-      otherCount: 20,
-      gridSize: [18, 18],
-      bounds: [
-        [-1 + 2 / 19, 1 - 2 / 19],
-        [-1 + 2 / 19, 1 - 2 / 19]
-      ],
-      scale: 3
-    })
+  constructor(scene, camera, position, donationIds) {
+    super(
+      scene,
+      camera,
+      {
+        position,
+        color: 0x8dd7d4,
+        objectModels: [
+          { name: 'tree-1', scale: [0.01, 0.01, 0.01], frequency: 2 },
+          { name: 'tree-2', scale: [0.01, 0.01, 0.01], frequency: 2 },
+          { name: 'tree-3', scale: [0.01, 0.01, 0.01], frequency: 2 },
+          {
+            name: 'tree-4',
+            scale: [0.01, 0.01, 0.01],
+            frequency: 2,
+            position: [0, -0.01, 0]
+          }
+        ],
+        otherModels: [
+          {
+            name: 'rock-1',
+            scale: [0.015, 0.015, 0.015],
+            frequency: 1,
+            position: [0, 0.03, 0]
+          },
+          {
+            name: 'rock-2',
+            scale: [0.033, 0.033, 0.033],
+            frequency: 1,
+            position: [0, 0, 0]
+          },
+          {
+            name: 'rock-3',
+            scale: [0.01, 0.01, 0.01],
+            frequency: 1,
+            position: [0, 0.03, 0]
+          }
+        ],
+        objectCount: 50,
+        otherCount: 20,
+        gridSize: [18, 18],
+        bounds: [
+          [-1 + 2 / 19, 1 - 2 / 19],
+          [-1 + 2 / 19, 1 - 2 / 19]
+        ],
+        scale: 3
+      },
+      donationIds
+    )
+    this.trees = this.donationObjects
   }
 
   getIslandMesh() {
@@ -303,71 +366,77 @@ class ForestBiome extends StandardBiome {
 }
 
 class MarineBiome extends StandardBiome {
-  constructor(scene, camera, position) {
-    super(scene, camera, {
-      position,
-      color: 0xdea8f3,
-      objectModels: [
-        {
-          name: 'coral-1',
-          scale: [0.03, 0.03, 0.03],
-          frequency: 2,
-          position: [0, -0.09, 0]
-        },
-        {
-          name: 'coral-2',
-          scale: [0.25, 0.25, 0.25],
-          frequency: 2,
-          position: [0, -0.09, 0]
-        }
-      ],
-      otherModels: [
-        {
-          name: 'seaweed-1',
-          scale: [0.005, 0.005, 0.005],
-          frequency: 2,
-          position: [0, -0.05, 0]
-        },
-        {
-          name: 'seaweed-2',
-          scale: [0.65, 0.65, 0.65],
-          frequency: 2,
-          position: [0, -0.075, 0]
-        },
-        {
-          name: 'coral-shelf',
-          scale: [0.17, 0.17, 0.17],
-          frequency: 2,
-          position: [0, -0.05, 0]
-        },
-        {
-          name: 'rock-1',
-          scale: [0.015, 0.015, 0.015],
-          frequency: 1,
-          position: [0, -0.03, 0]
-        },
-        {
-          name: 'rock-2',
-          scale: [0.033, 0.033, 0.033],
-          frequency: 1,
-          position: [0, -0.05, 0]
-        },
-        {
-          name: 'rock-3',
-          scale: [0.01, 0.01, 0.01],
-          frequency: 1,
-          position: [0, -0.05, 0]
-        }
-      ],
-      objectCount: 50,
-      otherCount: 30 ,
-      gridSize: [18, 18],
-      bounds: [
-        [-1 + 2 / 19, 1 - 2 / 19],
-        [-1 + 2 / 19, 1 - 2 / 19]
-      ],
-      scale: 3
-    })
+  constructor(scene, camera, position, donationIds) {
+    super(
+      scene,
+      camera,
+      {
+        position,
+        color: 0xdea8f3,
+        objectModels: [
+          {
+            name: 'coral-1',
+            scale: [0.03, 0.03, 0.03],
+            frequency: 2,
+            position: [0, -0.09, 0]
+          },
+          {
+            name: 'coral-2',
+            scale: [0.25, 0.25, 0.25],
+            frequency: 2,
+            position: [0, -0.09, 0]
+          }
+        ],
+        otherModels: [
+          {
+            name: 'seaweed-1',
+            scale: [0.005, 0.005, 0.005],
+            frequency: 2,
+            position: [0, -0.05, 0]
+          },
+          {
+            name: 'seaweed-2',
+            scale: [0.65, 0.65, 0.65],
+            frequency: 2,
+            position: [0, -0.075, 0]
+          },
+          {
+            name: 'coral-shelf',
+            scale: [0.17, 0.17, 0.17],
+            frequency: 2,
+            position: [0, -0.05, 0]
+          },
+          {
+            name: 'rock-1',
+            scale: [0.015, 0.015, 0.015],
+            frequency: 1,
+            position: [0, -0.03, 0]
+          },
+          {
+            name: 'rock-2',
+            scale: [0.033, 0.033, 0.033],
+            frequency: 1,
+            position: [0, -0.05, 0]
+          },
+          {
+            name: 'rock-3',
+            scale: [0.01, 0.01, 0.01],
+            frequency: 1,
+            position: [0, -0.05, 0]
+          }
+        ],
+        objectCount: 50,
+        otherCount: 30,
+        gridSize: [18, 18],
+        bounds: [
+          [-1 + 2 / 19, 1 - 2 / 19],
+          [-1 + 2 / 19, 1 - 2 / 19]
+        ],
+        scale: 3
+      },
+      donationIds
+    )
+    this.sealife = this.donationObjects
   }
 
   getIslandMesh() {
@@ -381,31 +450,46 @@ class MarineBiome extends StandardBiome {
     island.add(water)
     return [island, top.geometry.attributes.position.array]
   }
+
+  createClone(modelName) {
+    const model = loadedModels[modelName]
+    return new THREE.Mesh(model.geometry, model.material.clone())
+  }
+
+  animate() {
+    // this.group.rotateY()
+  }
 }
 
 class AgricultureBiome extends StandardBiome {
-  constructor(scene, camera, position) {
-    super(scene, camera, {
-      position,
-      color: 0xf8d1b7,
-      objectModels: [
-        {
-          name: 'crops',
-          scale: [1, 1, 1],
-          frequency: 1,
-          position: [0, 0.025, 0]
-        }
-      ],
-      otherModels: [],
-      objectCount: 50,
-      otherCount: 0,
-      gridSize: [8, 20],
-      bounds: [
-        [-1 + 2 / 21, 1 - 12 / 21],
-        [-1 + 2 / 21, 1 - 2 / 21]
-      ],
-      scale: 3
-    })
+  constructor(scene, camera, position, donationIds) {
+    super(
+      scene,
+      camera,
+      {
+        position,
+        color: 0xf8d1b7,
+        objectModels: [
+          {
+            name: 'crops',
+            scale: [1, 1, 1],
+            frequency: 1,
+            position: [0, 0.025, 0]
+          }
+        ],
+        otherModels: [],
+        objectCount: 50,
+        otherCount: 0,
+        gridSize: [8, 20],
+        bounds: [
+          [-1 + 2 / 21, 1 - 12 / 21],
+          [-1 + 2 / 21, 1 - 2 / 21]
+        ],
+        scale: 3
+      },
+      donationIds
+    )
+    this.crops = this.donationObjects
   }
 
   getIslandMesh() {
@@ -433,12 +517,19 @@ class AgricultureBiome extends StandardBiome {
 }
 
 export default class Biomes {
-  constructor(scene, camera) {
+  constructor(scene, camera, donationIds) {
+    const [
+      forestDonationIds,
+      agricultureDonationIds,
+      marineDonationIds
+    ] = donationIds
     this.scene = scene
+    console.log(donationIds, 'donationIds being printed')
     this.biomes = [
-      new ForestBiome(scene, camera, [0, 0, -6]),
-      new MarineBiome(scene, camera, [0, 0, -6]),
-      new AgricultureBiome(scene, camera, [0, 0, -6])
+      // new Biome(scene, camera, [0, 0, -6], donationIds),
+      new ForestBiome(scene, camera, [0, 0, -6], forestDonationIds),
+      new AgricultureBiome(scene, camera, [0, 0, -6], agricultureDonationIds),
+      new MarineBiome(scene, camera, [0, 0, -6], marineDonationIds)
     ]
     this.currentIndex = 0
     this.biomes[this.currentIndex].setScene()

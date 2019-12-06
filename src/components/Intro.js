@@ -12,8 +12,11 @@ const Centered = styled.div`
   text-align: center;
 
   & p {
+    font-size: 42px;
+    font-weight: bold;
     margin-top: 40vh;
     transition: opacity 0.5s;
+    color: #636363;
   }
 `;
 
