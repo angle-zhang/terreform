@@ -13,7 +13,7 @@ export const groupVertices = arr => {
 }
 
 export const sample = (vertices, n, gridSize, bounds) => {
-  const chance = new Chance(3)
+  const chance = new Chance(10)
 
   const [[lowerX, upperX], [lowerZ, upperZ]] = bounds
   const lenX = upperX - lowerX
@@ -35,35 +35,35 @@ export const sample = (vertices, n, gridSize, bounds) => {
   })
 
   // Fill undefined spots in grid
-  for (let i = 0; i < grid.length; i++) {
-    for (let j = 0; j < grid[i].length; j++) {
-      if (grid[i][j] === undefined) {
-        let sum = 0
-        let count = 0
-        const dirs = [
-          [0, 1],
-          [0, -1],
-          [-1, 0],
-          [1, 0]
-        ]
-        dirs.forEach(dir => {
-          const newI = i + dir[0]
-          const newJ = j + dir[1]
-          if (
-            newI >= 0 &&
-            newI < grid.length &&
-            newJ >= 0 &&
-            newJ < grid[i].length &&
-            grid[newI][newJ] !== undefined
-          ) {
-            sum += grid[newI][newJ]
-            count += 1
-          }
-        })
-        grid[i][j] = sum / count
-      }
-    }
-  }
+  // for (let i = 0; i < grid.length; i++) {
+  //   for (let j = 0; j < grid[i].length; j++) {
+  //     if (grid[i][j] === undefined) {
+  //       let sum = 0
+  //       let count = 0
+  //       const dirs = [
+  //         [0, 1],
+  //         [0, -1],
+  //         [-1, 0],
+  //         [1, 0]
+  //       ]
+  //       dirs.forEach(dir => {
+  //         const newI = i + dir[0]
+  //         const newJ = j + dir[1]
+  //         if (
+  //           newI >= 0 &&
+  //           newI < grid.length &&
+  //           newJ >= 0 &&
+  //           newJ < grid[i].length &&
+  //           grid[newI][newJ] !== undefined
+  //         ) {
+  //           sum += grid[newI][newJ]
+  //           count += 1
+  //         }
+  //       })
+  //       grid[i][j] = sum / count
+  //     }
+  //   }
+  // }
 
   const flattenedGrid = []
 
@@ -76,8 +76,13 @@ export const sample = (vertices, n, gridSize, bounds) => {
       ])
     }
   }
-  
-  return flattenedGrid.sort(() => 0.5 - chance.random()).splice(0, n)
+
+  console.log(flattenedGrid)
+
+  return flattenedGrid
+    .filter(([, y]) => y !== undefined)
+    .sort(() => 0.5 - chance.random())
+    .splice(0, n)
 }
 
 export const sampleVertices = (vertices, n, [gridX, gridY], bounds) => {

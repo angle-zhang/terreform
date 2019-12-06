@@ -23,7 +23,8 @@ const unloadedModels = [
   'agri-biome-bottom',
   'solar-panel',
   'crops',
-  'well'
+  'well',
+  'coral-shelf'
 ]
 
 const loadModel = name => {

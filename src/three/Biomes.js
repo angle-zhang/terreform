@@ -8,6 +8,13 @@ import { groupVertices, sampleVertices, sample } from './Vertices'
 import { Flock } from './Boids.js'
 import { createCloud } from './Clouds.js'
 
+const castShadow = mesh => {
+  mesh.castShadow = true
+  mesh.children.forEach(child => {
+    castShadow(child)
+  })
+}
+
 // define scene classes here
 // pseudo abstract class
 class Biome {
@@ -52,11 +59,12 @@ class EnvironmentBiome extends Biome {
   setScene() {
     // Add clouds in random positions
     const clouds = []
-    for (let i = 0; i < 15; i++) {
-      const cloud = createCloud(Math.random() * 5 + 3)
+    for (let i = 0; i < 20; i++) {
+      const cloud = createCloud(Math.random() * 4 + 2)
+      // const cloud = loadedModels['cloud-2'].clone()
       const x = Math.random() * 60 - 30
       const z = Math.sign(Math.random() - 0.5) * Math.sqrt(30 ** 2 - x ** 2)
-      cloud.position.set(x, Math.random() * 15 - 10, z)
+      cloud.position.set(x, Math.random() * 25 - 10, z)
       cloud.rotation.y = Math.atan2(x, z)
       clouds.push(cloud)
     }
@@ -106,14 +114,20 @@ class StandardBiome extends Biome {
       color,
       position,
       models,
+      objectModels,
+      otherModels,
       objectCount,
+      otherCount,
       gridSize,
       bounds,
       scale
     } = options
     this.color = color
     this.models = models
+    this.objectModels = objectModels
+    this.otherModels = otherModels
     this.objectCount = objectCount
+    this.otherCount = otherCount
     this.gridSize = gridSize
     this.bounds = bounds
     this.scale = scale
@@ -158,7 +172,7 @@ class StandardBiome extends Biome {
       )
     ]
     const object = loadedModels[model.name].clone()
-    object.castShadow = true
+    castShadow(object)
     const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
     object.scale.set(...model.scale.map(v => v * scaleMultiplier))
     object.position.set(x, y, z)
@@ -174,24 +188,53 @@ class StandardBiome extends Biome {
     const vertices = groupVertices(rawVertices)
     const randomVertices = sample(
       vertices,
-      this.objectCount,
+      this.objectCount + this.otherCount,
       this.gridSize,
       this.bounds
     )
-    randomVertices.forEach(([x, y, z]) => {
-      const model = this.models[
+    randomVertices.slice(this.otherCount).forEach(([x, y, z]) => {
+      const model = this.objectModels[
         this.chance.weighted(
-          Array(this.models.length)
+          Array(this.objectModels.length)
             .fill()
             .map((_v, idx) => idx),
-          this.models.map(({ frequency }) => frequency)
+          this.objectModels.map(({ frequency }) => frequency)
         )
       ]
       const object = loadedModels[model.name].clone()
-      object.castShadow = true
+      castShadow(object)
+      // object.castShadow = true
       const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
       object.scale.set(...model.scale.map(v => v * scaleMultiplier))
       object.position.set(x, y, z)
+      if (model.position) {
+        object.position.x += model.position[0]
+        object.position.y += model.position[1]
+        object.position.z += model.position[2]
+      }
+      this.group.add(object)
+    })
+
+    randomVertices.slice(0, this.otherCount).forEach(([x, y, z]) => {
+      const model = this.otherModels[
+        this.chance.weighted(
+          Array(this.otherModels.length)
+            .fill()
+            .map((_v, idx) => idx),
+          this.otherModels.map(({ frequency }) => frequency)
+        )
+      ]
+      const object = loadedModels[model.name].clone()
+      castShadow(object)
+      // object.castShadow = true
+      const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
+      object.scale.set(...model.scale.map(v => v * scaleMultiplier))
+      object.position.set(x, y, z)
+      if (model.position) {
+        object.position.x += model.position[0]
+        object.position.y += model.position[1]
+        object.position.z += model.position[2]
+      }
       this.group.add(object)
     })
 
@@ -210,16 +253,34 @@ class ForestBiome extends StandardBiome {
     super(scene, camera, {
       position,
       color: 0x8dd7d4,
-      models: [
-        { name: 'rock-1', scale: [0.02, 0.02, 0.02], frequency: 1 },
-        { name: 'rock-2', scale: [0.033, 0.033, 0.033], frequency: 1 },
-        { name: 'rock-3', scale: [0.017, 0.017, 0.017], frequency: 1 },
+      objectModels: [
         { name: 'tree-1', scale: [0.01, 0.01, 0.01], frequency: 2 },
         { name: 'tree-2', scale: [0.01, 0.01, 0.01], frequency: 2 },
         { name: 'tree-3', scale: [0.01, 0.01, 0.01], frequency: 2 },
-        { name: 'tree-4', scale: [0.01, 0.01, 0.01], frequency: 2 }
+        { name: 'tree-4', scale: [0.01, 0.01, 0.01], frequency: 2, position: [0, -0.01, 0] }
+      ],
+      otherModels: [
+        {
+          name: 'rock-1',
+          scale: [0.015, 0.015, 0.015],
+          frequency: 1,
+          position: [0, 0.03, 0]
+        },
+        {
+          name: 'rock-2',
+          scale: [0.033, 0.033, 0.033],
+          frequency: 1,
+          position: [0, 0, 0]
+        },
+        {
+          name: 'rock-3',
+          scale: [0.01, 0.01, 0.01],
+          frequency: 1,
+          position: [0, 0.03, 0]
+        }
       ],
       objectCount: 50,
+      otherCount: 20,
       gridSize: [18, 18],
       bounds: [
         [-1 + 2 / 19, 1 - 2 / 19],
@@ -232,6 +293,7 @@ class ForestBiome extends StandardBiome {
   getIslandMesh() {
     const island = new THREE.Object3D()
     const top = loadedModels['forest-biome-top'].clone()
+    top.scale.set(1, 1, 1)
     top.receiveShadow = true
     island.add(top)
     const bottom = loadedModels['forest-biome-bottom'].clone()
@@ -244,20 +306,67 @@ class MarineBiome extends StandardBiome {
   constructor(scene, camera, position) {
     super(scene, camera, {
       position,
-      color: 0x8dd7d4,
-      models: [
-        { name: 'seaweed-1', scale: [0.06, 0.06, 0.06], frequency: 2 },
-        { name: 'seaweed-2', scale: [0.06, 0.06, 0.06], frequency: 2 },
-        { name: 'coral-1', scale: [0.15, 0.15, 0.15], frequency: 2 },
-        { name: 'coral-2', scale: [0.15, 0.15, 0.15], frequency: 2 }
+      color: 0xdea8f3,
+      objectModels: [
+        {
+          name: 'coral-1',
+          scale: [0.03, 0.03, 0.03],
+          frequency: 2,
+          position: [0, -0.09, 0]
+        },
+        {
+          name: 'coral-2',
+          scale: [0.25, 0.25, 0.25],
+          frequency: 2,
+          position: [0, -0.09, 0]
+        }
+      ],
+      otherModels: [
+        {
+          name: 'seaweed-1',
+          scale: [0.005, 0.005, 0.005],
+          frequency: 2,
+          position: [0, -0.05, 0]
+        },
+        {
+          name: 'seaweed-2',
+          scale: [0.65, 0.65, 0.65],
+          frequency: 2,
+          position: [0, -0.075, 0]
+        },
+        {
+          name: 'coral-shelf',
+          scale: [0.17, 0.17, 0.17],
+          frequency: 2,
+          position: [0, -0.05, 0]
+        },
+        {
+          name: 'rock-1',
+          scale: [0.015, 0.015, 0.015],
+          frequency: 1,
+          position: [0, -0.03, 0]
+        },
+        {
+          name: 'rock-2',
+          scale: [0.033, 0.033, 0.033],
+          frequency: 1,
+          position: [0, -0.05, 0]
+        },
+        {
+          name: 'rock-3',
+          scale: [0.01, 0.01, 0.01],
+          frequency: 1,
+          position: [0, -0.05, 0]
+        }
       ],
       objectCount: 50,
+      otherCount: 30 ,
       gridSize: [18, 18],
       bounds: [
-        [-6.8, 6.8],
-        [-6.8, 6.8]
+        [-1 + 2 / 19, 1 - 2 / 19],
+        [-1 + 2 / 19, 1 - 2 / 19]
       ],
-      scale: 0.33
+      scale: 3
     })
   }
 
@@ -265,11 +374,10 @@ class MarineBiome extends StandardBiome {
     const island = new THREE.Object3D()
     const top = loadedModels['marine-biome-top'].clone()
     island.add(top)
+    top.receiveShadow = true
     const bottom = loadedModels['marine-biome-bottom'].clone()
-    bottom.receiveShadow = true
     island.add(bottom)
     const water = loadedModels['marine-biome-water'].clone()
-    water.position.set(0, 4, 0)
     island.add(water)
     return [island, top.geometry.attributes.position.array]
   }
@@ -279,9 +387,18 @@ class AgricultureBiome extends StandardBiome {
   constructor(scene, camera, position) {
     super(scene, camera, {
       position,
-      color: 0x8dd7d4,
-      models: [{ name: 'crops', scale: [1, 1, 1], frequency: 1 }],
+      color: 0xf8d1b7,
+      objectModels: [
+        {
+          name: 'crops',
+          scale: [1, 1, 1],
+          frequency: 1,
+          position: [0, 0.025, 0]
+        }
+      ],
+      otherModels: [],
       objectCount: 50,
+      otherCount: 0,
       gridSize: [8, 20],
       bounds: [
         [-1 + 2 / 21, 1 - 12 / 21],
@@ -294,15 +411,23 @@ class AgricultureBiome extends StandardBiome {
   getIslandMesh() {
     const island = new THREE.Object3D()
     const top = loadedModels['agri-biome-top'].clone()
-    top.scale.set(1, 1, 1)
-    top.children[0].receiveShadow = true
+    top.receiveShadow = true
+    top.children.forEach(child => {
+      child.receiveShadow = true
+    })
+    // console.log(top)
+    // top.children[1].receiveShadow = true
     island.add(top)
     const bottom = loadedModels['agri-biome-bottom'].clone()
-    bottom.scale.set(1, 1, 1)
+    bottom.receiveShadow = true
     island.add(bottom)
     const well = loadedModels['well'].clone()
-    well.scale.set(1, 1, 1)
+    castShadow(well)
     island.add(well)
+    const solarPanel = loadedModels['solar-panel'].clone()
+    solarPanel.castShadow = true
+    castShadow(solarPanel)
+    island.add(solarPanel)
     return [island, top.children[0].geometry.attributes.position.array]
   }
 }
@@ -312,8 +437,8 @@ export default class Biomes {
     this.scene = scene
     this.biomes = [
       new ForestBiome(scene, camera, [0, 0, -6]),
-      new AgricultureBiome(scene, camera, [0, 0, -6]),
-      new MarineBiome(scene, camera, [0, 0, -6])
+      new MarineBiome(scene, camera, [0, 0, -6]),
+      new AgricultureBiome(scene, camera, [0, 0, -6])
     ]
     this.currentIndex = 0
     this.biomes[this.currentIndex].setScene()
@@ -323,12 +448,12 @@ export default class Biomes {
     this.renderCurrentBiome()
   }
 
-  removeBiome(i) {
+  removeBiome(i, dir = 1) {
     const biome = this.biomes[i]
     const coords = { y: this.biomes[i].group.position.y }
     biome.removeScene()
     new TWEEN.Tween(coords)
-      .to({ y: -10 }, 1000)
+      .to({ y: dir * -10 }, 1000)
       .easing(TWEEN.Easing.Quadratic.Out)
       .onUpdate(() => {
         biome.group.position.y = coords.y
@@ -337,12 +462,12 @@ export default class Biomes {
     setTimeout(() => this.scene.remove(biome.group), 1000)
   }
 
-  renderCurrentBiome() {
+  renderCurrentBiome(dir) {
     const biome = this.biomes[this.currentIndex]
     biome.group.position.y = 10
     biome.setScene()
     this.scene.add(biome.group)
-    const coords = { y: biome.group.position.y }
+    const coords = { y: dir * biome.group.position.y }
     new TWEEN.Tween(coords)
       .to({ y: 0 }, 1000)
       .easing(TWEEN.Easing.Quadratic.Out)
@@ -367,9 +492,19 @@ export default class Biomes {
 
   next() {
     if (Date.now() - this.lastRotateTime > 1000) {
-      this.removeBiome(this.currentIndex)
+      this.removeBiome(this.currentIndex, 1)
       this.currentIndex = (this.currentIndex + 1) % this.biomes.length
-      this.renderCurrentBiome()
+      this.renderCurrentBiome(1)
+      this.lastRotateTime = Date.now()
+    }
+  }
+
+  prev() {
+    if (Date.now() - this.lastRotateTime > 1000) {
+      this.removeBiome(this.currentIndex, -1)
+      const n = this.biomes.length
+      this.currentIndex = (((this.currentIndex - 1) % n) + n) % n
+      this.renderCurrentBiome(-1)
       this.lastRotateTime = Date.now()
     }
   }

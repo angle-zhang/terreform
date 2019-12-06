@@ -35,6 +35,9 @@ export default async (
     if (event.keyCode === 32) {
       biomes.next()
       controls.group = biomes.getCurrent().group
+    } else if (event.keyCode === 13) {
+      biomes.prev()
+      controls.group = biomes.getCurrent().group
     }
   })
 
@@ -120,7 +123,8 @@ export default async (
     update,
     onWindowResize,
     callbacks: {
-      switchBiomes: () => biomes.next(),
+      nextBiome: () => biomes.next(),
+      prevBiome: () => biomes.prev(),
       addObject: index => biomes.addObject(index)
     },
     scene
