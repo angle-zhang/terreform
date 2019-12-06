@@ -1,7 +1,6 @@
 import Chance from 'chance'
 
-export const groupVertices = mesh => {
-  const arr = mesh.geometry.attributes.position.array
+export const groupVertices = arr => {
   const vertices = []
   for (let i = 0; i < arr.length / 3; i++) {
     const coord = []
