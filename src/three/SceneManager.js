@@ -67,7 +67,7 @@ export default async (
   });
 
   document.addEventListener('mousemove', onMouseMove, false);
-  document.onclick = onClick;
+  document.onmousedown = onClick;
 
   function buildScene() {
     const scene = new THREE.Scene();
@@ -147,9 +147,9 @@ export default async (
     cleanup.f = () => {};
     raycaster.setFromCamera(mouse, camera);
     biomes.getCurrent().donationObjects.forEach((child) => {
-      const intersects = raycaster.intersectObject(child.model, true);
+      // check if raycaster intersects model
+      var intersects = raycaster.intersectObject(child.model, true);
       if (intersects.length > 0) {
-        // console.log(intersects[0])
         const treeObject = isDonation(intersects[0]);
         if (treeObject) {
           cleanup.f = renderPopup(
@@ -165,15 +165,17 @@ export default async (
   function addLight(
     scene,
     {
-      color = 0xffffff,
-      intensity = 0.4,
+      ambientcolor = 0xffffff,
+      color = 0x0000ff,
+      ambientintensity = 0.2,
+      intensity = .9,
       position: { x, y, z } = { x: -4, y: 2, z: 0 }
     }
   ) {
-    const light = new THREE.AmbientLight(color, intensity);
+    const light = new THREE.AmbientLight(ambientcolor, ambientintensity);
     scene.add(light);
 
-    const dir = new THREE.PointLight(color, 0.75);
+    const dir = new THREE.PointLight(0xffd1c1, 0.75);
     dir.position.set(x, y, z);
     dir.castShadow = true;
     scene.add(dir);
@@ -184,7 +186,7 @@ export default async (
     // only update active scene
     TWEEN.update();
     biomes.animate();
-    raycaster.setFromCamera(mouse, camera);
+    // raycaster.setFromCamera(mouse, camera);
     // Check for intersecting trees
 
     // Reset tree colors if not intersecting
@@ -250,12 +252,8 @@ export default async (
         }
         return success;
       },
-      // addObject: (index) => biomes.addObject(index)
       addObject: (id, index) => {
         const object = biomes.addObject(id, index);
-        console.log('LKSJDFLKJSDFLKJSDLKFJ');
-        console.log(object);
-        console.log('alksdjflksjdfkljas');
         donationObjects.push(object);
       }
     },

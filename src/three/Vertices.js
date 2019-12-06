@@ -77,8 +77,6 @@ export const sample = (vertices, n, gridSize, bounds) => {
     }
   }
 
-  console.log(flattenedGrid)
-
   return flattenedGrid
     .filter(([, y]) => y !== undefined)
     .sort(() => 0.5 - chance.random())
