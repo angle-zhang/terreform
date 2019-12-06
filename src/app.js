@@ -28,12 +28,25 @@ const App = () => {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const initAudio = (url) => { 
+    let audio = new Audio(url);
+    return audio;
+  }
+
+  const song = initAudio("/audio.mp3");
+  song.loop = true;
+  var playSong = function(event) {
+    song.play();
+    document.removeEventListener('click', playSong, false);
+  };
+
+  document.addEventListener('click', playSong, false);  
+
   useEffect(() => {
     const runInitialization = async () => {
       const projects = await getAllProjects();
       setProjects(projects);
       const keys = await initKeys();
-      console.log('Key data:', keys);
       let data = await initBiomeData();
       data = testData;
       const donations = [];
