@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { loadedModels } from './ModelLoader'
 
 export class Flock {
   constructor(count, bounds, velocityMagnitude) {
@@ -11,7 +12,7 @@ export class Flock {
             [
               Math.random() * (bounds[0][1] - bounds[0][0]) + bounds[0][1],
               Math.random() * (bounds[1][1] - bounds[1][0]) + bounds[1][1],
-              -6
+              -10
             ],
             velocityMagnitude
           )
@@ -99,11 +100,16 @@ class Boid {
   }
 
   createMesh(x, y, z) {
-    const geometry = new THREE.ConeGeometry(0.1, 0.5)
-    const material = new THREE.MeshPhongMaterial({
-      color: 0x77ccff
-    })
-    const mesh = new THREE.Mesh(geometry, material)
+    const mesh = loadedModels['bird'].clone()
+    mesh.scale.set(0.03, 0.03, 0.03)
+    mesh.rotation.order = 'ZXY'
+    // mesh.scale.set(1, 1, 1)
+    mesh.rotation.set(0, Math.PI / -2, 0)
+    // const geometry = new THREE.ConeGeometry(0.1, 0.5)
+    // const material = new THREE.MeshPhongMaterial({
+    //   color: 0x77ccff
+    // })
+    // const mesh = new THREE.Mesh(geometry, material)
     mesh.position.set(x, y, z)
     return mesh
   }
@@ -123,7 +129,7 @@ class Boid {
     this.velocity.y = vy
     this.velocity.normalize()
     this.velocity.multiplyScalar(this.velocityMagnitude)
-    this.mesh.rotation.z = Math.atan2(vy, vx) - Math.PI / 2
+    this.mesh.rotation.z = Math.atan2(vy, vx)
   }
 
   updatePosition([xMin, xMax], [yMin, yMax]) {

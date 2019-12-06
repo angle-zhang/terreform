@@ -44,7 +44,8 @@ const Home = ({
 
   const renderPopup = (popupProps, setPopupProps, id, x, y) => {
     setPopupProps({
-      donation: getDonationDetails(id),
+      // donation: getDonationDetails(id),
+      donation: id,
       x,
       y,
       hide: false
@@ -63,7 +64,7 @@ const Home = ({
     const cleanup = renderPopup(successProps, setSuccessProps, id, x, y);
     return cleanup;
   };
-
+  //testing with sample donation values
   return (
     <div>
       <Navbar
@@ -122,8 +123,8 @@ const Home = ({
           }}
         />
       ) : (
-        ''
-      )}
+          ''
+        )}
     </div>
   );
 };

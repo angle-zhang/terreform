@@ -1,4 +1,7 @@
+import Chance from 'chance'
+
 export const poissonDiskSampling = (radius, k, bounds) => {
+    const chance = new Chance(1)
     // SETUP
     const N = 2
     const cellsize = (radius / Math.sqrt(N))
@@ -18,12 +21,9 @@ export const poissonDiskSampling = (radius, k, bounds) => {
         }
         grid.push(row)
     }
-    // console.log('grid')
-    // console.log(grid)
 
     // HELPERS
     const insertPoint = (grid, point) => {
-        // console.log(point[0] / cellsize, point[1] / cellsize)
         grid[Math.floor(point[0] / cellsize)][Math.floor(point[1] / cellsize)] = point
     }
 
@@ -56,28 +56,25 @@ export const poissonDiskSampling = (radius, k, bounds) => {
     }
 
     // ALGORITHM
-    let randPoint = [Math.random() * width, Math.random() * height]
-    // console.log(randPoint)
+    let randPoint = [chance.random() * width, chance.random() * height]
     points.push(randPoint)
     active.push(randPoint)
-    // console.log(grid)
+
 
     insertPoint(grid, randPoint)
 
     while (active.length > 0) {
-        let random_index = Math.floor(Math.random() * active.length)
-        // let p = active[random_index]
+        let random_index = Math.floor(chance.random() * active.length)
         let p = active[random_index]
         let found = false
         for (let tries = 0; tries < k; tries++) {
-            let theta = Math.random() * 2 * Math.PI
-            let new_radius = (Math.random() * (radius)) + radius
+            let theta = chance.random() * 2 * Math.PI
+            let new_radius = (chance.random() * (radius)) + radius
             let pnewx = p[0] + new_radius * Math.cos(theta)
             let pnewy = p[1] + new_radius * Math.sin(theta)
             let pnew = [pnewx, pnewy]
 
             if (!isValidPoint(ncells_width, ncells_height, pnew)) {
-                console.log('failed')
                 continue
             }
             points.push(pnew)
@@ -88,10 +85,8 @@ export const poissonDiskSampling = (radius, k, bounds) => {
         }
         if (!found) {
             active = active.filter((element) => element[0] !== p[0] || element[1] !== p[1])
-            // console.log('active')
         }
     }
 
-    // console.log(points)
-    return points
+    return points.map(point => [point[0] + bounds[0], point[1] + bounds[2]])
 }

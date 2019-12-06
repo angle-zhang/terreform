@@ -1,7 +1,7 @@
+const axios = require('axios');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const axios = require('axios');
 
 // global environment variables
 require('dotenv').config();

@@ -1,15 +1,8 @@
 import SceneManager from './SceneManager';
-import { getModel, loadedModels } from './ModelLoader';
 
-const loadItem = async (name) => {
-  let model = await getModel(name);
-  scene.add(model)
-  console.log('loading...')
-}
-
-export default async (containerElement, options) => {
+export default async (containerElement, options, renderPopup, donationIds) => {
   const canvas = createCanvas(document, containerElement);
-  const sceneManager = await SceneManager(canvas, options);
+  const sceneManager = await SceneManager(canvas, options, renderPopup, donationIds);
   bindEventListeners();
   render();
 
@@ -22,6 +15,7 @@ export default async (containerElement, options) => {
     window.onresize = resizeCanvas
     resizeCanvas()
   }
+
   function resizeCanvas() {
     canvas.style.width = '100%';
     canvas.style.height = '100%';
@@ -33,4 +27,5 @@ export default async (containerElement, options) => {
     requestAnimationFrame(render)
     sceneManager.update()
   }
+  return sceneManager.callbacks
 }
