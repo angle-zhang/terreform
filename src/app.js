@@ -39,7 +39,7 @@ const App = () => {
   song.loop = true;
   var playSong = function(event) {
     song.play();
-    document.removeEventListener('click', playSong, false);
+    event.target.removeEventListener(event.type, arguments.callee, false);
   };
 
   document.addEventListener('click', playSong, false);  
