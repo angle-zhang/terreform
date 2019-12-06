@@ -8,7 +8,7 @@ export const EmptyLink = styled(Link)`
   color: #fff;
 `;
 
-export const StyledLink = styled(Link)`
+export const StyledLink = styled.a`
   ${NoSelect}
 
   margin: 10px;
@@ -68,8 +68,8 @@ export const GreenLink = styled.a`
 
 export const Close = styled.img`
   position: absolute;
-  margin-left: ${props => props.static ? "700px" : "460px"};
-  margin-top: ${props => props.static ? "20px" : "-50px"}};
+  margin-left: ${(props) => (props.static ? '700px' : '460px')};
+  margin-top: ${(props) => (props.static ? '20px' : '-50px')}};
   width: 30px;
   height: 30px;
   padding: 10px;

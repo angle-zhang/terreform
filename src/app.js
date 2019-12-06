@@ -42,7 +42,6 @@ class App extends React.Component {
     // // if (this.state.donations.length !== nextState.donations.length) {
     // //   return false;
     // // }
-    console.log(nextState.reload);
     return nextState.reload;
   }
 
@@ -55,9 +54,9 @@ class App extends React.Component {
           ...project
         }))
       });
-      console.log(api_projects);
+      // console.log(api_projects);
       const keys = await initKeys();
-      console.log('Key data:', keys);
+      // console.log('Key data:', keys);
       let data = await initBiomeData();
       // data = testData;
       const donations = [];

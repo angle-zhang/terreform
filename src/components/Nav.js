@@ -49,25 +49,22 @@ const Hamburger = styled.div`
   }
 
   .content a:nth-of-type(1) {
-    animation: fade-3 1.8s forwards;
+    animation: fade-3 1.5s forwards;
   }
 
   .content a:nth-of-type(2) {
-    animation: fade-2 1.8s forwards;
+    animation: fade-2 1.5s forwards;
   }
 
-  .content a:nth-of-type(3) {
-    animation: fade-1 1.8s forwards;
-  }
+  // .content a:nth-of-type(3) {
+  //   animation: fade-1 1.8s forwards;
+  // }
 
   @keyframes fade-1 {
     0% {
       opacity: 0;
     }
-    40% {
-      opacity: 0;
-    }
-    60% {
+    50% {
       opacity: 1;
     }
     100% {
@@ -79,11 +76,8 @@ const Hamburger = styled.div`
     0% {
       opacity: 0;
     }
-    60% {
+    50% {
       opacity: 0;
-    }
-    80% {
-      opacity: 1;
     }
     100% {
       opacity: 1;

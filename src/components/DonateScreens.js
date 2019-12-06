@@ -62,7 +62,7 @@ export const Success = ({ donation, onContinue }) => {
   return (
     <SuccessWrapper>
       <h2>Thank You.</h2>
-      <h3>You have successfully donated ${'25'}!</h3>
+      <h3>You have successfully donated ${donation.amount}!</h3>
       <Img src="images/pine.png" onClick={onContinue} />
       <p>
         <em style={{ color: '#8b8b8b' }}>

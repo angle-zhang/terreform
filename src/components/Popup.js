@@ -27,6 +27,8 @@ export const DonationPopup = ({ donation, x, y, hide }) => {
     return '';
   }
 
+  // console.log('rendering', donation);
+
   return (
     <StyledPopup x={x} y={y}>
       <h3>{donation.username}</h3>
