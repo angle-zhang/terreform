@@ -1,16 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Row = styled.div`
-  width: 90%;
-  margin-left: 5%;
-  margin: ${(props) => (props['space-around'] ? '20px 0 20px 5%' : '0 5%')}
-  display: flex;
-  justify-content: ${(props) => (props['flex-end'] ? 'flex-end' : 'center')};
-  align-items: center;
-  text-align: center;
-`;
-
 const StyledPopup = styled.div`
   width: 200px;
   position: absolute;
@@ -20,14 +10,14 @@ const StyledPopup = styled.div`
   transform: translateX(-50%);
   pointer-events: none;
 
-  & h3,p {
+   h3,p {
+    margin: 5px;
     font-size: 16px;
     text-align: center;
-    margin: 5px;
   }
 `;
 
-const DonationPopup = ({ donation, x, y, hide }) => {
+export const DonationPopup = ({ donation, x, y, hide }) => {
   if (hide) {
     return '';
   }
@@ -53,6 +43,15 @@ const Success = styled.div`
   transform: translateX(-50%);
 `;
 
+const Row = styled.div`
+  display: flex;
+  justify-content: ${(props) => (props['flex-end'] ? 'flex-end' : 'center')};
+  align-items: center;
+  width: 90%;
+  margin: ${(props) => (props['space-around'] ? '20px 0 20px 5%' : '0 5%')}
+  text-align: center;
+`;
+
 const Icon = styled.img`
   width: 40px;
   height: 40px;
@@ -67,9 +66,14 @@ const MiniIcon = styled.img`
 const TextInfo = styled.p`
   font-size: 15px;
   color: #7c7c7c;
+
+  &:hover {
+    color: #ddd;
+    cursor: pointer;
+  }
 `;
 
-export const SuccessPopup = ({ donation, x, y, hide }) => {
+export const SuccessPopup = ({ donation, x, y, hide, onHome }) => {
   if (hide) {
     return '';
   }
@@ -89,7 +93,7 @@ export const SuccessPopup = ({ donation, x, y, hide }) => {
         home.
       </Row>
       <Row>
-        <Row>
+        <Row onClick={onHome}>
           <MiniIcon src="home.svg" />
           <TextInfo>Go Home</TextInfo>
         </Row>
@@ -101,5 +105,3 @@ export const SuccessPopup = ({ donation, x, y, hide }) => {
     </Success>
   );
 };
-
-export default DonationPopup;

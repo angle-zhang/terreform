@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import React, { useState } from 'react';
 
 import Navbar from './Nav';
-import { CardDonate } from './Donate';
+import CardDonate from './Donate';
 import ThreeContainer from './ThreeContainer.js';
 import Description from './Description';
-import DonationPopup, { SuccessPopup } from './Popup';
-import { NoSelect, ProgressBar, ArrowIndicator } from './presentational/Other';
+import { DonationPopup, SuccessPopup } from './Popup';
+
+import ProgressBar from './presentational/Progress';
+import PageArrows from './presentational/Arrows';
 
 const splitAndLimit = (arr) => {
   const newArr = [];
@@ -26,13 +26,13 @@ const splitAndLimit = (arr) => {
 const Home = ({ projects, donationIds, getDonationDetails }) => {
   const maxPage = projects.length;
   const [page, setPage] = useState(0);
-  const [donating, toggleDonating] = useState(false);
-  const [popupProps, setPopupProps] = useState({ hide: true });
+  const [showDonate, toggleDonate] = useState(false);
+  const [showDescription, toggleDescription] = useState(true);
+
+  const [donationProps, setDonationProps] = useState({ hide: true });
   const [successProps, setSuccessProps] = useState({ hide: true });
 
-  const [i, seti] = useState(1);
-
-  const renderPopup = (id, x, y) => {
+  const renderPopup = (popupProps, setPopupProps, id, x, y) => {
     setPopupProps({
       // donation: getDonationDetails(id),
       donation: id,
@@ -45,29 +45,37 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
     };
   };
 
+  const renderDonation = (id, x, y) => {
+    const cleanup = renderPopup(donationProps, setDonationProps, id, x, y);
+    return cleanup;
+  };
+
   const renderSuccess = (id, x, y) => {
-    setSuccessProps({
-      donation: getDonationDetails(id),
-      x,
-      y,
-      hide: false
-    });
-    return () => {
-      setSuccessProps({ ...popupProps, hide: true });
-    };
+    const cleanup = renderPopup(successProps, setSuccessProps, id, x, y);
+    return cleanup;
   };
   //testing with sample donation values
   return (
     <div>
       <Navbar />
-      <ThreeContainer renderPopup={renderPopup} donationIds={{'22098': ['a', 'b', 'c', 'd', 'e', 'f'], '22410': ['ab', 'bc', 'cd', 'de', 'ef'], '1563': ['aw', 'we', 'wu']}} />
-      <DonationPopup {...popupProps} />
-      <SuccessPopup {...successProps} />
-      <Description
-        title={projects[page].title}
-        body={projects[page].summary}
-        onDonate={() => toggleDonating((val) => !val)}
+      <ThreeContainer renderPopup={renderDonation} donationIds={donationIds} />
+      <DonationPopup {...donationProps} />
+      <SuccessPopup
+        {...successProps}
+        onHome={() => {
+          toggleDescription(true);
+          setSuccessProps({ hide: true });
+        }}
       />
+      {showDescription ? (
+        <Description
+          title={projects[page].title}
+          body={projects[page].summary}
+          onDonate={() => toggleDonate((val) => !val)}
+        />
+      ) : (
+        ''
+      )}
       <ProgressBar
         percent={
           parseInt(projects[page].funding) / parseInt(projects[page].goal)
@@ -75,23 +83,28 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
         goal={projects[page].goal}
         donations={projects[page].numberOfDonations}
       />
-      <ArrowIndicator
-        onUp={() => setPage(page == maxPage - 1 ? 0 : page + 1)}
-        onDown={() => setPage(page == 0 ? maxPage - 1 : page - 1)}
+      <PageArrows
         current={page}
         max={maxPage}
+        onUp={() => setPage(page == maxPage - 1 ? 0 : page + 1)}
+        onDown={() => setPage(page == 0 ? maxPage - 1 : page - 1)}
       />
-      {donating ? (
+      {showDonate ? (
         <CardDonate
-          onClose={() => toggleDonating(false)}
           id={projects[page].id}
-          description={projects[page].need}
           title={projects[page].title}
+          description={projects[page].need}
           optionArr={
             projects[page].donationOptions
               ? splitAndLimit(projects[page].donationOptions.donationOption)
               : []
           }
+          onClose={() => toggleDonate(false)}
+          onSuccess={() => {
+            toggleDonate(false);
+            toggleDescription(false);
+            renderSuccess(1, 200, 200);
+          }}
         />
       ) : (
           ''
