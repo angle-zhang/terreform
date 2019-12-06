@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 
+import sakura from "../public/audio.mp3";
+
 import { getAllProjects, initKeys, initBiomeData } from './globalGiving';
 import { postDonation } from './biome';
 
@@ -46,6 +48,21 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    const initAudio = (url) => {
+      let audio = new Audio(url);
+      return audio;
+    };
+
+    const song = initAudio(sakura);
+    song.loop = true;
+    song.autoPlay = true;
+    var playSong = function(event) {
+      song.play();
+      event.target.removeEventListener(event.type, arguments.callee, false);
+    };
+
+    document.addEventListener('click', playSong, false);
+
     const runInitialization = async () => {
       const api_projects = await getAllProjects();
       this.setState({
@@ -161,20 +178,6 @@ const OldApp = () => {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [successId, setSuccessId] = useState(0);
-
-  const initAudio = (url) => {
-    let audio = new Audio(url);
-    return audio;
-  };
-
-  const song = initAudio('/audio.mp3');
-  song.loop = true;
-  var playSong = function(event) {
-    song.play();
-    event.target.removeEventListener(event.type, arguments.callee, false);
-  };
-
-  document.addEventListener('click', playSong, false);
 
   useEffect(() => {
     const runInitialization = async () => {
