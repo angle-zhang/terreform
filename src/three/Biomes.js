@@ -138,10 +138,31 @@ class StandardBiome extends Biome {
     )
   }
 
-  positionGroup(position) {
-    this.group.position.set(...position)
-    // this.group.scale.set(this.scale)
-    this.group.rotation.set(this.group.rotation.x + Math.PI / 8, 0, 0)
+  addObject() {
+    this.objectCount += 1
+    const [, rawVertices] = this.getIslandMesh()
+    const vertices = groupVertices(rawVertices)
+    const randomVertices = sample(
+      vertices,
+      this.objectCount,
+      this.gridSize,
+      this.bounds
+    )
+    const [x, y, z] = randomVertices[randomVertices.length - 1]
+    const model = this.models[
+      this.chance.weighted(
+        Array(this.models.length)
+          .fill()
+          .map((_v, idx) => idx),
+        this.models.map(({ frequency }) => frequency)
+      )
+    ]
+    const object = loadedModels[model.name].clone()
+    object.castShadow = true
+    const scaleMultiplier = chance.floating({ min: 0.9, max: 1.1 })
+    object.scale.set(...model.scale.map(v => v * scaleMultiplier))
+    object.position.set(x, y, z)
+    this.group.add(object)
   }
 
   setObjects(position) {
@@ -329,6 +350,10 @@ export default class Biomes {
         biome.group.position.y = coords.y
       })
       .start()
+  }
+
+  addObject(index = this.currentIndex) {
+    this.biomes[index].addObject()
   }
 
   getCurrent() {

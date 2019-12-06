@@ -29,7 +29,7 @@ export default async (
   const biomes = createBiomes(scene, camera)
   addLight(scene, lighting)
   const controls = buildOrbitControls(biomes.getCurrent().group)
-    
+
   // TEMPORARY way to switch biomes
   document.addEventListener('keypress', event => {
     if (event.keyCode === 32) {
@@ -51,8 +51,8 @@ export default async (
     // Helps make loaded models brighter
     renderer.gammaFactor = 2.2
     renderer.gammaOutput = true
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMapSoft = true ;
+    renderer.shadowMap.enabled = true
+    renderer.shadowMapSoft = true
     return renderer
   }
 
@@ -65,7 +65,7 @@ export default async (
     camera.setViewOffset(
       window.innerWidth,
       window.innerHeight,
-      -1 * window.innerWidth / 12,
+      (-1 * window.innerWidth) / 12,
       0,
       window.innerWidth,
       window.innerHeight
@@ -120,7 +120,8 @@ export default async (
     update,
     onWindowResize,
     callbacks: {
-      switchBiomes: () => biomes.next()
+      switchBiomes: () => biomes.next(),
+      addObject: index => biomes.addObject(index)
     },
     scene
   }
