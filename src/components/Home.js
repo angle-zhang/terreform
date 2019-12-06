@@ -23,7 +23,7 @@ const splitAndLimit = (arr) => {
   return newArr;
 };
 
-const Home = ({ projects, donationIds, getDonationDetails }) => {
+const Home = ({ projects, biomeIds, donationIds, getDonationDetails }) => {
   const maxPage = projects.length;
   const [page, setPage] = useState(0);
   const [showDonate, toggleDonate] = useState(false);
@@ -92,7 +92,8 @@ const Home = ({ projects, donationIds, getDonationDetails }) => {
       />
       {showDonate ? (
         <CardDonate
-          id={projects[page].id}
+          projectId={projects[page].id}
+          biomeId={biomeIds[projects[page].id]}
           title={projects[page].title}
           description={projects[page].need}
           optionArr={

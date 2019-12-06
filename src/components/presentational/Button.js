@@ -28,20 +28,22 @@ export const StyledLink = styled(Link)`
 const Button = styled.div`
   ${NoSelect}
 
-  width: 150px;
+  width: 130px;
   margin: 0 auto;
-  padding: 10px 25px;
-  color: #222;
-  background-color: #fff;
+  margin-top: 40px;
+  padding: 13px 25px;
+  color: #fff
+  background-color: #222;
   border: 2px solid transparent;
-  border-radius: 25px;
+  border-radius: 27px;
   text-align: center;
   text-decoration: none;
+  font-size: 22px;
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    color: #fff
-    background-color: #222;
+    color: #222;
+    background-color: #fff;
     cursor: pointer;
   }
 `;

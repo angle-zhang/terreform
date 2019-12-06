@@ -7,20 +7,19 @@ import { TextDetail } from './presentational/Global';
 import { Close } from './presentational/Button';
 
 const TextDescription = styled(TextDetail)`
-  color: #000;
-
   h3 {
-    margin-left: 30px;
+    color: #000;
+    margin-left: 40px;
     text-align: left;
-    font-size: 24px;
+    font-size: 28px;
   }
 
   p {
     max-height: none;
-    margin: 30px;
+    margin: 40px;
     text-align: left;
     line-height: 28px;
-    font-size: 15px;
+    font-size: 18px;
   }
 `;
 
@@ -51,7 +50,8 @@ const Centered = styled.div`
 `;
 
 const CardDonate = ({
-  id,
+  projectId,
+  biomeId,
   optionArr,
   onClose,
   onSuccess,
@@ -96,7 +96,13 @@ const CardDonate = ({
             <h3>{title}</h3>
             <p>{description}</p>
           </TextDescription>
-          <DonateForm id={id} amountArr={optionArr} setStatus={setStatus} staticPage={false} />
+
+          <DonateForm
+            projectId={projectId}
+            biomeId={biomeId}
+            amountArr={optionArr}
+            setStatus={setStatus}
+          />
         </>
       );
   }

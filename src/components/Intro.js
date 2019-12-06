@@ -13,15 +13,16 @@ const Centered = styled.div`
   p {
     margin-top: 40vh;
     color: #636363;
-    font-size: 42px;
-    font-weight: bold;
-    transition: opacity 0.5s;
+    font-family: SF Pro Light;
+    font-size: 36px;
+    transition: opacity 1s;
   }
 `;
 
 const ContinueLink = styled(StyledLink)`
-  margin-top: 40vh;
-  margin-left: 80%;
+  position: absolute;
+  margin-top: 90vh;
+  margin-left: 43vw;
   color: #a9adb6;
 `;
 
@@ -36,6 +37,7 @@ const introText = [
 ];
 
 const Intro = ({ loading }) => {
+  const [first, setFirst] = useState(true);
   const [count, setCount] = useState(0);
   const [opacity, setOpacity] = useState(1);
 
@@ -44,18 +46,18 @@ const Intro = ({ loading }) => {
     setTimeout(() => {
       setCount((count) => (count == introText.length - 1 ? 1 : count + 1));
       setOpacity(1);
-    }, 600);
+    }, 1000);
   };
 
   useEffect(() => {
-    const interval = setInterval(cycle, 2000);
+    const interval = setInterval(cycle, 2500);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <Centered>
       <p style={{ opacity }}>{introText[count]}</p>
-      {!loading ? <ContinueLink to="/home">Skip</ContinueLink> : ''}
+      {!loading ? <ContinueLink to="/home">Continue</ContinueLink> : ''}
     </Centered>
   );
 };
