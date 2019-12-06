@@ -84,7 +84,13 @@ const Option = styled.div`
   }
 `;
 
-const DonateForm = ({ projectId, biomeId, amountArr, setStatus }) => {
+const DonateForm = ({
+  projectId,
+  biomeId,
+  amountArr,
+  setStatus,
+  addDonation
+}) => {
   const [amount, setAmount] = useField('number');
   const [firstname, setFirst] = useField('text');
   const [lastname, setLast] = useField('text');
@@ -129,10 +135,11 @@ const DonateForm = ({ projectId, biomeId, amountArr, setStatus }) => {
       });
       console.log(res.data);
       setStatus({ status: 'success', donation: res.data.donation });
-      postDonation(biomeId, {
+      const donation = await postDonation(biomeId, {
         username: `${firstname.value} ${lastname.value}`,
         message: message.value
       });
+      addDonation(projectId, donation);
     } catch (err) {
       console.error(err);
       // onClose();

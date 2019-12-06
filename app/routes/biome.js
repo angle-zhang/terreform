@@ -19,10 +19,11 @@ router.route('/:id').get((req, res) => {
 router.route('/:id/add').post((req, res) => {
   Biome.findById(req.params.id)
     .then((biome) => {
-      biome.donation_list.push({ ...req.body.donation, id: shortid() });
+      const newDonation = { ...req.body.donation, id: shortid() };
+      biome.donation_list.push(newDonation);
       biome
         .save()
-        .then(() => res.json({ donation_list: biome.donation_list }))
+        .then(() => res.json({ ...newDonation }))
         .catch((err) => res.status(400).json('Error: ' + err));
     })
     .catch((err) => res.status(400).json('Error: ' + err));

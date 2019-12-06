@@ -9,13 +9,14 @@ const TextDescription = styled(TextDetail)`
   h3 {
     color: #000;
     margin-left: 40px;
+    margin-bottom: 10px;
     text-align: left;
     font-size: 28px;
   }
 
   p {
     max-height: none;
-    margin: 40px;
+    margin: 15px 40px;
     text-align: left;
     line-height: 28px;
     font-size: 18px;
@@ -67,10 +68,11 @@ const CardDonate = ({
   projectId,
   biomeId,
   optionArr,
+  description,
+  title,
   onClose,
   onSuccess,
-  description,
-  title
+  addDonation
 }) => {
   const [donationStatus, setStatus] = useState({
     status: 'default',
@@ -116,6 +118,7 @@ const CardDonate = ({
             biomeId={biomeId}
             amountArr={optionArr}
             setStatus={setStatus}
+            addDonation={addDonation}
           />
         </>
       );

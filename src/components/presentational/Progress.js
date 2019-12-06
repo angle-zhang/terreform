@@ -22,8 +22,8 @@ const ProgressWrapper = styled.div`
   }
 
   .bottom-text {
-    position: absolute;
-    top: 40.5vh;
+    position: relative;
+    top: 37vh;
     width: 100px;
   }
 `;

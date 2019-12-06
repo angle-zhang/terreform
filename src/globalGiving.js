@@ -4,18 +4,26 @@ let API_TOKEN = '';
 let GATEWAY_KEY = '';
 const API_KEY = process.env.API_KEY;
 
-const projectIds = [
-  43209,
-  43238,
-  43349,
-  43044,
-  34797,
-  17766,
-  32965,
-  40601,
-  8758,
-  39506
+const projectIds = [22098, 24410, 1563];
+
+export const titles = [
+  'Brazil Forest Restoration',
+  "Save Mexico's Coral Reefs",
+  'Moroccan Tree Nurseries'
 ];
+
+// const projectIds = [
+//   43209,
+//   43238,
+//   43349,
+//   43044,
+//   34797,
+//   17766,
+//   32965,
+//   40601,
+//   8758,
+//   39506
+// ];
 
 export const getProjectIds = async () => {
   const projectUrl = `https://api.globalgiving.org/api/public/projectservice/featured/projects?api_key=${API_KEY}`;

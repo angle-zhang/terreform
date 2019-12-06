@@ -13,7 +13,7 @@ const Row = styled.div`
 
 const LoadingText = styled.h3`
   margin-top: 40%;
-  margin-bottom: 15%;
+  margin-bottom: 20%;
   text-align: center;
 `;
 
@@ -32,17 +32,25 @@ const SuccessWrapper = styled.div`
   text-align: center;
   margin: 40px;
 
+  h2 {
+    font-size: 36px;
+    font-family: SF Pro Bold;
+    margin-bottom: -10px;
+  }
+
   h3 {
-    font-size: 19px;
+    font-family: SF Pro Light;
+    font-size: 20px;
   }
 
   p {
-    font-size: 15px;
+    font-size: 20px;
+    line-height: 26px;
   }
 `;
 
 const Img = styled.img`
-  height: 300px;
+  height: 350px;
 
   &:hover {
     cursor: pointer;
@@ -54,18 +62,17 @@ export const Success = ({ donation, onContinue }) => {
   return (
     <SuccessWrapper>
       <h2>Thank You.</h2>
-      <h3>
-        You have successfully donated ${donation.amount}! Your receipt number is
-        "{donation.receipt.receiptNumber}".
-      </h3>
+      <h3>You have successfully donated ${'25'}!</h3>
       <Img src="images/pine.png" onClick={onContinue} />
       <p>
-        <em>Click the tree above to plant yours.</em>
+        <em style={{ color: '#8b8b8b' }}>
+          Click the tree above <br /> to plant yours.
+        </em>
       </p>
-      <p>
-        Your contribution will help plant more trees, build more homes, improve
-        air quality, and protect our oceans. With every donation, another tree
-        is planted.
+      <p style={{ marginTop: '40px', width: '400px' }}>
+        Your contribution will help plant more trees, <br />
+        build more homes, improve air quality, and protect our oceans. With
+        every donation, another tree is planted.
       </p>
     </SuccessWrapper>
   );
