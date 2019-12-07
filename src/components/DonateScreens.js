@@ -51,6 +51,7 @@ const SuccessWrapper = styled.div`
 
 const Img = styled.img`
   height: 350px;
+  width: 100%;
 
   &:hover {
     cursor: pointer;
@@ -58,21 +59,73 @@ const Img = styled.img`
   }
 `;
 
-export const Success = ({ donation, onContinue }) => {
+export const Success = ({ donation, type, onContinue }) => {
+  const getModelPng = () => {
+    switch (type) {
+      case 'tree-1':
+      case 'tree-2':
+      case 'tree-3':
+        return 'pine.png';
+      case 'tree-4':
+        return 'tree.png';
+      case 'crops':
+        return 'plant.png';
+      case 'coral-1':
+      case 'coral-2':
+        return 'coral.png';
+      default:
+        return 'pine.png';
+    }
+  };
+
+  const getModelName = () => {
+    switch (type) {
+      case 'tree-1':
+      case 'tree-2':
+      case 'tree-3':
+      case 'tree-4':
+        return 'tree';
+      case 'crops':
+        return 'crop';
+      case 'coral-1':
+      case 'coral-2':
+        return 'coral';
+      default:
+        return 'object';
+    }
+  };
+
+  const getContributionText = () => {
+    switch (type) {
+      case 'tree-1':
+      case 'tree-2':
+      case 'tree-3':
+      case 'tree-4':
+        return 'Your contribution will help reforest local farming communities in Brazil.';
+      case 'crops':
+        return 'crop';
+      case 'coral-1':
+      case 'coral-2':
+        return 'coral';
+      default:
+        return 'Your contribution will help plant more ';
+    }
+  };
+
   return (
     <SuccessWrapper>
       <h2>Thank You.</h2>
       <h3>You have successfully donated ${donation.amount}!</h3>
-      <Img src="images/pine.png" onClick={onContinue} />
+      <Img src={`images/${getModelPng()}`} onClick={onContinue} />
       <p>
         <em style={{ color: '#8b8b8b' }}>
-          Click the tree above <br /> to plant yours.
+          Click the {getModelName()} above <br /> to plant yours.
         </em>
       </p>
       <p style={{ marginTop: '40px', width: '400px' }}>
         Your contribution will help plant more trees, <br />
-        build more homes, improve air quality, and protect our oceans. With
-        every donation, another tree is planted.
+        improve air quality, and protect our oceans. With every donation,
+        another {getModelName()} is planted.
       </p>
     </SuccessWrapper>
   );

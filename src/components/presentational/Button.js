@@ -8,6 +8,23 @@ export const EmptyLink = styled(Link)`
   color: #fff;
 `;
 
+export const RealLink = styled(Link)`
+  ${NoSelect}
+
+  margin: 10px;
+  padding: 5px 15px;
+  color: #fff;
+  border: 2px 2px 0 2px solid transparent;
+  border-radius: 0;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    color: #4d4c4c;
+    cursor: pointer;
+  }
+`;
+
 export const StyledLink = styled.a`
   ${NoSelect}
 

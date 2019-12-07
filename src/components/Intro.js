@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { StyledLink } from './presentational/Button';
+import { RealLink } from './presentational/Button';
 
 const Centered = styled.div`
   display: flex;
@@ -21,7 +21,7 @@ const Centered = styled.div`
   }
 `;
 
-const ContinueLink = styled(StyledLink)`
+const ContinueLink = styled(RealLink)`
   position: absolute;
   margin-top: 90vh;
   margin-left: 43vw;
