@@ -8,21 +8,23 @@ const StaticContact = (props) => {
   return (
     <Overlay display={props.display ? 1 : 0}>
       <Close src="close.svg" onClick={props.close} static={true} />
-      <TextDetail>
-        <h1>Contact Us</h1>
-      </TextDetail>
-      <SubContent>
-        <TextDetail>
-          <p>
-            Thank you for showing interest in our project. If you are interested
-            in contacting us via email, please click on the button below to
-            shoot us an email! We look forward towards hearing from you.{' '}
-          </p>
+      <Content> 
+        <TextDetail color={"white"}>
+          <h1>Contact Us</h1>
         </TextDetail>
-        <GreenLink href="mailto:terreform.19@gmail.com">
-          Email Terreform
-        </GreenLink>
-      </SubContent>
+        <SubContent>
+          <TextDetail color={"white"}>
+            <p>
+              Thank you for showing interest in our project. If you are interested
+              in contacting us via email, please click on the button below to
+              shoot us an email! We look forward towards hearing from you.{' '}
+            </p>
+          </TextDetail>
+          <GreenLink href="mailto:terreform.19@gmail.com">
+            Email Terreform
+          </GreenLink>
+        </SubContent>
+      </Content>
     </Overlay>
   );
 };

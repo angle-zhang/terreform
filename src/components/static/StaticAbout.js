@@ -8,12 +8,12 @@ const StaticAbout = (props) => {
   return (
     <Overlay display={props.display ? 1 : 0}>
       <Close src="close.svg" onClick={props.close} static={true} />
-      <TextDetail>
-        <h1>About Terreform</h1>
-      </TextDetail>
       <Content>
+        <TextDetail color={"white"}>
+          <h1>About</h1>
+        </TextDetail>
         <SubContent>
-          <TextDetail>
+          <TextDetail color={"white"}>
             <p>
               This project was created by students at UCLA for the purpose of
               incentivizing donations that ameliorate the causes and effects of
@@ -23,11 +23,11 @@ const StaticAbout = (props) => {
             </p>
           </TextDetail>
         </SubContent>
-        <TextDetail>
+        <TextDetail color={"white"}>
           <h1>Meet the Team</h1>
         </TextDetail>
         <SubContent>
-          <TextDetail>
+          <TextDetail color={"white"}>
             <p>
               <strong>Angela Zhang</strong> Project Lead
             </p>

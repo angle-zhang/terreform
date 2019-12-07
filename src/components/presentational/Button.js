@@ -85,8 +85,8 @@ export const GreenLink = styled.a`
 
 export const Close = styled.img`
   position: absolute;
-  margin-left: ${(props) => (props.static ? '700px' : '460px')};
-  margin-top: ${(props) => (props.static ? '20px' : '-50px')}};
+  margin-left: ${(props) => (props.static ? '72vw' : '460px')};
+  margin-top: ${(props) => (props.static ? '25vh' : '-50px')}};
   width: 30px;
   height: 30px;
   padding: 10px;
