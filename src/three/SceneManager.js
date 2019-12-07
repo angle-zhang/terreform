@@ -66,8 +66,16 @@ export default async (
     // }
   });
 
+  let mouseDown = 0;
+
   document.addEventListener('mousemove', onMouseMove, false);
-  document.onmousedown = onClick;
+  document.onmousedown = () => {
+    ++mouseDown;
+    onClick();
+  };
+  document.onmouseup = () => {
+    --mouseDown;
+  };
 
   function buildScene() {
     const scene = new THREE.Scene();
@@ -143,21 +151,23 @@ export default async (
 
     // cleanup.f();
     // cleanup.f = () => {};
-    raycaster.setFromCamera(mouse, camera);
-    biomes.getCurrent().donationObjects.forEach((child) => {
-      // check if raycaster intersects model
-      var intersects = raycaster.intersectObject(child.model, true);
-      if (intersects.length > 0) {
-        const treeObject = isDonation(intersects[0]);
-        if (treeObject) {
-          cleanup.f = renderPopup(
-            treeObject['userId'],
-            event.clientX,
-            event.clientY
-          );
+    if (!mouseDown) {
+      raycaster.setFromCamera(mouse, camera);
+      biomes.getCurrent().donationObjects.forEach((child) => {
+        // check if raycaster intersects model
+        var intersects = raycaster.intersectObject(child.model, true);
+        if (intersects.length > 0) {
+          const treeObject = isDonation(intersects[0]);
+          if (treeObject) {
+            cleanup.f = renderPopup(
+              treeObject['userId'],
+              event.clientX,
+              event.clientY
+            );
+          }
         }
-      }
-    });
+      });
+    }
 
     // raycaster.setFromCamera(mouse, camera);
     // biomes.getCurrent().donationObjects.forEach((child) => {

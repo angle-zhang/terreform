@@ -62,7 +62,7 @@ const Home = ({
   useEffect(() => {
     const initThree = async () => {
       const callbacks = await threeEntryPoint(
-        // ref to canvas 
+        // ref to canvas
         ref.current,
         {
           backgroundColor: 0xffffff, // changes background color?
@@ -76,8 +76,10 @@ const Home = ({
     initThree();
   }, []);
 
+  const getShowDonate = () => showDonate;
+
   const renderDonation = (id, x, y) => {
-    console.log(donationProps, setDonationProps, "fisdfj");
+    // console.log(donationProps, setDonationProps, 'fisdfj');
     const cleanup = renderPopup(donationProps, setDonationProps, id, x, y);
     return cleanup;
   };
@@ -93,9 +95,10 @@ const Home = ({
       <ThreeContainer
         // renderPopup={renderDonation}
         // donationIds={donationIds}
+        style={{ pointerEvents: 'none' }}
         threeRef={ref}
       />
-      <DonationPopup {...donationProps} />
+      <DonationPopup {...donationProps} showDonate={showDonate} />
       <SuccessPopup
         {...successProps}
         onHome={() => {

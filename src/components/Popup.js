@@ -40,7 +40,7 @@ class DonationPopup extends React.Component {
     //   return false;
     // }
     // return prevProps.donation.id !== newProps.donation.id;
-    console.log(this.props, newProps);
+    // console.log(this.props, newProps);
     if (!this.props.donation || !newProps.donation) {
       return true;
     }
@@ -51,13 +51,13 @@ class DonationPopup extends React.Component {
   };
 
   render() {
-    if (this.props.hide) {
+    if (this.props.hide || this.props.showDonate) {
       return '';
     }
     return (
       <StyledPopup x={this.props.x} y={this.props.y}>
         <h3>{this.props.donation.username}</h3>
-        <p>Nov. 19, 2019</p>
+        <p>{new Date(this.props.donation.timestamp).toDateString()}</p>
       </StyledPopup>
     );
   }
