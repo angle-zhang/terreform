@@ -37,7 +37,22 @@ class App extends React.Component {
       successId: 0,
       reload: true
     };
+
+    const song = this.initAudio(sakura);
+    song.loop = true;
+    song.autoPlay = true;
+    var playSong = function(event) {
+      song.play();
+      event.target.removeEventListener(event.type, arguments.callee, false);
+    };
+
+    document.addEventListener('click', playSong, false);
   }
+
+  initAudio = (url) => {
+    let audio = new Audio(url);
+    return audio;
+  };
 
   shouldComponentUpdate(nextProps, nextState) {
     // console.log(this.state.donations.length, nextState.donations.length);
@@ -48,20 +63,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    const initAudio = (url) => {
-      let audio = new Audio(url);
-      return audio;
-    };
-
-    const song = initAudio(sakura);
-    song.loop = true;
-    song.autoPlay = true;
-    var playSong = function(event) {
-      song.play();
-      event.target.removeEventListener(event.type, arguments.callee, false);
-    };
-
-    document.addEventListener('click', playSong, false);
 
     const runInitialization = async () => {
       const api_projects = await getAllProjects();

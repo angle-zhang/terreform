@@ -10,8 +10,7 @@ export const NoSelect = css`
 
 export const TextDetail = styled.div`
   // text-align: left;
-  color: #1c1c1c;
-  opacity: 1.;
+  color: ${props => props.color ? props.color: "#1c1c1c"};
 
   h1,
   p {

@@ -171,7 +171,7 @@ class StandardBiome extends Biome {
               })
               .start();
           }, 300);
-          setTimeout(() => bounce(), 3000);
+          setTimeout(() => bounce(), 3200);
         };
         bounce();
       }
@@ -264,7 +264,7 @@ class StandardBiome extends Biome {
           })
           .start();
       }, 300);
-      setTimeout(() => bounce(), 3000);
+      setTimeout(() => bounce(), 3200);
     };
     bounce();
     // returns reference to new tree
@@ -693,7 +693,7 @@ export default class Biomes {
       })
       .start();
   }
-  
+
   addObject(id, index = this.currentIndex) {
     const object = this.biomes[index].addObject(id);
     return object;
