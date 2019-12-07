@@ -5,10 +5,11 @@ const tuftLocations = [0, 1.75, -1.75, 2.75, -2.75, 3.4, -3.4, 4, -4]
 
 // Most of this code is from here:
 // https://medium.com/@joshmarinacci/procedural-geometry-low-poly-clouds-b86a0e66bcad
+
 export function createCloud(n) {
   const geometry = new THREE.Geometry()
 
-  const sizeMultiplier = Math.random() * 1.5 + 0.5
+  const sizeMultiplier = Math.random() * 1.6 + .5;
 
   for (let i = 0; i < n; i++) {
     // as i increases tuft size decreases
@@ -37,7 +38,7 @@ export function createCloud(n) {
   chopBottom(geometry, -0.5)
 
   const material = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
+    color: 0xe8f4f8,
     opacity: 0.75,
     transparent: true
   })

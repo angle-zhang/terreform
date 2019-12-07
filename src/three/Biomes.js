@@ -133,7 +133,7 @@ class StandardBiome extends Biome {
     this.gridSize = gridSize;
     this.bounds = bounds;
     this.scale = scale;
-    this.chance = new Chance(10);
+    this.chance = new Chance(10); // seed random donation
     this.donationIds = donationIds;
     this.setObjects(position);
     this.donationObjects = this.donationObjects.map((object, i) => {
@@ -149,6 +149,7 @@ class StandardBiome extends Biome {
             userId: null
           };
     });
+    // bounce each object 
     this.donationObjects.forEach((object) => {
       if (object.userId) {
         const bounce = () => {
@@ -216,6 +217,7 @@ class StandardBiome extends Biome {
       )
     ];
     // const object = loadedModels[model.name].clone()
+    // create clone of tree 
     const object = createClone(model.name);
     castShadow(object);
     object.castShadow = true;
@@ -242,6 +244,7 @@ class StandardBiome extends Biome {
           userId: null
         };
     const objectDos = this.donationObjects[i];
+    // bounce the new object
     const bounce = () => {
       const originalCoord = objectDos['model'].position.y;
       const coords = { y: originalCoord };
@@ -264,6 +267,7 @@ class StandardBiome extends Biome {
       setTimeout(() => bounce(), 3000);
     };
     bounce();
+    // returns reference to new tree
     return objectDos;
     // this.objectCount += 1;
     // const [mesh, rawVertices] = this.getIslandMesh();
@@ -689,6 +693,7 @@ export default class Biomes {
       })
       .start();
   }
+  
   addObject(id, index = this.currentIndex) {
     const object = this.biomes[index].addObject(id);
     return object;
