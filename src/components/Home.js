@@ -5,7 +5,7 @@ import Navbar from './Nav';
 import CardDonate from './Donate';
 import ThreeContainer from './ThreeContainer.js';
 import Description from './Description';
-import { DonationPopup, SuccessPopup } from './Popup';
+import DonationPopup, { SuccessPopup } from './Popup';
 import { titles } from '../globalGiving';
 
 import ProgressBar from './presentational/Progress';
@@ -29,8 +29,8 @@ const Home = ({
   projects,
   biomeIds,
   donationIds,
-  getDonationDetails,
   addDonation,
+  getDonationDetails,
   successId,
   setReload,
   getSuccessId
@@ -136,7 +136,7 @@ const Home = ({
           projectId={projects[page].id}
           biomeId={biomeIds[projects[page].id]}
           title={titles[page]}
-          description={projects[page].need}
+          description={projects[page].activities}
           optionArr={
             projects[page].donationOptions
               ? splitAndLimit(projects[page].donationOptions.donationOption)
@@ -149,7 +149,7 @@ const Home = ({
             toggleDonate(false);
             toggleDescription(false);
             // setReload(true);
-            renderSuccess(getSuccessId(), 200, 200);
+            renderSuccess(getSuccessId());
           }}
           callbacks={callbacks}
         />

@@ -67,7 +67,8 @@ export default async (
   });
 
   document.addEventListener('mousemove', onMouseMove, false);
-  document.onclick = onClick;
+  document.addEventListener('mousedown', onClick, false);
+  // document.onclick = onClick;
 
   function buildScene() {
     const scene = new THREE.Scene();
@@ -140,11 +141,9 @@ export default async (
   function onMouseMove(event) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  }
 
-  function onClick(event) {
-    cleanup.f();
-    cleanup.f = () => {};
+    // cleanup.f();
+    // cleanup.f = () => {};
     raycaster.setFromCamera(mouse, camera);
     biomes.getCurrent().donationObjects.forEach((child) => {
       const intersects = raycaster.intersectObject(child.model, true);
@@ -160,6 +159,53 @@ export default async (
         }
       }
     });
+
+    // raycaster.setFromCamera(mouse, camera);
+    // biomes.getCurrent().donationObjects.forEach((child) => {
+    //   const intersects = raycaster.intersectObject(child.model, true);
+    //   if (intersects.length > 0) {
+    //     intersecting = intersects;
+    //     // console.log(intersects[0]);
+    //     const treeObject = isDonation(intersects[0]);
+    //     if (treeObject) {
+    //       treeObject['model'].material.color.set(
+    //         darkenColor(treeObject.baseColor)
+    //       ); //(0x404040)
+    //       // cleanup.f = renderPopup(
+    //       //   treeObject['userId'],
+    //       //   event.clientX,
+    //       //   event.clientY
+    //       // );
+    //     }
+
+    //     // donationObjects.forEach((treeObject) => {
+    //     //   console.log(treeObject);
+    //     //   // console.log(treeObject['model'].material.color)
+    //     //   // console.log(treeObject.baseColor)
+    //     //   treeObject.model.material.color.set(treeObject.baseColor);
+    //     // });
+    //   }
+    // });
+  }
+
+  function onClick(event) {
+    cleanup.f();
+    cleanup.f = () => {};
+    // raycaster.setFromCamera(mouse, camera);
+    // biomes.getCurrent().donationObjects.forEach((child) => {
+    //   const intersects = raycaster.intersectObject(child.model, true);
+    //   if (intersects.length > 0) {
+    //     // console.log(intersects[0])
+    //     const treeObject = isDonation(intersects[0]);
+    //     if (treeObject) {
+    //       cleanup.f = renderPopup(
+    //         treeObject['userId'],
+    //         event.clientX,
+    //         event.clientY
+    //       );
+    //     }
+    //   }
+    // });
   }
 
   function addLight(
@@ -187,14 +233,49 @@ export default async (
     raycaster.setFromCamera(mouse, camera);
     // Check for intersecting trees
 
-    // Reset tree colors if not intersecting
-    // if (!isDonation(intersecting[0])) {
-    //   donationObjects.forEach(treeObject => {
-    //     // console.log(treeObject['model'].material.color)
-    //     // console.log(treeObject.baseColor)
-    //     treeObject.model.material.color.set(treeObject.baseColor)
-    //   })
-    // }
+    // raycaster.setFromCamera(mouse, camera);
+    // donationObjects.forEach((child) => {
+    //   const intersects = raycaster.intersectObject(child.model, true);
+    //   intersecting = intersects;
+    //   if (intersects.length > 0) {
+    //     // console.log(intersects[0]);
+    //     const treeObject = isDonation(intersects[0]);
+    //     if (treeObject) {
+    //       treeObject['model'].material.color.set(
+    //         darkenColor(treeObject.baseColor)
+    //       ); //(0x404040)
+    //       // cleanup.f = renderPopup(
+    //       //   treeObject['userId'],
+    //       //   event.clientX,
+    //       //   event.clientY
+    //       // );
+    //     }
+
+    //     // donationObjects.forEach((treeObject) => {
+    //     //   console.log(treeObject);
+    //     //   // console.log(treeObject['model'].material.color)
+    //     //   // console.log(treeObject.baseColor)
+    //     //   treeObject.model.material.color.set(treeObject.baseColor);
+    //     // });
+    //   }
+    // });
+
+    // // Reset tree colors if not intersecting
+    // // if (!isDonation(intersecting[0])) {
+    // console.log(intersecting);
+    // donationObjects.forEach((treeObject) => {
+    //   // if (!isDonation(intersecting[0])) {
+    //   // console.log(treeObject['model'].material.color)
+    //   // console.log(treeObject.baseColor)
+    //   intersecting.forEach((intersects) => {
+    //     if (intersects.object.model.uuid === treeObject.model.uuid) {
+    //       console.log('reseting');
+    //       treeObject.object.model.material.color.set(treeObject.baseColor);
+    //     }
+    //   });
+    // });
+    // // }
+
     renderer.render(scene, camera);
   }
 
@@ -250,13 +331,10 @@ export default async (
         }
         return success;
       },
-      // addObject: (index) => biomes.addObject(index)
       addObject: (id, index) => {
         const object = biomes.addObject(id, index);
-        console.log('LKSJDFLKJSDFLKJSDLKFJ');
-        console.log(object);
-        console.log('alksdjflksjdfkljas');
         donationObjects.push(object);
+        return object.model;
       }
     },
     scene

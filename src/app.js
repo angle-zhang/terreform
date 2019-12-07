@@ -54,7 +54,7 @@ class App extends React.Component {
           ...project
         }))
       });
-      // console.log(api_projects);
+      console.log(api_projects);
       const keys = await initKeys();
       // console.log('Key data:', keys);
       let data = await initBiomeData();
@@ -81,7 +81,7 @@ class App extends React.Component {
         loading: false
       });
 
-      console.log(biomeIds, donations, donationIds);
+      // console.log(biomeIds, donations, donationIds);
     };
 
     runInitialization();
@@ -101,7 +101,7 @@ class App extends React.Component {
   getSuccessId = () => this.state.successId;
 
   addDonation = (projectId, donation) => {
-    console.log(projectId);
+    // console.log(donation);
 
     const newDonationIds = { ...this.state.donationIds };
     // newDonationIds[projectId] = newDonationIds[projectId].concat(donation.id);
@@ -115,11 +115,11 @@ class App extends React.Component {
       reload: false
     });
 
-    console.log(
-      this.state.donationIds,
-      this.state.donations,
-      this.state.successId
-    );
+    //     console.log(
+    //       this.state.donationIds,
+    //       this.state.donations,
+    //       this.state.successId
+    //     );
   };
 
   render() {
