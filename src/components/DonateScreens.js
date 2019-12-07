@@ -51,7 +51,7 @@ const SuccessWrapper = styled.div`
 
 const Img = styled.img`
   height: 350px;
-  width: 100%;
+  max-width: 100%;
 
   &:hover {
     cursor: pointer;

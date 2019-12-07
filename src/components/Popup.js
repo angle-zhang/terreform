@@ -134,7 +134,7 @@ export const SuccessPopup = ({ donation, hide, onHome }) => {
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
-    return `${date.getMonth() + 1}/${date.getDay()}/${date
+    return `${date.getMonth() + 1}/${date.getDay() + 1}/${date
       .getFullYear()
       .toString()
       .substring(2, 4)}`;
