@@ -5,7 +5,7 @@ import Navbar from './Nav';
 import CardDonate from './Donate';
 import ThreeContainer from './ThreeContainer.js';
 import Description from './Description';
-import { DonationPopup, SuccessPopup } from './Popup';
+import DonationPopup, { SuccessPopup } from './Popup';
 import { titles } from '../globalGiving';
 
 import ProgressBar from './presentational/Progress';
@@ -29,8 +29,8 @@ const Home = ({
   projects,
   biomeIds,
   donationIds,
-  getDonationDetails,
   addDonation,
+  getDonationDetails,
   successId,
   setReload,
   getSuccessId
@@ -62,7 +62,7 @@ const Home = ({
   useEffect(() => {
     const initThree = async () => {
       const callbacks = await threeEntryPoint(
-        // ref to canvas 
+        // ref to canvas
         ref.current,
         {
           backgroundColor: 0xffffff, // changes background color?
@@ -76,8 +76,10 @@ const Home = ({
     initThree();
   }, []);
 
+  const getShowDonate = () => showDonate;
+
   const renderDonation = (id, x, y) => {
-    console.log(donationProps, setDonationProps, "fisdfj");
+    // console.log(donationProps, setDonationProps, 'fisdfj');
     const cleanup = renderPopup(donationProps, setDonationProps, id, x, y);
     return cleanup;
   };
@@ -93,9 +95,10 @@ const Home = ({
       <ThreeContainer
         // renderPopup={renderDonation}
         // donationIds={donationIds}
+        style={{ pointerEvents: 'none' }}
         threeRef={ref}
       />
-      <DonationPopup {...donationProps} />
+      <DonationPopup {...donationProps} showDonate={showDonate} />
       <SuccessPopup
         {...successProps}
         onHome={() => {
@@ -138,7 +141,7 @@ const Home = ({
           projectId={projects[page].id}
           biomeId={biomeIds[projects[page].id]}
           title={titles[page]}
-          description={projects[page].need}
+          description={projects[page].activities}
           optionArr={
             projects[page].donationOptions
               ? splitAndLimit(projects[page].donationOptions.donationOption)
@@ -151,7 +154,7 @@ const Home = ({
             toggleDonate(false);
             toggleDescription(false);
             // setReload(true);
-            renderSuccess(getSuccessId(), 200, 200);
+            renderSuccess(getSuccessId());
           }}
           callbacks={callbacks}
         />

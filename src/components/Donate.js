@@ -64,7 +64,8 @@ const CardDonate = ({
 }) => {
   const [donationStatus, setStatus] = useState({
     status: 'default',
-    donation: {}
+    donation: {},
+    type: ''
   });
 
   const node = useRef();
@@ -90,7 +91,11 @@ const CardDonate = ({
       break;
     case 'success':
       contentComponent = (
-        <Success donation={donationStatus.donation} onContinue={onSuccess} />
+        <Success
+          donation={donationStatus.donation}
+          onContinue={onSuccess}
+          type={donationStatus.type}
+        />
       );
       break;
     default:

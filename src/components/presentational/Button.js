@@ -8,6 +8,23 @@ export const EmptyLink = styled(Link)`
   color: #fff;
 `;
 
+export const RealLink = styled(Link)`
+  ${NoSelect}
+
+  margin: 10px;
+  padding: 5px 15px;
+  color: #fff;
+  border: 2px 2px 0 2px solid transparent;
+  border-radius: 0;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    color: #4d4c4c;
+    cursor: pointer;
+  }
+`;
+
 export const StyledLink = styled.a`
   ${NoSelect}
 
@@ -68,8 +85,8 @@ export const GreenLink = styled.a`
 
 export const Close = styled.img`
   position: absolute;
-  margin-left: ${(props) => (props.static ? '700px' : '460px')};
-  margin-top: ${(props) => (props.static ? '20px' : '-50px')}};
+  margin-left: ${(props) => (props.static ? '72vw' : '460px')};
+  margin-top: ${(props) => (props.static ? '25vh' : '-50px')}};
   width: 30px;
   height: 30px;
   padding: 10px;

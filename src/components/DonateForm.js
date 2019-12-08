@@ -138,13 +138,17 @@ const DonateForm = ({
         nonce: nonce
       });
       console.log(res.data);
-      setStatus({ status: 'success', donation: res.data.donation });
       const donation = await postDonation(biomeId, {
         username: `${firstname.value} ${lastname.value}`,
         message: message.value
       });
-      addDonation(projectId, donation);
-      callbacks.addObject(donation.id);
+      const model = callbacks.addObject(donation.id);
+      addDonation(projectId, { ...donation });
+      setStatus({
+        status: 'success',
+        donation: res.data.donation,
+        type: model.name
+      });
     } catch (err) {
       console.error(err);
       // onClose();

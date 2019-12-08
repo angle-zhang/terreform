@@ -2,15 +2,14 @@ import styled from "styled-components"
 
 export const Overlay = styled.div`
     display: ${props => props.display ? "block" : "none"};
+    color: white;
     position: absolute;
     z-index: 99;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #000000;
-    opacity: 82%;
-    padding: 200px 400px;
+    background-color: rgba(0,0,0,0.7);
 `;
 
 export const SubContent = styled.div`
@@ -25,6 +24,8 @@ export const SubContent = styled.div`
 `;
 
 export const Content = styled.div`
+    margin-left: 25vw;
+    margin-top: 22vh;
     height: 400px;
     overflow-y: scroll;
 `;

@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 
+import sakura from "../public/audio.mp3";
+
 import { getAllProjects, initKeys, initBiomeData } from './globalGiving';
 import { postDonation } from './biome';
 
@@ -35,7 +37,22 @@ class App extends React.Component {
       successId: 0,
       reload: true
     };
+
+    const song = this.initAudio(sakura);
+    song.loop = true;
+    song.autoPlay = true;
+    var playSong = function(event) {
+      song.play();
+      event.target.removeEventListener(event.type, arguments.callee, false);
+    };
+
+    document.addEventListener('click', playSong, false);
   }
+
+  initAudio = (url) => {
+    let audio = new Audio(url);
+    return audio;
+  };
 
   shouldComponentUpdate(nextProps, nextState) {
     // console.log(this.state.donations.length, nextState.donations.length);
@@ -46,6 +63,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+
     const runInitialization = async () => {
       const api_projects = await getAllProjects();
       this.setState({
@@ -54,7 +72,7 @@ class App extends React.Component {
           ...project
         }))
       });
-      // console.log(api_projects);
+      console.log(api_projects);
       const keys = await initKeys();
       // console.log('Key data:', keys);
       let data = await initBiomeData();
@@ -81,7 +99,7 @@ class App extends React.Component {
         loading: false
       });
 
-      console.log(biomeIds, donations, donationIds);
+      // console.log(biomeIds, donations, donationIds);
     };
 
     runInitialization();
@@ -101,7 +119,7 @@ class App extends React.Component {
   getSuccessId = () => this.state.successId;
 
   addDonation = (projectId, donation) => {
-    console.log(projectId);
+    // console.log(donation);
 
     const newDonationIds = { ...this.state.donationIds };
     // newDonationIds[projectId] = newDonationIds[projectId].concat(donation.id);
@@ -115,11 +133,11 @@ class App extends React.Component {
       reload: false
     });
 
-    console.log(
-      this.state.donationIds,
-      this.state.donations,
-      this.state.successId
-    );
+    //     console.log(
+    //       this.state.donationIds,
+    //       this.state.donations,
+    //       this.state.successId
+    //     );
   };
 
   render() {
@@ -161,20 +179,6 @@ const OldApp = () => {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [successId, setSuccessId] = useState(0);
-
-  const initAudio = (url) => {
-    let audio = new Audio(url);
-    return audio;
-  };
-
-  const song = initAudio('/audio.mp3');
-  song.loop = true;
-  var playSong = function(event) {
-    song.play();
-    event.target.removeEventListener(event.type, arguments.callee, false);
-  };
-
-  document.addEventListener('click', playSong, false);
 
   useEffect(() => {
     const runInitialization = async () => {
