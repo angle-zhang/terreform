@@ -42,12 +42,13 @@ const Centered = styled.div`
   margin-top: 100px;
   background-color: #fff;
   border-radius: 25px;
-  overflow: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   z-index: 4;
 
-  &::-webkit-scrollbar {
-    display: none;
+  .inner {
+    position: relative;
+    max-height: 100%;
+    overflow-y: ${(props) => (props.hideScroll ? 'hidden' : 'auto')};
   }
 `;
 
@@ -113,6 +114,7 @@ const CardDonate = ({
             setStatus={setStatus}
             addDonation={addDonation}
             callbacks={callbacks}
+            onClose={onClose}
           />
         </>
       );
@@ -121,9 +123,9 @@ const CardDonate = ({
   return (
     <div>
       <Overlay />
-      <Centered ref={node}>
+      <Centered ref={node} hideScroll={donationStatus.status !== 'default'}>
         <Close src="close.svg" onClick={onClose} />
-        {contentComponent}
+        <div className="inner">{contentComponent}</div>
       </Centered>
     </div>
   );

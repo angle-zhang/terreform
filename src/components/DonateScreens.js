@@ -50,7 +50,7 @@ const SuccessWrapper = styled.div`
 `;
 
 const Img = styled.img`
-  height: 350px;
+  height: 325px;
   max-width: 100%;
 
   &:hover {
@@ -61,54 +61,40 @@ const Img = styled.img`
 
 export const Success = ({ donation, type, onContinue }) => {
   const getModelPng = () => {
-    switch (type) {
-      case 'tree-1':
-      case 'tree-2':
-      case 'tree-3':
-        return 'pine.png';
-      case 'tree-4':
-        return 'tree.png';
-      case 'crops':
-        return 'plant.png';
-      case 'coral-1':
-      case 'coral-2':
-        return 'coral.png';
-      default:
-        return 'pine.png';
+    if (type.includes('pine')) {
+      return 'pine.png';
+    } else if (type.includes('tree')) {
+      return 'tree.png';
+    } else if (type.includes('coral')) {
+      return 'coral.png';
+    } else if (type.includes('crops')) {
+      return 'plant.png';
+    } else {
+      return 'pine.png';
     }
   };
 
   const getModelName = () => {
-    switch (type) {
-      case 'tree-1':
-      case 'tree-2':
-      case 'tree-3':
-      case 'tree-4':
-        return 'tree';
-      case 'crops':
-        return 'crop';
-      case 'coral-1':
-      case 'coral-2':
-        return 'coral';
-      default:
-        return 'object';
+    if (type.includes('tree')) {
+      return 'tree';
+    } else if (type.includes('coral')) {
+      return 'coral';
+    } else if (type.includes('crops')) {
+      return 'crop';
+    } else {
+      return 'object';
     }
   };
 
   const getContributionText = () => {
-    switch (type) {
-      case 'tree-1':
-      case 'tree-2':
-      case 'tree-3':
-      case 'tree-4':
-        return 'Your contribution will help reforest local farming communities in Brazil.';
-      case 'crops':
-        return 'crop';
-      case 'coral-1':
-      case 'coral-2':
-        return 'coral';
-      default:
-        return 'Your contribution will help plant more ';
+    if (type.includes('tree')) {
+      return 'Your contribution will help reforest local farming communities in Brazil.';
+    } else if (type.includes('coral')) {
+      return 'Your contribution will help preserve and protect coral reefs in Mexico.';
+    } else if (type.includes('crops')) {
+      return 'Your contribution will help small Moroccan farming communities by planting high-quality fruit trees.';
+    } else {
+      return 'Your contribution will make a difference in protecting our planet.';
     }
   };
 
@@ -123,9 +109,8 @@ export const Success = ({ donation, type, onContinue }) => {
         </em>
       </p>
       <p style={{ marginTop: '40px', width: '400px' }}>
-        Your contribution will help plant more trees, <br />
-        improve air quality, and protect our oceans. With every donation,
-        another {getModelName()} is planted.
+        {getContributionText()} <br />
+        With every donation, another {getModelName()} is planted.
       </p>
     </SuccessWrapper>
   );
