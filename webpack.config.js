@@ -29,8 +29,8 @@ module.exports = {
     extensions: ['*', '.js', '.jsx']
   },
   output: {
-    path: path.resolve(__dirname, 'dist/'),
-    publicPath: '/dist/',
+    path: path.resolve(__dirname, 'public/'),
+    publicPath: '/public/',
     filename: 'bundle.js'
   },
   devServer: {
@@ -42,7 +42,7 @@ module.exports = {
         secure: false
       }
     },
-    publicPath: 'http://localhost:3000/dist/',
+    publicPath: 'http://localhost:3000/public/',
     historyApiFallback: true,
     hotOnly: true
   },

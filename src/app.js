@@ -3,8 +3,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 
-import sakura from "../public/audio.mp3";
-
 import { getAllProjects, initKeys, initBiomeData } from './globalGiving';
 import { postDonation } from './biome';
 
@@ -38,7 +36,7 @@ class App extends React.Component {
       reload: true
     };
 
-    const song = this.initAudio(sakura);
+    const song = this.initAudio();
     song.loop = true;
     song.autoPlay = true;
     var playSong = function(event) {
@@ -49,8 +47,8 @@ class App extends React.Component {
     document.addEventListener('click', playSong, false);
   }
 
-  initAudio = (url) => {
-    let audio = new Audio(url);
+  initAudio = () => {
+    let audio = new Audio("audio.mp3");
     return audio;
   };
 
