@@ -20,7 +20,7 @@ export const SubContent = styled.div`
     border-left: 0.5px solid #FFFFFF;
     padding-left: 50px;
     max-height: 300px;
-    width: 600px;
+    width: 35vw;
 `;
 
 export const Content = styled.div`

@@ -73,7 +73,7 @@ class App extends React.Component {
         }))
       });
       console.log(api_projects);
-      const keys = await initKeys();
+      const keys = await initKeys(false);
       // console.log('Key data:', keys);
       let data = await initBiomeData();
       // data = testData;
@@ -188,7 +188,7 @@ const OldApp = () => {
           ...project
         }))
       );
-      const keys = await initKeys();
+      const keys = await initKeys(false);
       let data = await initBiomeData();
       // data = testData;
       const donations = [];

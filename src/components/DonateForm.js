@@ -181,7 +181,6 @@ const DonateForm = ({
           event.preventDefault();
           hostedFieldsInstance.tokenize((err, payload) => {
             if (err) console.error(err);
-            console.log('Nonce:', payload.nonce);
             if (!nonce) {
               setNonce(payload.nonce);
             }
