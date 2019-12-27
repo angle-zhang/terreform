@@ -3,27 +3,21 @@ import axios from 'axios';
 let API_TOKEN = '';
 let GATEWAY_KEY = '';
 const API_KEY = process.env.API_KEY;
+const IS_TEST = false;
 
 const projectIds = [22098, 24410, 1563];
 
 export const titles = [
-  'Brazil Forest Restoration',
-  "Save Mexico's Coral Reefs",
+  'Brazilian Forest Restoration',
+  'Mexican Coral Reefs',
   'Moroccan Tree Nurseries'
 ];
 
-// const projectIds = [
-//   43209,
-//   43238,
-//   43349,
-//   43044,
-//   34797,
-//   17766,
-//   32965,
-//   40601,
-//   8758,
-//   39506
-// ];
+export const objects = {
+  22098: 'tree',
+  24410: 'coral',
+  1563: 'crop'
+};
 
 export const getProjectIds = async () => {
   const projectUrl = `https://api.globalgiving.org/api/public/projectservice/featured/projects?api_key=${API_KEY}`;
@@ -39,10 +33,10 @@ export const getAllProjects = () => {
   return Promise.all(projects);
 };
 
-export const initKeys = async (test = false) => {
+export const initKeys = async () => {
   const res = await axios.get('/api/get_token/');
   API_TOKEN = res.data.token;
-  GATEWAY_KEY = test ? res.data.test_gatekey : res.data.prod_gatekey;
+  GATEWAY_KEY = IS_TEST ? res.data.test_gatekey : res.data.prod_gatekey;
   return res.data;
 };
 
@@ -64,11 +58,10 @@ export const makeDonation = async ({
   email,
   amount,
   projectId,
-  nonce,
-  test = false
+  nonce
 }) => {
   let donationUrl = `https://api.globalgiving.org/api/secure/givingservice/donationsclient?api_key=${API_KEY}&api_token=${API_TOKEN}`;
-  donationUrl = test ? donationUrl + '&is_test=true' : donationUrl;
+  donationUrl = IS_TEST ? donationUrl + '&is_test=true' : donationUrl;
 
   const res = await axios.post(donationUrl, {
     donation: {

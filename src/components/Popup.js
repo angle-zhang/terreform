@@ -26,21 +26,7 @@ const StyledPopup = styled.div`
 `;
 
 class DonationPopup extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     hide: true,
-  //     donation: {}
-  //   };
-  // }
-
   shouldComponentUpdate = (newProps) => {
-    // if (newProps && newProps.hide) return true;
-    // if (!prevProps.donation || !newProps.donation) {
-    //   return false;
-    // }
-    // return prevProps.donation.id !== newProps.donation.id;
-    // console.log(this.props, newProps);
     if (!this.props.donation || !newProps.donation) {
       return true;
     }
@@ -84,13 +70,11 @@ const Success = styled.div`
   position: absolute;
   top: 33%;
   left: 10%;
-  // left: ${(props) => props.x + 'px'}
-  // top: ${(props) => props.y + 'px'}
   width: 390px;
   height: 280px;
   padding: 60px 30px 20px 30px;
-  background-color: rgba(255, 255, 255, 0.80);
-  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  // border-radius: 10px;
   font-size: 20px;
   z-index: 2;
 `;
@@ -120,7 +104,7 @@ const TextInfo = styled.p`
   color: #7c7c7c;
 
   &:hover {
-    color: #ddd;
+    color: #ccc;
     cursor: pointer;
   }
 `;
@@ -130,14 +114,24 @@ export const SuccessPopup = ({ donation, hide, onHome }) => {
     return '';
   }
 
-  // console.log(donation);
-
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     return `${date.getMonth() + 1}/${date.getDay() + 1}/${date
       .getFullYear()
       .toString()
       .substring(2, 4)}`;
+  };
+
+  const getModelName = () => {
+    if (donation.type.includes('tree')) {
+      return 'tree';
+    } else if (donation.type.includes('coral')) {
+      return 'coral';
+    } else if (donation.type.includes('crops')) {
+      return 'crop';
+    } else {
+      return 'object';
+    }
   };
 
   return (
@@ -151,8 +145,7 @@ export const SuccessPopup = ({ donation, hide, onHome }) => {
         <Icon src="check.svg" />
       </Row>
       <Row space-around style={{ lineHeight: '30px' }}>
-        Your virtual tree has been successfully planted. Share this post or go
-        home.
+        Your virtual {getModelName()} has been successfully planted.
       </Row>
       <Row onClick={onHome} style={{ marginTop: '50px' }}>
         <MiniIcon src="home.svg" />

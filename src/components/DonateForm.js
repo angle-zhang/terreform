@@ -18,8 +18,6 @@ const useField = (type, init = '') => {
 };
 
 const Row = styled.div`
-  // width: ${(props) => (props.static ? '100%' : '74%')};
-  // margin-left: ${(props) => (props.static ? '0%' : '13%')};
   width: 74%;
   margin-left: 13%;
   display: flex;
@@ -51,7 +49,6 @@ const Option = styled.div`
   margin-left: 10px;
   text-align: center;
   line-height: 100px;
-  // border-radius: ${(props) => (props.static ? '0px' : '10px')};
   border-radius: 10px;
   background-color: ${(props) => (props.selected ? '#222' : '#eee')};
   color: ${(props) => (props.selected ? '#fff' : '#222')};
@@ -93,7 +90,8 @@ const DonateForm = ({
   amountArr,
   setStatus,
   addDonation,
-  callbacks
+  callbacks,
+  onClose
 }) => {
   const [amount, setAmount] = useField('number');
   const [firstname, setFirst] = useField('text');
@@ -116,12 +114,14 @@ const DonateForm = ({
       return 'Invalid payment information.';
     } else if (!firstname.value || !lastname.value) {
       return 'Missing name.';
-    } else if (!amount.value) {
-      return 'Select an amount.';
     } else if (!email) {
       return 'Missing email.';
     } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
       return 'Invalid email.';
+    } else if (!amount.value) {
+      return 'No amount selected.';
+    } else if (amount.value < 10) {
+      return 'Minimum $10 donation.';
     }
     return '';
   };
@@ -137,13 +137,12 @@ const DonateForm = ({
         projectId: parseInt(projectId),
         nonce: nonce
       });
-      console.log(res.data);
       const donation = await postDonation(biomeId, {
         username: `${firstname.value} ${lastname.value}`,
         message: message.value
       });
       const model = callbacks.addObject(donation.id);
-      addDonation(projectId, { ...donation });
+      addDonation(projectId, { ...donation, type: model.name });
       setStatus({
         status: 'success',
         donation: res.data.donation,
@@ -151,14 +150,14 @@ const DonateForm = ({
       });
     } catch (err) {
       console.error(err);
-      // onClose();
-      // setTimeout(
-      //   () =>
-      //     alert(
-      //       'There was a problem with your transaction! If the problem persists, please contact us.'
-      //     ),
-      //   250
-      // );
+      onClose();
+      setTimeout(
+        () =>
+          alert(
+            'There was a problem with your transaction! If the problem persists, please contact us.'
+          ),
+        250
+      );
     }
     setAmount('');
     setFirst('');
@@ -212,7 +211,9 @@ const DonateForm = ({
               onClick={() => {
                 setAmount(option.amount);
               }}
-              selected={amount.value === option.amount}
+              selected={
+                amount.value === option.amount && amount.value !== customAmount
+              }
             >
               ${option.amount}
             </Option>
@@ -227,12 +228,13 @@ const DonateForm = ({
               $
               <input
                 type="number"
-                min={1}
+                min={10}
                 value={customAmount}
                 onChange={(e) => {
                   if (e.target.value >= 0) {
-                    setCustomAmount(parseInt(e.target.value));
-                    setAmount(parseInt(e.target.value));
+                    const newVal = parseInt(e.target.value);
+                    setCustomAmount(newVal);
+                    setAmount(newVal);
                   }
                 }}
               />
