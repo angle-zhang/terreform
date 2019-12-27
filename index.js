@@ -16,6 +16,7 @@ app.use(express.json());
 
 // set up mongo database
 const uri = process.env.ATLAS_URI;
+
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -52,6 +53,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/public/index.html'))
 })
 
+// gives api tokens 
 app.get('/api/get_token', async (req, res) => {
   const result = await axios.post(tokenUrl, {
     auth_request: {
