@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import shortid from 'shortid';
 
 import { StyledLink } from './presentational/Button';
 import { NoSelect } from './presentational/Global';
 
 import StaticAbout from './static/StaticAbout';
 import StaticContact from './static/StaticContact';
-// import StaticDonate from "./static/StaticDonate";
 
 const Nav = styled.nav`
   position: fixed;
@@ -55,10 +53,6 @@ const Hamburger = styled.div`
   .content a:nth-of-type(2) {
     animation: fade-2 1.5s forwards;
   }
-
-  // .content a:nth-of-type(3) {
-  //   animation: fade-1 1.8s forwards;
-  // }
 
   @keyframes fade-1 {
     0% {
@@ -209,11 +203,11 @@ const AnimatedHam = styled.div`
   }
 `;
 
-const Navbar = (props) => {
+const Navbar = ({ page, setPage }) => {
   const [closed, setClosed] = useState(true);
   const [animateIn, setAnimateIn] = useState(false);
   const [animateOut, setAnimateOut] = useState(false);
-  const [page, setPage] = useState('');
+  const [key, setKey] = useState(0);
 
   const closeMenu = () => {
     setClosed(true);
@@ -228,6 +222,8 @@ const Navbar = (props) => {
   };
 
   const toggleMenu = () => {
+    /* change key to replay CSS animation */
+    setKey((key) => key + 1);
     if (closed) {
       openMenu();
     } else {
@@ -235,13 +231,9 @@ const Navbar = (props) => {
     }
   };
 
-  const openPage = (page) => {
-    setPage(page);
-  };
+  const openPage = (page) => setPage(page);
 
-  const closePage = () => {
-    setPage('');
-  };
+  const closePage = () => setPage('');
 
   return (
     <>
@@ -249,22 +241,21 @@ const Navbar = (props) => {
         <Header>TerreForm</Header>
         <Hamburger closed={closed}>
           <div className="content">
-            {/* <StyledLink onClick={() => {openPage("donate")}} key={shortid.generate()}>
-            Donate
-          </StyledLink> */}
             <StyledLink
               onClick={() => {
                 openPage('about');
+                toggleMenu();
               }}
-              key={shortid.generate()}
+              key={key}
             >
               About
             </StyledLink>
             <StyledLink
               onClick={() => {
                 openPage('contact');
+                toggleMenu();
               }}
-              key={shortid.generate()}
+              key={key + 1}
             >
               Contact Us
             </StyledLink>
@@ -279,9 +270,8 @@ const Navbar = (props) => {
           </AnimatedHam>
         </Hamburger>
       </Nav>
-      <StaticAbout close={closePage} display={page == 'about'} />
-      {/* <StaticDonate projects={props.projects} close={closePage} display={page == "donate"}/> */}
-      <StaticContact close={closePage} display={page == 'contact'} />
+      <StaticAbout close={closePage} display={page === 'about'} />
+      <StaticContact close={closePage} display={page === 'contact'} />
     </>
   );
 };

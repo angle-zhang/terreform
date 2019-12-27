@@ -28,45 +28,46 @@ const ContinueLink = styled(RealLink)`
   color: #a9adb6;
 `;
 
-const introText = [
+const facts = [
   'Welcome to Terreform.',
   'More carbon dioxide is in the atmosphere than in the last 800,000 years.',
-  'Global sea level will rise 7 – 23 inches in 80 years.',
   '2014 was the world’s hottest year on record.',
   'The Arctic region may have its first completely ice-free summer by 2040.',
+  'Global sea level will rise 7 – 23 inches in 80 years.',
   'But you can make a difference...'
 ];
 
 const Intro = ({ loading, history }) => {
-  const [first, setFirst] = useState(true);
   const [count, setCount] = useState(0);
   const [opacity, setOpacity] = useState(1);
 
   useEffect(() => {
-    const cycle = () => {
+    const transition = () => {
       setOpacity(0);
       setTimeout(() => {
-        setCount((count) =>
-          count === introText.length - 1 ? count : count + 1
-        );
+        setCount((count) => (count === facts.length - 1 ? count : count + 1));
         setOpacity(1);
       }, 1000);
     };
 
-    const interval = setInterval(cycle, 3000);
+    /* change facts every 3 seconds except first and last intro text */
+    const interval = setTimeout(() => {
+      transition();
+      setInterval(transition, 3000);
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    if (!loading && count === introText.length - 1) {
+    if (!loading && count === facts.length - 1) {
       setTimeout(() => history.push('/home'), 3000);
     }
   }, [loading, count]);
 
   return (
     <Centered>
-      <p style={{ opacity: count === introText.length - 1 ? 1 : opacity }}>
-        {introText[count]}
+      <p style={{ opacity: count === facts.length - 1 ? 1 : opacity }}>
+        {facts[count]}
       </p>
       {!loading ? <ContinueLink to="/home">Continue</ContinueLink> : ''}
     </Centered>

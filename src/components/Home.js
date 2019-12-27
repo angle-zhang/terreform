@@ -31,8 +31,6 @@ const Home = ({
   donationIds,
   addDonation,
   getDonationDetails,
-  successId,
-  setReload,
   getSuccessId
 }) => {
   const maxPage = projects.length;
@@ -40,6 +38,8 @@ const Home = ({
   const [showDonate, toggleDonate] = useState(false);
   const [showDescription, toggleDescription] = useState(true);
   const [callbacks, setCallbacks] = useState({});
+
+  const [staticPage, setStaticPage] = useState('');
 
   const [donationProps, setDonationProps] = useState({ hide: true });
   const [successProps, setSuccessProps] = useState({ hide: true });
@@ -76,8 +76,6 @@ const Home = ({
     initThree();
   }, []);
 
-  const getShowDonate = () => showDonate;
-
   const renderDonation = (id, x, y) => {
     // console.log(donationProps, setDonationProps, 'fisdfj');
     const cleanup = renderPopup(donationProps, setDonationProps, id, x, y);
@@ -91,14 +89,17 @@ const Home = ({
   //testing with sample donation values
   return (
     <div>
-      <Navbar projects={projects} />
+      <Navbar page={staticPage} setPage={setStaticPage} />
       <ThreeContainer
         // renderPopup={renderDonation}
         // donationIds={donationIds}
         style={{ pointerEvents: 'none' }}
         threeRef={ref}
       />
-      <DonationPopup {...donationProps} showDonate={showDonate} />
+      <DonationPopup
+        {...donationProps}
+        hide={donationProps.hide || showDonate || staticPage}
+      />
       <SuccessPopup
         {...successProps}
         onHome={() => {
