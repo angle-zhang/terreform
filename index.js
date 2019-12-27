@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 // global environment variables 
-// require('dotenv').config();
+require('dotenv').config();
 
 // create server
 const app = express();
