@@ -15,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 // set up mongo database
+console.log(process.env.ATLAS_URI);
 const uri = process.env.ATLAS_URI;
 
 mongoose.connect(uri, {
@@ -53,7 +54,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/public/index.html'))
 })
 
-// gives api tokens 
+// gives api tokens and key
 app.get('/api/get_token', async (req, res) => {
   const result = await axios.post(tokenUrl, {
     auth_request: {
@@ -66,6 +67,7 @@ app.get('/api/get_token', async (req, res) => {
   });
   const tokenjson = await result.data;
   res.json({
+    key: apiKey, // gives api key as well
     token: tokenjson.auth_response.access_token,
     test_gatekey: testGatekey,
     prod_gatekey: prodGatekey
