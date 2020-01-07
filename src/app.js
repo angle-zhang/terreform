@@ -46,6 +46,7 @@ class App extends React.Component {
 
   componentDidMount() {
     const runInitialization = async () => {
+      await initKeys();
       const apiProjects = await getAllProjects();
       this.setState({
         ...this.state,
@@ -53,8 +54,7 @@ class App extends React.Component {
           ...project
         }))
       });
-
-      await initKeys();
+  
       const data = await initBiomeData();
 
       const donations = [];

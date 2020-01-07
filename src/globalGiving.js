@@ -2,7 +2,7 @@ import axios from 'axios';
 
 let API_TOKEN = '';
 let GATEWAY_KEY = '';
-const API_KEY = '';
+let API_KEY = '';
 const IS_TEST = false;
 
 const projectIds = [22098, 24410, 1563];

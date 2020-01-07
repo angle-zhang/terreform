@@ -29,7 +29,6 @@ export const getBounds = (coords) => {
 export const getPoissonBounds = (biomeCoords, modelCoords) => {
   let biomeBounds = getBounds(biomeCoords)
   let modelBounds = getBounds(modelCoords)
-  console.log(modelBounds)
   let modelWidth = Math.abs(Math.max(modelBounds[2] - modelBounds[0], modelBounds[3] - modelBounds[1]))
   return biomeBounds.map(coord => coord < 0 ? coord + modelWidth : coord - modelWidth)
 }
