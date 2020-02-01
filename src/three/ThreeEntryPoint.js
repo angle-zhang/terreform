@@ -5,7 +5,6 @@ export default async (containerElement, options, renderPopup, donationIds) => {
   const sceneManager = await SceneManager(canvas, options, renderPopup, donationIds);
   bindEventListeners();
   render();
-
   function createCanvas(document, containerElement) {
     const canvas = document.createElement('canvas')
     containerElement.appendChild(canvas)

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 let API_TOKEN = '';
 let GATEWAY_KEY = '';
-const API_KEY = process.env.API_KEY;
+let API_KEY = '';
 const IS_TEST = false;
 
 const projectIds = [22098, 24410, 1563];
@@ -35,6 +35,7 @@ export const getAllProjects = () => {
 
 export const initKeys = async () => {
   const res = await axios.get('/api/get_token/');
+  API_KEY = res.data.key;
   API_TOKEN = res.data.token;
   GATEWAY_KEY = IS_TEST ? res.data.test_gatekey : res.data.prod_gatekey;
   return res.data;

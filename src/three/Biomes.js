@@ -650,7 +650,6 @@ export default class Biomes {
     const marineDonationIds = donationIds['24410'];
     const agricultureDonationIds = donationIds['1563'];
     this.scene = scene;
-    console.log(donationIds, 'donationIds being printed');
     this.biomes = [
       // new Biome(scene, camera, [0, 0, -6], donationIds),
       new ForestBiome(scene, camera, [0, 0, -6], forestDonationIds),

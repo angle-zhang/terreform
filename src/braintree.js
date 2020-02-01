@@ -38,7 +38,6 @@ const braintreeOptions = {
 export const initBraintree = async (onSubmit, onLoaded) => {
   const form = document.querySelector('#cardForm');
   const authorization = getGatewayKey();
-
   const createClient = (authorization) =>
     braintree.client.create({ authorization });
 

@@ -4,10 +4,10 @@
   "description": "donate and see what happens ;) ",
   "main": "index.js",
   "scripts": {
-    "start": "node app/server.js & webpack-dev-server --mode development",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode development",
-    "production": "webpack --mode production"
+    "build": "webpack --mode production",
+    "heroku-postbuild": "npm install && npm run build"
   },
   "proxy": "http://localhost:5000/",
   "repository": {
@@ -27,35 +27,36 @@
   },
   "homepage": "https://github.com/angle-zhang/terreform#readme",
   "devDependencies": {
+    "dotenv": "^8.2.0",
+    "dotenv-webpack": "^1.7.0",
+    "webpack-dev-server": "^3.8.2"
+  },
+  "dependencies": {
     "@babel/cli": "^7.1.0",
     "@babel/core": "^7.1.0",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "@tweenjs/tween.js": "^18.3.2",
     "axios": "^0.19.0",
     "babel-loader": "^8.0.2",
     "babel-polyfill": "^6.26.0",
+    "chance": "^1.1.3",
     "cors": "^2.8.5",
     "css-loader": "^1.0.0",
-    "dotenv": "^8.2.0",
-    "dotenv-webpack": "^1.7.0",
+    "express": "^4.17.1",
+    "file-loader": "^5.0.2",
     "mongodb": "^3.3.3",
     "mongoose": "^5.7.11",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-hot-loader": "^4.6",
     "react-router-dom": "^5.1.2",
+    "shortid": "^2.2.15",
     "style-loader": "^0.23.0",
     "styled-components": "^4.4.0",
     "three": "^0.109.0",
     "webpack": "^4.19.1",
-    "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.8.2"
-  },
-  "dependencies": {
-    "@tweenjs/tween.js": "^18.3.2",
-    "chance": "^1.1.3",
-    "file-loader": "^5.0.2",
-    "react-hot-loader": "^4.3.11"
+    "webpack-cli": "^3.3.9"
   }
 }

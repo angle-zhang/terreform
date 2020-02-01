@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 
-import sakura from '../public/audio.mp3';
 import { getAllProjects, initKeys, initBiomeData } from './globalGiving';
 
 import Intro from './components/Intro';
@@ -24,7 +23,7 @@ class App extends React.Component {
       reload: true
     };
 
-    const song = this.initAudio(sakura);
+    const song = this.initAudio();
     song.loop = true;
     song.autoPlay = true;
     var playSong = function(event) {
@@ -47,6 +46,7 @@ class App extends React.Component {
 
   componentDidMount() {
     const runInitialization = async () => {
+      await initKeys();
       const apiProjects = await getAllProjects();
       this.setState({
         ...this.state,
@@ -54,8 +54,7 @@ class App extends React.Component {
           ...project
         }))
       });
-
-      await initKeys();
+  
       const data = await initBiomeData();
 
       const donations = [];

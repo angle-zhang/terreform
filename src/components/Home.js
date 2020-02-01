@@ -77,7 +77,6 @@ const Home = ({
   }, []);
 
   const renderDonation = (id, x, y) => {
-    // console.log(donationProps, setDonationProps, 'fisdfj');
     const cleanup = renderPopup(donationProps, setDonationProps, id, x, y);
     return cleanup;
   };
@@ -151,7 +150,6 @@ const Home = ({
           onClose={() => toggleDonate(false)}
           addDonation={addDonation}
           onSuccess={() => {
-            // console.log(successId, getDonationDetails(successId));
             toggleDonate(false);
             toggleDescription(false);
             // setReload(true);

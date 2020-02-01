@@ -71,7 +71,7 @@ export const GreenLink = styled.a`
   background-color: rgba(130, 167, 127, 0.7);
   border-radius: 5px;
   border: none;
-  width: 491px;
+  width: 30vw;
   height: 55px;
   line-height: 55px;
   text-align: center;
@@ -95,6 +95,7 @@ export const Close = styled.img`
   &:hover {
     background-color: #eee;
     cursor: pointer;
+    
   }
 `;
 
