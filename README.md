@@ -14,5 +14,11 @@
 	- DB: MongoDB
 	
 ### Deployment
-	- heroku app
-
+Comment out 
+`// require('dotenv').config();`
+Production build
+`npm build production` 
+Deploy
+`git add .`
+`git commit -m "build`
+`git push heroku master`
