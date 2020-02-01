@@ -21,6 +21,7 @@ export const SubContent = styled.div`
     padding-left: 50px;
     max-height: 300px;
     width: 35vw;
+    overflow-y: scroll;
 `;
 
 export const Content = styled.div`

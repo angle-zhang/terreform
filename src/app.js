@@ -23,7 +23,7 @@ class App extends React.Component {
       reload: true
     };
 
-    const song = this.initAudio();
+    const song = this.initAudio('/audio.mp3');
     song.loop = true;
     song.autoPlay = true;
     var playSong = function(event) {
