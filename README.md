@@ -14,5 +14,5 @@
 	- DB: MongoDB
 	
 ### Deployment
-	- AWS or Azure 
+	- heroku app
 

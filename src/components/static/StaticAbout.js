@@ -43,6 +43,12 @@ const StaticAbout = (props) => {
             <p>
               <strong>Nikhil Arora</strong> Backend Developer
             </p>
+            <p>
+              <strong>Lily Lee</strong> UI/UX Designer
+            </p>
+            <p>
+              <strong>Desmond Anderson</strong> 3D Modeler/Environment Designer
+            </p>
           </TextDetail>
         </SubContent>
       </Content>
