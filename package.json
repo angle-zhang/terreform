@@ -47,7 +47,7 @@
     "react-router-dom": "^5.1.2",
     "style-loader": "^0.23.0",
     "styled-components": "^4.4.0",
-    "three": "^0.109.0",
+    "three": "^0.125.0",
     "webpack": "^4.19.1",
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.8.2"
